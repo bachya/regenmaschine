@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b2e09608e4315b2ffb8dcc15360b3c05c2e7a3d44fdfd32b2431ae734706c528"
+            "sha256": "b15e06835ca3d7da4981c412c1eb7976b9598e2084fca2a2d3a8259c3c2a66e6"
         },
         "requires": {},
         "sources": [
@@ -22,24 +22,78 @@
             "version": "==2.5"
         },
         "requests": {
-            "version": "==2.18.0"
+            "version": "==2.18.1"
         },
         "urllib3": {
             "version": "==1.21.1"
         }
     },
     "develop": {
+        "alabaster": {
+            "version": "==0.7.10"
+        },
+        "babel": {
+            "version": "==2.4.0"
+        },
+        "certifi": {
+            "version": "==2017.4.17"
+        },
+        "chardet": {
+            "version": "==3.0.4"
+        },
         "coverage": {
             "version": "==4.4.1"
+        },
+        "docutils": {
+            "version": "==0.13.1"
+        },
+        "idna": {
+            "version": "==2.5"
+        },
+        "imagesize": {
+            "version": "==0.7.1"
+        },
+        "jinja2": {
+            "version": "==2.9.6"
+        },
+        "markupsafe": {
+            "version": "==1.0"
         },
         "py": {
             "version": "==1.4.34"
         },
+        "pygments": {
+            "version": "==2.2.0"
+        },
         "pytest": {
             "version": "==3.1.2"
         },
+        "pytest-mock": {
+            "version": "==1.6.0"
+        },
+        "pytz": {
+            "version": "==2017.2"
+        },
+        "requests": {
+            "version": "==2.18.1"
+        },
         "setuptools": {
             "version": "==36.0.1"
+        },
+        "six": {
+            "version": "==1.10.0"
+        },
+        "snowballstemmer": {
+            "version": "==1.2.1"
+        },
+        "sphinx": {
+            "version": "==1.6.2"
+        },
+        "sphinxcontrib-websupport": {
+            "version": "==1.0.1"
+        },
+        "urllib3": {
+            "version": "==1.21.1"
         }
     }
 }

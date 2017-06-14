@@ -1,3 +1,4 @@
+all: tests docs
 tests:
 	pytest tests/
 docs:
