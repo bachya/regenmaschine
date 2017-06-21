@@ -7,4 +7,4 @@ Email: bachya1208@gmail.com
 Github: https://github.com/bachya/regenmaschine
 """
 
-from .auth import *
+import auth

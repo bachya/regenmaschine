@@ -15,21 +15,18 @@ DEFAULT_TIMEOUT = 10
 __all__ = ['BaseAPI']
 
 
-class RemoteAPIError(Exception):
-    """ A generic error class """
-    pass
-
-
 class Response(object):  # pylint: disable=too-few-public-methods
     """
     A class lovingly borred from Slacker (https://github.com/os/slacker)
     """
 
     def __init__(self, requests_response_object):
-        self.raw = requests_response_object.text
+        """ Initialize! """
         self.body = requests_response_object.json()
-        self.successful = requests_response_object.ok
         self.error = None
+        self.raw = requests_response_object.text
+        self.request_url = requests_response_object.request.url
+        self.successful = requests_response_object.ok
 
     def __str__(self):
         """ Defines how this class should be printed """
@@ -67,23 +64,22 @@ class BaseAPI(object):
         remote_error_code = response.body.get('errorType')
         if remote_error_code and remote_error_code != 0:
             response.successful = False
-            error = 'HTTP Error {}'
             if remote_error_code == 2:
-                response.error = error.format(requests.codes.unauthorized)
+                response.error = '401 Client Error: Unauthorized'
             elif remote_error_code == 4:
-                response.error = error.format(requests.codes.not_implemented)
+                response.error = '501 Client Error: Not Implemented'
             elif remote_error_code == 5:
-                response.error = error.format(requests.codes.not_found)
+                response.error = '404 Client Error: Not Found'
             elif remote_error_code == 6:
-                response.error = error.format(requests.codes.server_error)
+                response.error = '500 Client Error: Internal Server Error'
             elif remote_error_code == 10:
-                response.error = error.format(
-                    requests.codes.service_unavailable)
+                response.error = '503 Client Error: Service Unavailable'
             else:
-                response.error = error.format(requests.codes.bad_request)
+                response.error = '400 Client Error: Bad Request'
 
         if not response.successful:
-            raise RemoteAPIError(response.error)
+            raise requests.exceptions.HTTPError(
+                '{} for url: {}'.format(response.error, response.request_url))
 
         return response
 

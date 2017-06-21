@@ -13,7 +13,26 @@ from .api import BaseAPI
 BASE_URL_LOCAL = 'https://{}:8080/api/4'
 BASE_URL_REMOTE = 'https://my.rainmachine.com'
 
-__all__ = ['get_local_access_token', 'get_remote_access_token']
+__all__ = ['get_local_access_token', 'get_remote_access_token', 'Credentials']
+
+
+class Credentials(object):  # pylint: disable=too-few-public-methods
+    """ Normalization object to hold credential info """
+
+    def __init__(self, credentials):
+        """ Initialize! """
+        if isinstance(credentials, str):
+            credentials = json.loads(credentials)
+
+        self.access_token = credentials['access_token']
+        self.checksum = credentials.get('checksum')
+        self.expiration = credentials.get('expiration')
+        self.expires_in = credentials.get('expires_in')
+        self.sprinkler_id = credentials.get('sprinklerId')
+
+    def __str__(self):
+        """ Defines how this class should be printed """
+        return json.dumps(self.__dict__)
 
 
 class Authenticator(BaseAPI):
@@ -29,10 +48,11 @@ class Authenticator(BaseAPI):
 
     def get_access_token(self):
         """ Retrieves access token (and related info) from the API """
-        return self.post(
+        response = self.post(
             self.api_endpoint,
             data=json.dumps(self.data),
             verify=self.verify_ssl)
+        return Credentials(response.body)
 
 
 class LocalAuthenticator(Authenticator):
