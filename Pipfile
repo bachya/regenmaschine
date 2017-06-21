@@ -5,9 +5,10 @@ verify_ssl = true
 [dev-packages]
 coverage = "*"
 pytest = "*"
-Sphinx = "*"
+sphinx = "*"
 pytest-cov = "*"
 responses = "*"
+requests-mock = "*"
 
 [packages]
 requests = "*"
