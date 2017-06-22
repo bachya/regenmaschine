@@ -13,7 +13,7 @@ from .api import BaseAPI
 BASE_URL_LOCAL = 'https://{}:8080/api/4'
 BASE_URL_REMOTE = 'https://my.rainmachine.com'
 
-__all__ = ['get_local_access_token', 'get_remote_access_token', 'Credentials']
+__all__ = ['get_local_credentials', 'get_remote_credentials', 'Credentials']
 
 
 class Credentials(object):  # pylint: disable=too-few-public-methods
@@ -29,10 +29,7 @@ class Credentials(object):  # pylint: disable=too-few-public-methods
         self.expiration = credentials.get('expiration')
         self.expires_in = credentials.get('expires_in')
         self.sprinkler_id = credentials.get('sprinklerId')
-
-    def __str__(self):
-        """ Defines how this class should be printed """
-        return json.dumps(self.__dict__)
+        self.status_code = credentials.get('statusCode')
 
 
 class Authenticator(BaseAPI):
@@ -46,7 +43,7 @@ class Authenticator(BaseAPI):
         self.data = None
         super(Authenticator, self).__init__(self.url)
 
-    def get_access_token(self):
+    def get_credentials(self):
         """ Retrieves access token (and related info) from the API """
         response = self.post(
             self.api_endpoint,
@@ -76,11 +73,11 @@ class RemoteAuthenticator(Authenticator):
         self.data = {'user': {'email': email, 'pwd': password, 'remember': 1}}
 
 
-def get_local_access_token(ip_address, password):
+def get_local_credentials(ip_address, password):
     """ Convenience method to get an access token from the local device """
-    return LocalAuthenticator(ip_address, password).get_access_token()
+    return LocalAuthenticator(ip_address, password).get_credentials()
 
 
-def get_remote_access_token(email, password):
+def get_remote_credentials(email, password):
     """ Convenience method to get an access token from the remote API """
-    return RemoteAuthenticator(email, password).get_access_token()
+    return RemoteAuthenticator(email, password).get_credentials()

@@ -6,8 +6,6 @@ Email: bachya1208@gmail.com
 Github: https://github.com/bachya/regenmaschine
 """
 
-import json
-
 import requests
 
 DEFAULT_TIMEOUT = 10
@@ -27,10 +25,6 @@ class Response(object):  # pylint: disable=too-few-public-methods
         self.raw = requests_response_object.text
         self.request_url = requests_response_object.request.url
         self.successful = requests_response_object.ok
-
-    def __str__(self):
-        """ Defines how this class should be printed """
-        return json.dumps(self.body)
 
 
 class BaseAPI(object):
@@ -54,13 +48,15 @@ class BaseAPI(object):
             kwargs.setdefault('params', {})['access_token'] = self.access_token
 
         _response = method('{}/{}'.format(self.url, api_endpoint), **kwargs)
+
+        # Raises exceptions from the local API just fine; however...
         _response.raise_for_status()
-        response = Response(_response)
 
         # The remote API is odd: it returns error codes in the body somewhat
         # correctly, but always seems to return a status of 200. If that
         # happens, catch it and set the correct code based on the API docs
         # before moving on:
+        response = Response(_response)
         remote_error_code = response.body.get('errorType')
         if remote_error_code and remote_error_code != 0:
             response.successful = False
