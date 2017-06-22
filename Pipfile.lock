@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "53ce31191d9c75bd938e289c38cf4ac260ce50c329f0bdde5e4e6d2015d94968"
+            "sha256": "b75b190f4242f250df82d0ea85e763b4a26cce6d5754489fcecef2665d9a359d"
         },
         "requires": {},
         "sources": [
@@ -41,6 +41,9 @@
         "chardet": {
             "version": "==3.0.4"
         },
+        "cookies": {
+            "version": "==2.2.1"
+        },
         "coverage": {
             "version": "==4.4.1"
         },
@@ -76,6 +79,12 @@
         },
         "requests": {
             "version": "==2.18.1"
+        },
+        "requests-mock": {
+            "version": "==1.3.0"
+        },
+        "responses": {
+            "version": "==0.5.1"
         },
         "setuptools": {
             "version": "==36.0.1"
