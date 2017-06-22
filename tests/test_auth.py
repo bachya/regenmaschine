@@ -1,11 +1,12 @@
-# -*- coding: utf-8 -*-
-# pylint: disable=no-self-use,too-few-public-methods
 """
 File: test_auth.py
 Author: Aaron Bach
 Email: bachya1208@gmail.com
 Github: https://github.com/bachya/regenmaschine
 """
+
+# -*- coding: utf-8 -*-
+# pylint: disable=no-self-use,too-few-public-methods
 
 import json
 

@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
 """
 File: api.py
 Author: Aaron Bach
 Email: bachya1208@gmail.com
 Github: https://github.com/bachya/regenmaschine
 """
+
+# -*- coding: utf-8 -*-
 
 import requests
 
