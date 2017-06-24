@@ -29,10 +29,9 @@ class Authenticator(api.BaseAPI):
         self.url = url
         super(Authenticator, self).__init__(self.url)
 
-    def _get_credentials(self, verify_ssl=True):
+    def _get_credentials(self):
         """ Retrieves access token (and related info) from the API """
-        response = self.post(
-            self.api_endpoint, data=json.dumps(self.data), verify=verify_ssl)
+        response = self.post(self.api_endpoint, data=json.dumps(self.data))
         return {
             'access_token':
             response.body.get('access_token'),
@@ -41,6 +40,8 @@ class Authenticator(api.BaseAPI):
             '{}/s/{}/api/4'.format(self.url, response.body.get('sprinklerId')),
             'checksum':
             response.body.get('checksum'),
+            'cookies':
+            response.cookies,
             'expires_in':
             response.body.get('expires_in'),
             'expiration':
@@ -50,7 +51,7 @@ class Authenticator(api.BaseAPI):
             'status_code':
             response.body.get('statusCode'),
             'verify_ssl':
-            verify_ssl
+            self.verify_ssl
         }
 
     def create_client(self):
@@ -88,7 +89,8 @@ class LocalAuthenticator(Authenticator):
         super(LocalAuthenticator, self).__init__(API_LOCAL_BASE.format(ip))
         self.api_endpoint = 'auth/login'
         self.data = {'pwd': password, 'remember': 1}
-        self.credentials = self._get_credentials(verify_ssl=False)
+        self.verify_ssl = False
+        self.credentials = self._get_credentials()
 
 
 class RemoteAuthenticator(Authenticator):

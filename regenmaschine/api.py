@@ -7,21 +7,25 @@ Github: https://github.com/bachya/regenmaschine
 
 # -*- coding: utf-8 -*-
 
+import logging
+
 import requests
 
 import regenmaschine.remote_status_codes as rsc
 
 DEFAULT_TIMEOUT = 10
+LOGGER = logging.getLogger(__name__)
 
 
 class Response(object):  # pylint: disable=too-few-public-methods
     """
-    A class lovingly borred from Slacker (https://github.com/os/slacker)
+    A simpler class borred from Slacker (https://github.com/os/slacker)
     """
 
     def __init__(self, requests_response_object):
         """ Initialize! """
         self.body = requests_response_object.json()
+        self.cookies = requests_response_object.cookies
         self.error = None
         self.raw = requests_response_object.text
         self.request_url = requests_response_object.request.url
@@ -31,16 +35,21 @@ class Response(object):  # pylint: disable=too-few-public-methods
 class BaseAPI(object):
     """ Base class for interacting with the RainMachine API """
 
-    def __init__(self,
-                 url,
-                 access_token=None,
-                 session=None,
-                 timeout=DEFAULT_TIMEOUT):
+    def __init__(  # pylint: disable=too-many-arguments
+            self,
+            url,
+            access_token=None,
+            cookies=None,
+            session=None,
+            timeout=DEFAULT_TIMEOUT,
+            verify_ssl=True):
         """ Initialize! """
         self.url = url
         self.access_token = access_token
+        self.cookies = cookies
         self.timeout = timeout
         self.session = session
+        self.verify_ssl = verify_ssl
 
     def _request(self, method, api_endpoint, **kwargs):
         """ Generic request method """
@@ -48,7 +57,11 @@ class BaseAPI(object):
         if self.access_token:
             kwargs.setdefault('params', {})['access_token'] = self.access_token
 
-        _response = method('{}/{}'.format(self.url, api_endpoint), **kwargs)
+        _response = method(
+            '{}/{}'.format(self.url, api_endpoint),
+            cookies=self.cookies,
+            verify=self.verify_ssl,
+            **kwargs)
 
         # Raises exceptions from the local API just fine; however...
         _response.raise_for_status()
