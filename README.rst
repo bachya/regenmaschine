@@ -1,4 +1,4 @@
-Regenmaschine: A Library for RainMachine
-========================================
+Regenmaschine: A Simple Python Library for RainMachine™
+=======================================================
 
 Coming soon!
