@@ -9,9 +9,9 @@ Github: https://github.com/bachya/regenmaschine
 
 import requests
 
-DEFAULT_TIMEOUT = 10
+import regenmaschine.remote_status_codes as rsc
 
-__all__ = ['BaseAPI']
+DEFAULT_TIMEOUT = 10
 
 
 class Response(object):  # pylint: disable=too-few-public-methods
@@ -61,18 +61,10 @@ class BaseAPI(object):
         remote_error_code = response.body.get('errorType')
         if remote_error_code and remote_error_code != 0:
             response.successful = False
-            if remote_error_code == 2:
-                response.error = '401 Client Error: Unauthorized'
-            elif remote_error_code == 4:
-                response.error = '501 Client Error: Not Implemented'
-            elif remote_error_code == 5:
-                response.error = '404 Client Error: Not Found'
-            elif remote_error_code == 6:
-                response.error = '500 Client Error: Internal Server Error'
-            elif remote_error_code == 10:
-                response.error = '503 Client Error: Service Unavailable'
+            if remote_error_code in rsc.CODES.keys():
+                response.error = rsc.CODES[remote_error_code]
             else:
-                response.error = '400 Client Error: Bad Request'
+                response.error = rsc.CODES[99]
 
         if not response.successful:
             raise requests.exceptions.HTTPError(

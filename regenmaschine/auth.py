@@ -9,48 +9,75 @@ Github: https://github.com/bachya/regenmaschine
 
 import json
 
-from .api import BaseAPI
+import regenmaschine.api as api
+import regenmaschine.client as cli
 
-BASE_URL_LOCAL = 'https://{}:8080/api/4'
-BASE_URL_REMOTE = 'https://my.rainmachine.com'
+API_LOCAL_BASE = 'https://{}:8080/api/4'
+API_REMOTE_BASE = 'https://my.rainmachine.com'
 
-__all__ = ['get_local_credentials', 'get_remote_credentials', 'Credentials']
-
-
-class Credentials(object):  # pylint: disable=too-few-public-methods
-    """ Normalization object to hold credential info """
-
-    def __init__(self, credentials):
-        """ Initialize! """
-        if isinstance(credentials, str):
-            credentials = json.loads(credentials)
-
-        self.access_token = credentials['access_token']
-        self.checksum = credentials.get('checksum')
-        self.expiration = credentials.get('expiration')
-        self.expires_in = credentials.get('expires_in')
-        self.sprinkler_id = credentials.get('sprinklerId')
-        self.status_code = credentials.get('statusCode')
+__all__ = ['Authenticator', 'LocalAuthenticator', 'RemoteAuthenticator']
 
 
-class Authenticator(BaseAPI):
+class Authenticator(api.BaseAPI):
     """ Generic authentication object """
 
-    def __init__(self, url, verify_ssl=True):
+    def __init__(self, url):
         """ Initialize! """
-        self.url = url
-        self.verify_ssl = verify_ssl
         self.api_endpoint = None
+        self.credentials = None
         self.data = None
+        self.url = url
         super(Authenticator, self).__init__(self.url)
 
-    def get_credentials(self):
+    def _get_credentials(self, verify_ssl=True):
         """ Retrieves access token (and related info) from the API """
         response = self.post(
-            self.api_endpoint,
-            data=json.dumps(self.data),
-            verify=self.verify_ssl)
-        return Credentials(response.body)
+            self.api_endpoint, data=json.dumps(self.data), verify=verify_ssl)
+        return {
+            'access_token':
+            response.body.get('access_token'),
+            'api_url':
+            self.url if response.body.get('sprinklerId') is None else
+            '{}/s/{}/api/4'.format(self.url, response.body.get('sprinklerId')),
+            'checksum':
+            response.body.get('checksum'),
+            'expires_in':
+            response.body.get('expires_in'),
+            'expiration':
+            response.body.get('expiration'),
+            'sprinkler_id':
+            response.body.get('sprinklerId'),
+            'status_code':
+            response.body.get('statusCode'),
+            'verify_ssl':
+            verify_ssl
+        }
+
+    def create_client(self):
+        """ Create a client with the correct info """
+        return cli.Client(self.credentials)
+
+    def dump(self):
+        """ Return a nice dict representation of the Authenticator """
+        return self.credentials
+
+    def dumps(self):
+        """ Return a string version of the Authenticator (for easy caching) """
+        return json.dumps(self.credentials)
+
+    @classmethod
+    def load(cls, json_dict):
+        """ Creates an Authenticator from a dict """
+        klass = cls('http://www.whatever.com')
+        klass.credentials = json_dict
+        return klass
+
+    @classmethod
+    def loads(cls, json_str):
+        """ Creates an Authenticator from a string """
+        klass = cls('http://www.whatever.com')
+        klass.credentials = json.loads(json_str)
+        return klass
 
 
 class LocalAuthenticator(Authenticator):
@@ -58,10 +85,10 @@ class LocalAuthenticator(Authenticator):
 
     def __init__(self, ip, password):
         """ Initialize! """
-        super(LocalAuthenticator, self).__init__(
-            BASE_URL_LOCAL.format(ip), verify_ssl=False)
+        super(LocalAuthenticator, self).__init__(API_LOCAL_BASE.format(ip))
         self.api_endpoint = 'auth/login'
         self.data = {'pwd': password, 'remember': 1}
+        self.credentials = self._get_credentials(verify_ssl=False)
 
 
 class RemoteAuthenticator(Authenticator):
@@ -69,16 +96,7 @@ class RemoteAuthenticator(Authenticator):
 
     def __init__(self, email, password):
         """ Initialize! """
-        super(RemoteAuthenticator, self).__init__(BASE_URL_REMOTE)
+        super(RemoteAuthenticator, self).__init__(API_REMOTE_BASE)
         self.api_endpoint = 'login/auth'
         self.data = {'user': {'email': email, 'pwd': password, 'remember': 1}}
-
-
-def get_local_credentials(ip_address, password):
-    """ Convenience method to get an access token from the local device """
-    return LocalAuthenticator(ip_address, password).get_credentials()
-
-
-def get_remote_credentials(email, password):
-    """ Convenience method to get an access token from the remote API """
-    return RemoteAuthenticator(email, password).get_credentials()
+        self.credentials = self._get_credentials()
