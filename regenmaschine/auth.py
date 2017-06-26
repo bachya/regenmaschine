@@ -10,7 +10,6 @@ Github: https://github.com/bachya/regenmaschine
 import json
 
 import regenmaschine.api as api
-import regenmaschine.client as cli
 
 API_LOCAL_BASE = 'https://{}:8080/api/4'
 API_REMOTE_BASE = 'https://my.rainmachine.com'
@@ -18,87 +17,90 @@ API_REMOTE_BASE = 'https://my.rainmachine.com'
 __all__ = ['Authenticator', 'LocalAuthenticator', 'RemoteAuthenticator']
 
 
-class Authenticator(api.BaseAPI):
+class InvalidAuthenticator(Exception):
+    """ Generic auth error """
+    pass
+
+
+class Authenticator(api.BaseAPI):   # pylint: disable=too-many-instance-attributes
     """ Generic authentication object """
 
-    def __init__(self, url):
+    def __init__(self, url, session=None):
         """ Initialize! """
         self.api_endpoint = None
-        self.credentials = None
+        self.api_url = None
+        self.checksum = None
         self.data = None
+        self.expiration = None
+        self.expires_in = None
+        self.session = session
+        self.sprinkler_id = None
+        self.status_code = None
         self.url = url
-        super(Authenticator, self).__init__(self.url)
+        super(Authenticator, self).__init__(self.url, session=self.session)
 
-    def _get_credentials(self):
+    def authenticate(self):
         """ Retrieves access token (and related info) from the API """
         response = self._post(self.api_endpoint, data=json.dumps(self.data))
-        return {
-            'access_token':
-            response.body.get('access_token'),
-            'api_url':
-            self.url if response.body.get('sprinklerId') is None else
-            '{}/s/{}/api/4'.format(self.url, response.body.get('sprinklerId')),
-            'checksum':
-            response.body.get('checksum'),
-            'cookies':
-            response.cookies.get_dict(),
-            'expires_in':
-            response.body.get('expires_in'),
-            'expiration':
-            response.body.get('expiration'),
-            'sprinkler_id':
-            response.body.get('sprinklerId'),
-            'status_code':
-            response.body.get('statusCode'),
-            'verify_ssl':
-            self.verify_ssl
-        }
-
-    def create_client(self):
-        """ Create a client with the correct info """
-        return cli.Client(self.credentials)
+        self.access_token = response.body.get('access_token')
+        self.api_url = self.url if response.body.get(
+            'sprinklerId') is None else '{}/s/{}/api/4'.format(
+                self.url, response.body.get('sprinklerId'))
+        self.checksum = response.body.get('checksum')
+        self.cookies = response.cookies.get_dict()
+        self.expiration = response.body.get('expiration')
+        self.expires_in = response.body.get('expires_in')
+        self.sprinkler_id = response.body.get('sprinklerId')
+        self.status_code = response.body.get('statusCode')
 
     def dump(self):
         """ Return a nice dict representation of the Authenticator """
-        return self.credentials
+        return self.__dict__
 
     def dumps(self):
         """ Return a string version of the Authenticator (for easy caching) """
-        return json.dumps(self.credentials)
+        return json.dumps(self.__dict__)
 
     @classmethod
-    def load(cls, json_dict):
+    def load(cls, auth_dict):
         """ Creates an Authenticator from a dict """
-        klass = cls('http://www.whatever.com')
-        klass.credentials = json_dict
-        return klass
+        try:
+            klass = cls(auth_dict['url'])
+            for k, v in auth_dict.items():  # pylint: disable=invalid-name
+                setattr(klass, k, v)
+            return klass
+        except KeyError:
+            raise InvalidAuthenticator('Invalid Authenticator data')
 
     @classmethod
-    def loads(cls, json_str):
+    def loads(cls, auth_str):
         """ Creates an Authenticator from a string """
-        klass = cls('http://www.whatever.com')
-        klass.credentials = json.loads(json_str)
-        return klass
+        try:
+            auth_dict = json.loads(auth_str)
+            return cls.load(auth_dict)
+        except json.decoder.JSONDecodeError:
+            raise InvalidAuthenticator('Invalid Authenticator data')
 
 
 class LocalAuthenticator(Authenticator):
     """ Authentication object the local device """
 
-    def __init__(self, ip, password):
+    def __init__(self, ip, password, session=None):
         """ Initialize! """
-        super(LocalAuthenticator, self).__init__(API_LOCAL_BASE.format(ip))
+        super(LocalAuthenticator, self).__init__(
+            API_LOCAL_BASE.format(ip), session)
         self.api_endpoint = 'auth/login'
         self.data = {'pwd': password, 'remember': 1}
         self.verify_ssl = False
-        self.credentials = self._get_credentials()
+        self.authenticate()
 
 
 class RemoteAuthenticator(Authenticator):
     """ Authentication object the local device """
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, session=None):
         """ Initialize! """
-        super(RemoteAuthenticator, self).__init__(API_REMOTE_BASE)
+        super(RemoteAuthenticator, self).__init__(API_REMOTE_BASE, session)
         self.api_endpoint = 'login/auth'
         self.data = {'user': {'email': email, 'pwd': password, 'remember': 1}}
-        self.credentials = self._get_credentials()
+        self.authenticate()

@@ -15,7 +15,7 @@ import pytest
 import requests
 import requests_mock
 
-import regenmaschine.auth as rma
+import regenmaschine as rm
 import regenmaschine.remote_status_codes as rsc
 from tests.fixtures import *
 
@@ -23,8 +23,8 @@ from tests.fixtures import *
 class TestAuthenticator(object):
     """ Class for testing a generic Authenticator object """
 
-    def test_dump(self, local_url, local_cookies,
-                  local_credentials, local_auth_response_200):
+    def test_dump(self, local_url, local_cookies, local_auth,
+                  local_auth_response_200):
         """ Tests successfully dumping credentials to a dict """
         with requests_mock.Mocker() as mock:
             mock.post(
@@ -32,11 +32,11 @@ class TestAuthenticator(object):
                 text=json.dumps(local_auth_response_200),
                 cookies=local_cookies)
 
-            auth = rma.LocalAuthenticator('192.168.1.100', '12345')
-            assert auth.dump() == local_credentials
+            auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+            assert auth.dump() == local_auth
 
-    def test_dumps(self, local_cookies, local_credentials,
-                   local_auth_response_200, local_url):
+    def test_dumps(self, local_cookies, local_auth, local_auth_response_200,
+                   local_url):
         """ Tests successfully dumping credentials to a string """
         with requests_mock.Mocker() as mock:
             mock.post(
@@ -44,24 +44,33 @@ class TestAuthenticator(object):
                 text=json.dumps(local_auth_response_200),
                 cookies=local_cookies)
 
-            auth = rma.LocalAuthenticator('192.168.1.100', '12345')
-            assert auth.dumps() == json.dumps(local_credentials)
+            auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+            assert json.loads(auth.dumps()) == json.loads(
+                json.dumps(local_auth))
 
-    def test_load(self, local_credentials):
+    def test_load(self, local_auth):
         """ Test successfully loading credentials via a dict """
-        auth = rma.Authenticator.load(local_credentials)
-        assert auth.dump() == local_credentials
+        auth = rm.Authenticator.load(local_auth)
+        assert auth.dump() == local_auth
 
-    def test_loads(self, local_credentials):
+        with pytest.raises(rm.auth.InvalidAuthenticator):
+            bad_local_auth = {}
+            auth = rm.Authenticator.load(bad_local_auth)
+
+    def test_loads(self, local_auth):
         """ Test successfully loading credentials via a string """
-        auth = rma.Authenticator.loads(json.dumps(local_credentials))
-        assert auth.dump() == local_credentials
+        auth = rm.Authenticator.loads(json.dumps(local_auth))
+        assert auth.dump() == local_auth
+
+        with pytest.raises(rm.auth.InvalidAuthenticator):
+            bad_local_auth = "This can't possibly work!"
+            auth = rm.Authenticator.loads(bad_local_auth)
 
 
 class TestLocalAuthenticator(object):
     """ Class for testing local credentials """
 
-    def test_local_200(self, local_cookies, local_credentials,
+    def test_local_200(self, local_cookies, local_auth,
                        local_auth_response_200, local_url):
         """ Tests successful credentials from local device """
         with requests_mock.Mocker() as mock:
@@ -70,8 +79,8 @@ class TestLocalAuthenticator(object):
                 text=json.dumps(local_auth_response_200),
                 cookies=local_cookies)
 
-            auth = rma.LocalAuthenticator('192.168.1.100', '12345')
-            assert auth.credentials == local_credentials
+            auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+            assert auth.dump() == local_auth
 
     def test_local_404(self):
         """ Tests failed credentials from local device """
@@ -83,7 +92,7 @@ class TestLocalAuthenticator(object):
                     '404 Client Error: Not Found in url: {}'.format(url)))
 
             with pytest.raises(requests.exceptions.HTTPError) as exc_info:
-                rma.LocalAuthenticator('192.168.1.100', '12345')
+                rm.LocalAuthenticator('192.168.1.100', '12345')
                 assert '404 Client Error: Not Found' in str(exc_info)
 
 
@@ -100,13 +109,11 @@ class TestRemoteCredentials(object):
                 cookies=local_cookies)
 
             with pytest.raises(requests.exceptions.HTTPError) as exc_info:
-                rma.RemoteAuthenticator('user@host.com',
-                                        '12345').get_credentials()
+                rm.RemoteAuthenticator('user@host.com', '12345')
                 assert rsc.CODES[remote_error_code] in str(exc_info)
 
-    def test_remote_200(self, remote_cookies,
-                        remote_auth_response_200, remote_credentials,
-                        remote_url):
+    def test_remote_200(self, remote_cookies, remote_auth_response_200,
+                        remote_credentials, remote_url):
         """ Tests retrieving credentials from the remote API """
         with requests_mock.Mocker() as mock:
             mock.post(
@@ -114,8 +121,8 @@ class TestRemoteCredentials(object):
                 text=json.dumps(remote_auth_response_200),
                 cookies=remote_cookies)
 
-            auth = rma.RemoteAuthenticator('user@host.com', '12345')
-            assert auth.credentials == remote_credentials
+            auth = rm.RemoteAuthenticator('user@host.com', '12345')
+            assert auth.dump() == remote_credentials
 
     def test_remote_401(self):
         """ Tests failed credentials from remote API """

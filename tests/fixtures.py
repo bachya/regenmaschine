@@ -12,6 +12,30 @@ import pytest
 
 
 @pytest.fixture(scope='session')
+def local_auth(local_cookies, local_url):
+    """ Fixture to return a good credentials dict """
+    return {
+        'access_token': '12345',
+        'api_endpoint': 'auth/login',
+        'api_url': local_url,
+        'checksum': '12345',
+        'cookies': local_cookies,
+        'data': {
+            'pwd': '12345',
+            'remember': 1
+        },
+        'expiration': 'Thu, 23 Jun 2022 00:35:34 GMT',
+        'expires_in': 157679999,
+        'session': None,
+        'sprinkler_id': None,
+        'status_code': 0,
+        'timeout': 10,
+        'url': local_url,
+        'verify_ssl': False,
+    }
+
+
+@pytest.fixture(scope='session')
 def local_auth_response_200():
     """ Fixture to return a successful local response """
     return {
@@ -30,29 +54,13 @@ def local_cookies():
 
 
 @pytest.fixture(scope='session')
-def local_credentials(local_cookies, local_url):
-    """ Fixture to return a good credentials dict """
-    return {
-        'access_token': '12345',
-        'api_url': local_url,
-        'checksum': '12345',
-        'cookies': local_cookies,
-        'expires_in': 157679999,
-        'expiration': 'Thu, 23 Jun 2022 00:35:34 GMT',
-        'sprinkler_id': None,
-        'status_code': 0,
-        'verify_ssl': False
-    }
-
-
-@pytest.fixture(scope='session')
 def local_url():
     """ Fixture to return a valid local API URL """
     return 'https://192.168.1.100:8080/api/4'
 
 
 @pytest.fixture(scope='session')
-def programs_get_response_200():
+def programs_all_response_200():
     """ Fixture to return a good set of /program data """
     return {
         "programs": [{
@@ -175,6 +183,21 @@ def programs_get_response_200():
 
 
 @pytest.fixture(scope='session')
+def programs_running_response_200():
+    """ Fixture to return running programs """
+    return {
+        "programs": [{
+            "uid": 1,
+            "name": "Default Watering Schedule",
+            "manual": True,
+            "userStartTime": "2017-06-26 16:12:00",
+            "realStartTime": "2017-06-26 16:12:55",
+            "status": 1
+        }]
+    }
+
+
+@pytest.fixture(scope='session')
 def remote_auth_response_200():
     """ Fixture to return a successful remote response """
     return {"access_token": "12345", "errorType": 0, "sprinklerId": "C3aysvee"}
@@ -197,14 +220,25 @@ def remote_credentials(remote_cookies, remote_url, sprinkler_id):
     """ Fixture to return a good credentials dict """
     return {
         'access_token': '12345',
+        'api_endpoint': 'login/auth',
         'api_url': '{}/s/{}/api/4'.format(remote_url, sprinkler_id),
         'checksum': None,
         'cookies': remote_cookies,
-        'expires_in': None,
+        'data': {
+            'user': {
+                'email': 'user@host.com',
+                'pwd': '12345',
+                'remember': 1
+            }
+        },
         'expiration': None,
+        'expires_in': None,
+        'session': None,
         'sprinkler_id': sprinkler_id,
         'status_code': None,
-        'verify_ssl': True
+        'timeout': 10,
+        'url': remote_url,
+        'verify_ssl': True,
     }
 
 
