@@ -10,6 +10,7 @@ Github: https://github.com/bachya/regenmaschine
 import logging
 
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 import regenmaschine.remote_status_codes as rsc
 
@@ -32,7 +33,7 @@ class Response(object):  # pylint: disable=too-few-public-methods
         self.successful = requests_response_object.ok
 
 
-class BaseAPI(object):
+class BaseAPI(object):  # pylint: disable=too-few-public-methods
     """ Base class for interacting with the RainMachine API """
 
     def __init__(  # pylint: disable=too-many-arguments
@@ -57,19 +58,25 @@ class BaseAPI(object):
         if self.access_token:
             kwargs.setdefault('params', {})['access_token'] = self.access_token
 
+        if not self.verify_ssl:
+            # RainMachine uses a self-signed certificate for the local device;
+            # in that case, the easiest thing to do is turn off and disable
+            # warnings; if SSL is desired, the remote API should be used.
+            # http://bit.ly/2rScDjk
+            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
         _response = method(
             '{}/{}'.format(self.url, api_endpoint),
-            cookies=self.cookies,
+            cookies=requests.cookies.cookiejar_from_dict(self.cookies),
             verify=self.verify_ssl,
             **kwargs)
 
         # Raises exceptions from the local API just fine; however...
         _response.raise_for_status()
 
-        # The remote API is odd: it returns error codes in the body somewhat
-        # correctly, but always seems to return a status of 200. If that
-        # happens, catch it and set the correct code based on the API docs
-        # before moving on:
+        # The remote API is odd: it returns error codes in the body correctly,
+        # but always seems to return a status of 200. If that happens, catch it
+        # and set the correct code based on the API docs before moving on:
         response = Response(_response)
         remote_error_code = response.body.get('errorType')
         if remote_error_code and remote_error_code != 0:
@@ -97,12 +104,12 @@ class BaseAPI(object):
         return self.session.request(
             method='post', url=url, data=data, **kwargs)
 
-    def get(self, api_endpoint, **kwargs):
+    def _get(self, api_endpoint, **kwargs):
         """ Generic GET request """
         return self._request(self._session_get if self.session else
                              requests.get, api_endpoint, **kwargs)
 
-    def post(self, api_endpoint, **kwargs):
+    def _post(self, api_endpoint, **kwargs):
         """ Generic GET request """
         return self._request(self._session_post if self.session else
                              requests.post, api_endpoint, **kwargs)

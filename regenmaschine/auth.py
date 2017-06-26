@@ -31,7 +31,7 @@ class Authenticator(api.BaseAPI):
 
     def _get_credentials(self):
         """ Retrieves access token (and related info) from the API """
-        response = self.post(self.api_endpoint, data=json.dumps(self.data))
+        response = self._post(self.api_endpoint, data=json.dumps(self.data))
         return {
             'access_token':
             response.body.get('access_token'),
@@ -41,7 +41,7 @@ class Authenticator(api.BaseAPI):
             'checksum':
             response.body.get('checksum'),
             'cookies':
-            response.cookies,
+            response.cookies.get_dict(),
             'expires_in':
             response.body.get('expires_in'),
             'expiration':

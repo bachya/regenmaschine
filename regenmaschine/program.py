@@ -10,17 +10,9 @@ Github: https://github.com/bachya/regenmaschine
 import regenmaschine.api as api
 
 
-class Program(object):
-    """ A wrapper class to define a RainMachine program """
-
-    def __init__(self):
-        """ Initialize! """
-        pass
-
-
-class Programs(api.BaseAPI):
+class Programs(api.BaseAPI):  # pylint: disable=too-few-public-methods
     """ An object to list, interact with, etc. programs """
 
-    def dump(self):
+    def get(self):
         """ Returns raw JSON of all program information """
-        return self.get('program').body
+        return self._get('program').body
