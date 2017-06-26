@@ -31,4 +31,4 @@ def test_local_programs_get(local_cookies, local_url, local_auth_response_200,
             cookies=local_cookies)
         auth = rma.LocalAuthenticator('192.168.1.100', '12345')
         client = auth.create_client()
-        assert client.programs.get() == programs_get_response_200
+        assert client.programs.all() == programs_get_response_200
