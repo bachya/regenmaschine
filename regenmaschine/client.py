@@ -14,16 +14,16 @@ import regenmaschine.program as program
 class Client(object):  # pylint: disable=too-few-public-methods
     """ A client to interact with the bulk of the RainMachine API """
 
-    def __init__(self, credentials, session=None, timeout=api.DEFAULT_TIMEOUT):
+    def __init__(self, auth, timeout=api.DEFAULT_TIMEOUT):
         """ Initialize! """
-        self.credentials = credentials
+        self.auth = auth
         kwargs = {
-            'url': credentials['api_url'],
-            'access_token': credentials['access_token'],
-            'cookies': credentials['cookies'],
-            'session': session,
+            'url': auth.api_url,
+            'access_token': auth.access_token,
+            'cookies': auth.cookies,
+            'session': auth.session,
             'timeout': timeout,
-            'verify_ssl': credentials['verify_ssl']
+            'verify_ssl': auth.verify_ssl
         }
 
         self.programs = program.Programs(**kwargs)

@@ -8,3 +8,4 @@ Github: https://github.com/bachya/regenmaschine
 """
 
 from regenmaschine.auth import *
+from regenmaschine.client import *
