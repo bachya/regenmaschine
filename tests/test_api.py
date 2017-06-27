@@ -31,7 +31,7 @@ def test_session(local_auth_response_200, local_cookies, local_url,
             text=json.dumps(programs_all_response_200),
             cookies=local_cookies)
 
-        auth = rm.LocalAuthenticator('192.168.1.100', '12345',
-                                     requests.Session())
+        auth = rm.Authenticator.create_local('192.168.1.100', '12345',
+                                             requests.Session())
         client = rm.Client(auth)
         assert client.programs.all() == programs_all_response_200

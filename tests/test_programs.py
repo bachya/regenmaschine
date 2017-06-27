@@ -30,7 +30,7 @@ def test_local_all(local_cookies, local_url, local_auth_response_200,
             text=json.dumps(programs_all_response_200),
             cookies=local_cookies)
 
-        auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+        auth = rm.Authenticator.create_local('192.168.1.100', '12345')
         client = rm.Client(auth)
         assert client.programs.all() == programs_all_response_200
 
@@ -48,7 +48,7 @@ def test_local_get(local_cookies, local_url, local_auth_response_200,
             text=json.dumps(programs_get_response_200),
             cookies=local_cookies)
 
-        auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+        auth = rm.Authenticator.create_local('192.168.1.100', '12345')
         client = rm.Client(auth)
         assert client.programs.get(1) == programs_get_response_200
 
@@ -66,7 +66,7 @@ def test_local_nextrun(local_cookies, local_url, local_auth_response_200,
             text=json.dumps(local_nextrun_response_200),
             cookies=local_cookies)
 
-        auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+        auth = rm.Authenticator.create_local('192.168.1.100', '12345')
         client = rm.Client(auth)
         assert client.programs.next() == local_nextrun_response_200
 
@@ -84,7 +84,7 @@ def test_local_running(local_cookies, local_url, local_auth_response_200,
             text=json.dumps(programs_running_response_200),
             cookies=local_cookies)
 
-        auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+        auth = rm.Authenticator.create_local('192.168.1.100', '12345')
         client = rm.Client(auth)
         assert client.programs.running() == programs_running_response_200
 
@@ -110,7 +110,7 @@ def test_local_start_stop(client_general_response_200, local_auth_response_200,
             text=json.dumps(client_general_response_200),
             cookies=local_cookies)
 
-        auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+        auth = rm.Authenticator.create_local('192.168.1.100', '12345')
         client = rm.Client(auth)
         assert client.programs.start(1) == client_general_response_200
         assert client.programs.stop(1) == client_general_response_200

@@ -32,7 +32,7 @@ class TestAuthenticator(object):
                 text=json.dumps(local_auth_response_200),
                 cookies=local_cookies)
 
-            auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+            auth = rm.Authenticator.create_local('192.168.1.100', '12345')
             assert auth.dump() == local_auth
 
     def test_dumps(self, local_cookies, local_auth, local_auth_response_200,
@@ -44,7 +44,7 @@ class TestAuthenticator(object):
                 text=json.dumps(local_auth_response_200),
                 cookies=local_cookies)
 
-            auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+            auth = rm.Authenticator.create_local('192.168.1.100', '12345')
             assert json.loads(auth.dumps()) == json.loads(
                 json.dumps(local_auth))
 
@@ -79,7 +79,7 @@ class TestLocalAuthenticator(object):
                 text=json.dumps(local_auth_response_200),
                 cookies=local_cookies)
 
-            auth = rm.LocalAuthenticator('192.168.1.100', '12345')
+            auth = rm.Authenticator.create_local('192.168.1.100', '12345')
             assert auth.dump() == local_auth
 
     def test_local_404(self):
@@ -92,7 +92,7 @@ class TestLocalAuthenticator(object):
                     '404 Client Error: Not Found in url: {}'.format(url)))
 
             with pytest.raises(requests.exceptions.HTTPError) as exc_info:
-                rm.LocalAuthenticator('192.168.1.100', '12345')
+                rm.Authenticator.create_local('192.168.1.100', '12345')
                 assert '404 Client Error: Not Found' in str(exc_info)
 
 
@@ -109,7 +109,7 @@ class TestRemoteCredentials(object):
                 cookies=local_cookies)
 
             with pytest.raises(requests.exceptions.HTTPError) as exc_info:
-                rm.RemoteAuthenticator('user@host.com', '12345')
+                rm.Authenticator.create_remote('user@host.com', '12345')
                 assert rsc.CODES[remote_error_code] in str(exc_info)
 
     def test_remote_200(self, remote_cookies, remote_auth_response_200,
@@ -121,7 +121,7 @@ class TestRemoteCredentials(object):
                 text=json.dumps(remote_auth_response_200),
                 cookies=remote_cookies)
 
-            auth = rm.RemoteAuthenticator('user@host.com', '12345')
+            auth = rm.Authenticator.create_remote('user@host.com', '12345')
             assert auth.dump() == remote_credentials
 
     def test_remote_401(self):

@@ -14,15 +14,15 @@ import regenmaschine.api as api
 API_LOCAL_BASE = 'https://{}:8080/api/4'
 API_REMOTE_BASE = 'https://my.rainmachine.com'
 
-__all__ = ['Authenticator', 'LocalAuthenticator', 'RemoteAuthenticator']
+__all__ = ['Authenticator', 'InvalidAuthenticator']
 
 
 class InvalidAuthenticator(Exception):
     """ Generic auth error """
     pass
 
-
-class Authenticator(api.BaseAPI):   # pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
+class Authenticator(api.BaseAPI):
     """ Generic authentication object """
 
     def __init__(self, url, session=None):
@@ -53,6 +53,25 @@ class Authenticator(api.BaseAPI):   # pylint: disable=too-many-instance-attribut
         self.sprinkler_id = response.body.get('sprinklerId')
         self.status_code = response.body.get('statusCode')
 
+    @classmethod
+    def create_local(cls, ip_address, password, session=None):
+        """ Creates a local authenticator"""
+        klass = cls(API_LOCAL_BASE.format(ip_address), session)
+        klass.api_endpoint = 'auth/login'
+        klass.data = {'pwd': password, 'remember': 1}
+        klass.verify_ssl = False
+        klass.authenticate()
+        return klass
+
+    @classmethod
+    def create_remote(cls, email, password, session=None):
+        """ Creates a local authenticator"""
+        klass = cls(API_REMOTE_BASE, session)
+        klass.api_endpoint = 'login/auth'
+        klass.data = {'user': {'email': email, 'pwd': password, 'remember': 1}}
+        klass.authenticate()
+        return klass
+
     def dump(self):
         """ Return a nice dict representation of the Authenticator """
         return self.__dict__
@@ -80,27 +99,3 @@ class Authenticator(api.BaseAPI):   # pylint: disable=too-many-instance-attribut
             return cls.load(auth_dict)
         except json.decoder.JSONDecodeError:
             raise InvalidAuthenticator('Invalid Authenticator data')
-
-
-class LocalAuthenticator(Authenticator):
-    """ Authentication object the local device """
-
-    def __init__(self, ip, password, session=None):
-        """ Initialize! """
-        super(LocalAuthenticator, self).__init__(
-            API_LOCAL_BASE.format(ip), session)
-        self.api_endpoint = 'auth/login'
-        self.data = {'pwd': password, 'remember': 1}
-        self.verify_ssl = False
-        self.authenticate()
-
-
-class RemoteAuthenticator(Authenticator):
-    """ Authentication object the local device """
-
-    def __init__(self, email, password, session=None):
-        """ Initialize! """
-        super(RemoteAuthenticator, self).__init__(API_REMOTE_BASE, session)
-        self.api_endpoint = 'login/auth'
-        self.data = {'user': {'email': email, 'pwd': password, 'remember': 1}}
-        self.authenticate()
