@@ -17,7 +17,8 @@ import requests_mock
 
 import regenmaschine as rm
 import regenmaschine.remote_status_codes as rsc
-from tests.fixtures import *
+from tests.fixtures.auth import *
+from tests.fixtures.misc import *
 
 
 class TestAuthenticator(object):
@@ -113,7 +114,7 @@ class TestRemoteCredentials(object):
                 assert rsc.CODES[remote_error_code] in str(exc_info)
 
     def test_remote_200(self, remote_cookies, remote_auth_response_200,
-                        remote_credentials, remote_url):
+                        remote_auth, remote_url):
         """ Tests retrieving credentials from the remote API """
         with requests_mock.Mocker() as mock:
             mock.post(
@@ -122,7 +123,7 @@ class TestRemoteCredentials(object):
                 cookies=remote_cookies)
 
             auth = rm.Authenticator.create_remote('user@host.com', '12345')
-            assert auth.dump() == remote_credentials
+            assert auth.dump() == remote_auth
 
     def test_remote_401(self):
         """ Tests failed credentials from remote API """

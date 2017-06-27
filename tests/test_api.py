@@ -15,7 +15,9 @@ import requests
 import requests_mock
 
 import regenmaschine as rm
-from tests.fixtures import *
+from tests.fixtures.auth import *
+from tests.fixtures.misc import *
+from tests.fixtures.program import *
 
 
 def test_session(local_auth_response_200, local_cookies, local_url,
@@ -33,5 +35,8 @@ def test_session(local_auth_response_200, local_cookies, local_url,
 
         auth = rm.Authenticator.create_local('192.168.1.100', '12345',
                                              requests.Session())
+        assert auth.session is not None
+
         client = rm.Client(auth)
         assert client.programs.all() == programs_all_response_200
+        assert client.programs.cookies == local_cookies
