@@ -21,11 +21,12 @@ class InvalidAuthenticator(Exception):
     """ Generic auth error """
     pass
 
+
 # pylint: disable=too-many-instance-attributes
 class Authenticator(api.BaseAPI):
     """ Generic authentication object """
 
-    def __init__(self, url, session=None):
+    def __init__(self, url, using_remote_api, session=None):
         """ Initialize! """
         self.api_endpoint = None
         self.api_url = None
@@ -37,7 +38,9 @@ class Authenticator(api.BaseAPI):
         self.sprinkler_id = None
         self.status_code = None
         self.url = url
-        super(Authenticator, self).__init__(self.url, session=self.session)
+        self.using_remote_api = using_remote_api
+        super(Authenticator, self).__init__(
+            self.url, self.using_remote_api, session=self.session)
 
     def authenticate(self):
         """ Retrieves access token (and related info) from the API """
@@ -56,7 +59,7 @@ class Authenticator(api.BaseAPI):
     @classmethod
     def create_local(cls, ip_address, password, session=None):
         """ Creates a local authenticator"""
-        klass = cls(API_LOCAL_BASE.format(ip_address), session)
+        klass = cls(API_LOCAL_BASE.format(ip_address), False, session)
         klass.api_endpoint = 'auth/login'
         klass.data = {'pwd': password, 'remember': 1}
         klass.verify_ssl = False
@@ -66,7 +69,7 @@ class Authenticator(api.BaseAPI):
     @classmethod
     def create_remote(cls, email, password, session=None):
         """ Creates a local authenticator"""
-        klass = cls(API_REMOTE_BASE, session)
+        klass = cls(API_REMOTE_BASE, True, session)
         klass.api_endpoint = 'login/auth'
         klass.data = {'user': {'email': email, 'pwd': password, 'remember': 1}}
         klass.authenticate()
@@ -84,7 +87,7 @@ class Authenticator(api.BaseAPI):
     def load(cls, auth_dict):
         """ Creates an Authenticator from a dict """
         try:
-            klass = cls(auth_dict['url'])
+            klass = cls(auth_dict['url'], auth_dict['using_remote_api'])
             for k, v in auth_dict.items():  # pylint: disable=invalid-name
                 setattr(klass, k, v)
             return klass

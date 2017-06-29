@@ -18,10 +18,13 @@ DEFAULT_TIMEOUT = 10
 LOGGER = logging.getLogger(__name__)
 
 
+class BrokenAPICall(Exception):
+    """ Exception for when RainMachine's API is broken """
+    pass
+
+
 class Response(object):  # pylint: disable=too-few-public-methods
-    """
-    A simpler class borred from Slacker (https://github.com/os/slacker)
-    """
+    """ A simpler response class """
 
     def __init__(self, requests_response_object):
         """ Initialize! """
@@ -39,6 +42,7 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
     def __init__(  # pylint: disable=too-many-arguments
             self,
             url,
+            using_remote_api,
             access_token=None,
             cookies=None,
             session=None,
@@ -50,6 +54,7 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
         self.cookies = cookies
         self.timeout = timeout
         self.session = session
+        self.using_remote_api = using_remote_api
         self.verify_ssl = verify_ssl
 
     def _request(self, method, api_endpoint, **kwargs):
@@ -113,3 +118,17 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
         """ Generic GET request """
         return self._request(self._session_post if self.session else
                              requests.post, api_endpoint, **kwargs)
+
+
+def broken_remote_api(function):
+    """ Decorator to define API calls that are broken in the remote API """
+
+    def decorator(self, *args, **kwargs):
+        """ Decorate! """
+        if self.using_remote_api:
+            raise BrokenAPICall('{}() currently broken in remote API'.format(
+                function.__name__))
+        else:
+            return function(self, *args, **kwargs)
+
+    return decorator

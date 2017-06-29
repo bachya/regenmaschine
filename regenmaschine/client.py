@@ -9,6 +9,7 @@ Github: https://github.com/bachya/regenmaschine
 
 import regenmaschine.api as api
 import regenmaschine.program as program
+import regenmaschine.zone as zone
 
 
 class Client(object):  # pylint: disable=too-few-public-methods
@@ -23,7 +24,9 @@ class Client(object):  # pylint: disable=too-few-public-methods
             'cookies': auth.cookies,
             'session': auth.session,
             'timeout': timeout,
+            'using_remote_api': auth.using_remote_api,
             'verify_ssl': auth.verify_ssl
         }
 
         self.programs = program.Programs(**kwargs)
+        self.zones = zone.Zones(**kwargs)

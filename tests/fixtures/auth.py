@@ -31,6 +31,7 @@ def local_auth(local_cookies, local_url):
         'status_code': 0,
         'timeout': 10,
         'url': local_url,
+        'using_remote_api': False,
         'verify_ssl': False,
     }
 
@@ -98,5 +99,6 @@ def remote_auth(remote_cookies, remote_url, sprinkler_id):
         'status_code': None,
         'timeout': 10,
         'url': remote_url,
+        'using_remote_api': True,
         'verify_ssl': True,
     }

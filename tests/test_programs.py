@@ -100,10 +100,6 @@ def test_local_start_stop(client_general_response_200, local_auth_response_200,
             text=json.dumps(local_auth_response_200),
             cookies=local_cookies)
         mock.post(
-            '{}/program/1/delete'.format(local_url),
-            text=json.dumps(client_general_response_200),
-            cookies=local_cookies)
-        mock.post(
             '{}/program/1/start'.format(local_url),
             text=json.dumps(client_general_response_200),
             cookies=local_cookies)
@@ -116,3 +112,32 @@ def test_local_start_stop(client_general_response_200, local_auth_response_200,
         client = rm.Client(auth)
         assert client.programs.start(1) == client_general_response_200
         assert client.programs.stop(1) == client_general_response_200
+
+
+# pylint: disable=protected-access
+def test_remote_api_broken(local_auth_response_200, local_url,
+                           remote_auth_response_200, remote_url, sprinkler_id):
+    """ Tests the broken_remote_api decorator """
+    with requests_mock.Mocker() as mock:
+        mock.post(
+            '{}/login/auth'.format(remote_url),
+            text=json.dumps(remote_auth_response_200),
+            cookies=remote_cookies)
+        mock.post(
+            '{}/auth/login'.format(local_url),
+            text=json.dumps(local_auth_response_200),
+            cookies=local_cookies)
+        mock.post(
+            '{}/s/{}/api/4/program/1/start'.format(remote_url, sprinkler_id),
+            exc=rm.api.BrokenAPICall('start() currently broken in remote API'))
+
+        auth_local = rm.Authenticator.create_local('192.168.1.100', '12345')
+        auth_remote = rm.Authenticator.create_remote('user@host.com', '12345')
+
+        with pytest.raises(rm.api.BrokenAPICall) as exc_info:
+            client = rm.Client(auth_remote)
+            client.programs._broken_remote_api_test()
+            assert 'currently broken in remote API' in str(exc_info)
+
+        client = rm.Client(auth_local)
+        assert client.programs._broken_remote_api_test() == {'status': 'ok'}
