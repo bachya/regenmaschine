@@ -11,3 +11,4 @@ Sphinx = "*"
 
 [packages]
 requests = "*"
+maya = "*"

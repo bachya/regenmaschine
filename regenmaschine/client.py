@@ -12,6 +12,7 @@ import regenmaschine.diagnostics as diagnostics
 import regenmaschine.program as program
 import regenmaschine.parser as parser
 import regenmaschine.restrictions as restrictions
+import regenmaschine.stats as stats
 import regenmaschine.zone as zone
 
 
@@ -35,4 +36,5 @@ class Client(object):  # pylint: disable=too-few-public-methods
         self.parsers = parser.Parsers(**kwargs)
         self.programs = program.Programs(**kwargs)
         self.restrictions = restrictions.Restrictions(**kwargs)
+        self.stats = stats.Stats(**kwargs)
         self.zones = zone.Zones(**kwargs)
