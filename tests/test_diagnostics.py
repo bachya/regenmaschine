@@ -19,8 +19,9 @@ from tests.fixtures.diagnostics import *
 from tests.fixtures.misc import *
 
 
-def test_local_current(diagnostics_current_response_200, local_cookies,
-                       local_url, local_auth_response_200):
+def test_all_operations(diagnostics_current_response_200,
+                        diagnostics_log_response_200, local_cookies, local_url,
+                        local_auth_response_200):
     """ Tests getting the program list """
     with requests_mock.Mocker() as mock:
         mock.post(
@@ -31,25 +32,12 @@ def test_local_current(diagnostics_current_response_200, local_cookies,
             '{}/diag'.format(local_url),
             text=json.dumps(diagnostics_current_response_200),
             cookies=local_cookies)
-
-        auth = rm.Authenticator.create_local('192.168.1.100', '12345')
-        client = rm.Client(auth)
-        assert client.diagnostics.current() == diagnostics_current_response_200
-
-
-def test_local_log(diagnostics_log_response_200, local_cookies, local_url,
-                   local_auth_response_200):
-    """ Tests getting the program list """
-    with requests_mock.Mocker() as mock:
-        mock.post(
-            '{}/auth/login'.format(local_url),
-            text=json.dumps(local_auth_response_200),
-            cookies=local_cookies)
         mock.get(
             '{}/diag/log'.format(local_url),
             text=json.dumps(diagnostics_log_response_200),
             cookies=local_cookies)
 
         auth = rm.Authenticator.create_local('192.168.1.100', '12345')
-        client = rm.Client(auth)
-        assert client.diagnostics.log() == diagnostics_log_response_200
+        client = rm.Client(auth).diagnostics
+        assert client.current() == diagnostics_current_response_200
+        assert client.log() == diagnostics_log_response_200

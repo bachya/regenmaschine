@@ -10,6 +10,7 @@ Github: https://github.com/bachya/regenmaschine
 import regenmaschine.api as api
 import regenmaschine.diagnostics as diagnostics
 import regenmaschine.program as program
+import regenmaschine.restrictions as restrictions
 import regenmaschine.zone as zone
 
 
@@ -31,4 +32,5 @@ class Client(object):  # pylint: disable=too-few-public-methods
 
         self.diagnostics = diagnostics.Diagnostics(**kwargs)
         self.programs = program.Programs(**kwargs)
+        self.restrictions = restrictions.Restrictions(**kwargs)
         self.zones = zone.Zones(**kwargs)

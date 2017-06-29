@@ -1,9 +1,9 @@
-'''
-File: zones.py
+"""
+File: diagnostics.py
 Author: Aaron Bach
 Email: bachya1208@gmail.com
 Github: https://github.com/bachya/regenmaschine
-'''
+"""
 
 # -*- coding: utf-8 -*-
 # pylint: disable=redefined-outer-name,invalid-name
@@ -13,7 +13,7 @@ import pytest
 
 @pytest.fixture(scope='session')
 def diagnostics_current_response_200():
-    ''' Fixture to return local device diagnostic info '''
+    """ Fixture to return local device diagnostic info """
     return {
         'hasWifi': True,
         'uptime': '18 days, 16:16:48',
@@ -39,7 +39,7 @@ def diagnostics_current_response_200():
 
 @pytest.fixture(scope='session')
 def diagnostics_log_response_200():
-    ''' Fixture to return a log snippet '''
+    """ Fixture to return a log snippet """
     return {
         'log': '--------------------------- GENERAL RAINMACHINE LOG --------'
     }
