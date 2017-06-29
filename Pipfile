@@ -6,7 +6,6 @@ verify_ssl = true
 coverage = "*"
 pytest = "*"
 pytest-cov = "*"
-responses = "*"
 requests-mock = "*"
 Sphinx = "*"
 
