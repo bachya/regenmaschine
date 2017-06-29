@@ -1,5 +1,5 @@
 """
-file: test_programs.py
+file: test_zones.py
 Author: Aaron Bach
 Email: bachya1208@gmail.com
 Github: https://github.com/bachya/regenmaschine

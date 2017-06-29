@@ -8,6 +8,7 @@ Github: https://github.com/bachya/regenmaschine
 # -*- coding: utf-8 -*-
 
 import regenmaschine.api as api
+import regenmaschine.diagnostics as diagnostics
 import regenmaschine.program as program
 import regenmaschine.zone as zone
 
@@ -28,5 +29,6 @@ class Client(object):  # pylint: disable=too-few-public-methods
             'verify_ssl': auth.verify_ssl
         }
 
+        self.diagnostics = diagnostics.Diagnostics(**kwargs)
         self.programs = program.Programs(**kwargs)
         self.zones = zone.Zones(**kwargs)
