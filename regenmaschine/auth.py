@@ -100,5 +100,5 @@ class Authenticator(api.BaseAPI):
         try:
             auth_dict = json.loads(auth_str)
             return cls.load(auth_dict)
-        except json.decoder.JSONDecodeError:
+        except ValueError:
             raise InvalidAuthenticator('Invalid Authenticator data')

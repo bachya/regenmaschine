@@ -30,15 +30,16 @@ if sys.argv[-1] == "publish":
     os.system("python setup.py sdist bdist_wheel upload")
     sys.exit()
 
-REQUIRED = ['requests']
+REQUIRED = ['maya', 'requests']
 
-PACKAGES = [
-    'regenmaschine',
-]
+PACKAGES = ['regenmaschine']
 
 ABOUT = dict()
-with open(os.path.join(HERE, 'regenmaschine', '__version__.py'), 'r', encoding='utf-8') as f:
-    exec(f.read(), ABOUT)  # pylint: disable=exec-used
+with open(
+        os.path.join(HERE, 'regenmaschine', '__version__.py'),
+        'r',
+        encoding='utf-8') as f:
+    exec (f.read(), ABOUT)  # pylint: disable=exec-used
 
 setup(
     name='maya',
@@ -52,11 +53,10 @@ setup(
     install_requires=REQUIRED,
     license='MIT',
     classifiers=(
-        'Development Status :: 1 - Planning',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 2',
+        'Natural Language :: English', 'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
