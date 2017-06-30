@@ -4,7 +4,8 @@ python:
   - "3.6"
 
 # command to install dependencies
-before_install: make init
+before_install: "make init"
 
 # command to run tests
-script: make prod
+script:
+  - make prod
