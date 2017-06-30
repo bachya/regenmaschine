@@ -190,9 +190,11 @@ Therefore, it should be cached and stored securely.
 ===============
 
 #. Check for open features/bugs or initiate a discussion on one.
-#. Form the repository and make your changes on a new branch.
+#. Form the repository.
+#. Install the dev environment: :code:`pip install pipenv; pipenv lock; pipenv install --dev`.
+#. Code your new feature or bug fix.
 #. Write a test that covers your new functionality.
-#. Run tests: :code:`make test`
-#. Build new docs: :code:`make docs`
+#. Run tests: :code:`pipenv run make test`
+#. Build new docs: :code:`pipenv run make docs`
 #. Add yourself to AUTHORS.rst.
 #. Submit a pull request!
