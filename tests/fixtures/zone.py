@@ -96,3 +96,9 @@ def zones_get_advanced_response_200():
             5.08
         }
     }
+
+
+@pytest.fixture(scope='session')
+def zones_simulate_response_200():
+    """ Fixture to return info on a single zone """
+    return {'referenceTime': 1243, 'currentFieldCapacity': 30.92}

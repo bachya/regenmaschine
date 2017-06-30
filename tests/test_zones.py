@@ -19,11 +19,11 @@ from tests.fixtures.misc import *
 from tests.fixtures.zone import *
 
 
-def test_all_operations(client_general_response_200, local_cookies, local_url,
-                        local_auth_response_200, zones_all_response_200,
-                        zones_all_advanced_response_200,
-                        zones_get_response_200,
-                        zones_get_advanced_response_200):
+def test_all_operations(
+        client_general_response_200, local_cookies, local_url,
+        local_auth_response_200, zones_all_response_200,
+        zones_all_advanced_response_200, zones_get_response_200,
+        zones_get_advanced_response_200, zones_simulate_response_200):
     """ Tests getting the program list """
     with requests_mock.Mocker() as mock:
         mock.post(
@@ -37,6 +37,10 @@ def test_all_operations(client_general_response_200, local_cookies, local_url,
         mock.get(
             '{}/zone/properties'.format(local_url),
             text=json.dumps(zones_all_advanced_response_200),
+            cookies=local_cookies)
+        mock.post(
+            '{}/zone/simulate'.format(local_url),
+            text=json.dumps(zones_simulate_response_200),
             cookies=local_cookies)
         mock.get(
             '{}/zone/1'.format(local_url),
@@ -61,5 +65,7 @@ def test_all_operations(client_general_response_200, local_cookies, local_url,
         assert client.all(True) == zones_all_advanced_response_200
         assert client.get(1) == zones_get_response_200
         assert client.get(1, True) == zones_get_advanced_response_200
+        assert client.simulate(
+            zones_get_advanced_response_200) == zones_simulate_response_200
         assert client.start(1, 60) == client_general_response_200
         assert client.stop(1) == client_general_response_200

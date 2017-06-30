@@ -27,9 +27,11 @@ class Zones(api.BaseAPI):
 
         return self._get('zone/{}'.format(zone_id)).body
 
-    # def simulate(self, zone_id):
-    #     """ Simulates a zone activity """
-    #     return self._post('zone/{}/simulate'.format(zone_id)).body
+    def simulate(self, zone_data):
+        """
+        Simulates a zone activity (based on advanced zone properties)
+        """
+        return self._post('zone/simulate', data=zone_data).body
 
     def start(self, zone_id, seconds):
         """ Starts a zone for a specific number of seconds """
