@@ -177,10 +177,10 @@ client:
 .. code-block:: python
 
   # Outputs a dict:
-  rm.Authenticator.load(auth_json)
+  auth = rm.Authenticator.load(auth_json)
 
   # Outputs a string version of the dict:
-  rm.Authenticator.loads(auth_str)
+  auth = rm.Authenticator.loads(auth_str)
 
 *Beware:* the dumped :code:`auth` object contains the access token needed to
 query the API, as well as the information needed to reconstruct the client.
