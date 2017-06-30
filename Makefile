@@ -5,6 +5,6 @@ init:
 	pipenv lock
 	pipenv install --dev
 test:
-	pytest --cov-report term-missing --cov=regenmaschine -s tests/
+	pipenv run pytest --cov-report term-missing --cov=regenmaschine -s tests/
 upload_coverage:
-	codecov --token=41f0313d-f147-4eb0-b571-df8929bc1314
+	pipenv run codecov --token=41f0313d-f147-4eb0-b571-df8929bc1314

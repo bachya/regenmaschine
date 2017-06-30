@@ -28,11 +28,11 @@ controllers over a LAN or via RainMachine™'s cloud.
 💧 Usage
 ========
 
-Authentication
---------------
+Authentication & Creating a Client
+----------------------------------
 
-First, we need to authenticate. Authentication can be done against the local
-device or the cloud API:
+Authentication is the first step and an be done against the local device or the
+cloud API:
 
 .. code-block:: python
 
