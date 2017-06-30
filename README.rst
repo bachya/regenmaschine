@@ -16,10 +16,38 @@ library for interacting with `RainMachine smart sprinkler controllers
 controllers over a LAN or via RainMachine's cloud API.
 
 💧 Installation
----------------
+===============
 .. code-block:: bash
 
   $ pip install regenmaschine
 
 💧 Usage
----------------
+========
+
+Authentication
+--------------
+
+First, we need to authenticate. Authentication can be done against the local
+device or the cloud API:
+
+.. code-block:: python
+
+  import regenmaschine as rm
+
+  # Using the local API:
+  auth = rm.Authenticator.create_local('<DEVICE_IP_ADDRESS>', '<PASSWORD>')
+
+  # Using the remote API:
+  auth = rm.Authenticator.create_remote('<EMAIL ADDRESS>', '<PASSWORD>')
+
+If authentication is successful, this :code:`auth` object can then be used to
+create a client:
+
+.. code-block:: python
+
+  client = rm.Client(auth)
+
+Caching the :code:`auth` Object
+-------------------------------
+
+Assuming this succeeds, the
