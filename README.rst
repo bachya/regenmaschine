@@ -174,6 +174,8 @@ client:
   # Outputs a string version of the dict:
   auth = rm.Authenticator.loads(auth_str)
 
+  client = rm.Client(auth)
+
 *Beware:* the dumped :code:`auth` object contains the access token needed to
 query the API, as well as the information needed to reconstruct the client.
 Therefore, it should be cached and stored securely.
