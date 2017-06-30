@@ -4,8 +4,8 @@ python:
   - "3.6"
 
 # command to install dependencies
-before_install: "make init"
+install: "make"
 
 # command to run tests
 script:
-  - make prod
+  - make travis
