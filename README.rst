@@ -112,8 +112,8 @@ Exceptions
 ----------
 
 Regenmaschine relies on two other libraries:
-`Requests<https://github.com/requests/requests>`_ and
-`Maya<https://github.com/kennethreitz/maya>`_; as such, Regenmaschine may
+`Requests <https://github.com/requests/requests>`_ and
+`Maya <https://github.com/kennethreitz/maya>`_; as such, Regenmaschine may
 raise any of the exceptions that they provide.
 
 Beyond that, Regenmaschine defines a few exceptions of its own:
