@@ -18,4 +18,4 @@ controllers over a LAN or via RainMachine's cloud API.
 💧 Installation
 ---------------
 
-  $ pip install regenmaschine
+    $ pip install regenmaschine
