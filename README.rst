@@ -50,24 +50,63 @@ create a client:
 Programs
 --------
 
+More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/programs>`_
+
 .. code-block:: python
 
-  client.programs.all()               # Returns all program information
-  client.programs.get(<program_id>)   # Returns info about a single program
-  client.programs.next()              # Returns the next run date/time for all programs
-  client.programs.running()           # Returns all running programs
-  client.programs.start(<program_id>) # Starts a program
-  client.programs.stop(<program_id>)  # Stops a program
+  client.programs.all()     # Returns all program info
+  client.programs.get(1)    # Returns info about a single program
+  client.programs.next()    # Returns the next run date/time for all programs
+  client.programs.running() # Returns all running programs
+  client.programs.start(7)  # Starts a program
+  client.programs.stop(7)   # Stops a program
 
 Zones
 -----
 
+More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/zones>`_
+
 .. code-block:: python
 
-  client.zones.all(<advanced_properties=False>)            # Returns all zone information
-  client.zones.get(<zone_id>, <advanced_properties=False>) # Returns info about a single zone
-  client.zones.start(<zone_id>, <number_of_seconds>)       # Starts a zone for X seconds
-  client.zones.stop(<zone_id>)                             # Stops a zone
+  client.zones.all()                            # Returns all zone info
+  client.zones.all(advanced_properties=True)    # Returns advanced info for all zones
+  client.zones.get(2)                           # Returns advanced info about a single zone
+  client.zones.get(2, advanced_properties=True) # Returns info about a single zone
+  client.zones.start(3, <number_of_seconds>)    # Starts a zone for X seconds
+  client.zones.stop(3)                          # Stops a zone
+
+Watering
+--------
+
+More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/watering>`_
+
+.. code-block:: python
+
+  # log() can have any number of the parameters shown here:
+  client.watering.log()                 # Returns log of all watering
+  client.watering.log(details=True)     # Returns comprehensive log of all watering
+  client.watering.log('6/29/2017', 2)   # Returns log for 6/27-6/29
+  client.watering.log('2017-06-29', 2)  # Alternate view of log()
+  client.watering.log('2 days ago', 3)  # Returns log 2-5 days ago
+
+  client.watering.queue()               # Returns the active queue of watering activities
+  client.watering.runs('6/29/2017', 2)  # Alternate view of log()
+  client.watering.runs('2017-06-29', 2) # Alternate view of log()
+  client.watering.runs('2 days ago', 3) # Alternate view of log()
+  client.watering.stop_all()            # Immediately stops all programs and zones
+
+Stats
+-----
+
+More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/daily-stats>`_
+
+.. code-block:: python
+
+  client.stats.on_date('6/29/2017')           # Returns all stats for a date
+  client.stats.on_date('2017-06-29')          # Returns all stats for a date
+  client.stats.on_date('1 week ago')          # Returns all stats for a date
+  client.stats.upcoming()                     # Returns expected stats for the next 7 days
+  client.stats.upcoming(include_details=True) # Deeper look at the next 7 days
 
 Exceptions
 ----------
