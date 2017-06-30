@@ -7,11 +7,11 @@ Regenmaschine: A Simple Python Library for RainMachine™
 .. image:: https://travis-ci.org/bachya/regenmaschine.svg?branch=master
   :target: https://travis-ci.org/bachya/regenmaschine
 
-.. image:: https://img.shields.io/badge/SayThanks-!-1EAEDB.svg
-  :target: https://saythanks.io/to/bachya
-
 .. image:: https://codecov.io/gh/bachya/regenmaschine/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/bachya/regenmaschine
+
+.. image:: https://img.shields.io/badge/SayThanks-!-1EAEDB.svg
+  :target: https://saythanks.io/to/bachya
 
 Regenmaschine (German for "rain machine") is a simple, clean, well-tested Python
 library for interacting with `RainMachine™ smart sprinkler controllers
