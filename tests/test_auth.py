@@ -54,7 +54,7 @@ class TestAuthenticator(object):
         auth = rm.Authenticator.load(local_auth)
         assert auth.dump() == local_auth
 
-        with pytest.raises(rm.auth.InvalidAuthenticator):
+        with pytest.raises(rm.exceptions.InvalidAuthenticator):
             bad_local_auth = {}
             auth = rm.Authenticator.load(bad_local_auth)
 
@@ -63,7 +63,7 @@ class TestAuthenticator(object):
         auth = rm.Authenticator.loads(json.dumps(local_auth))
         assert auth.dump() == local_auth
 
-        with pytest.raises(rm.auth.InvalidAuthenticator):
+        with pytest.raises(rm.exceptions.InvalidAuthenticator):
             bad_local_auth = "This can't possibly work!"
             auth = rm.Authenticator.loads(bad_local_auth)
 

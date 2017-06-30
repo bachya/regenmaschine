@@ -12,15 +12,11 @@ import logging
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+import regenmaschine.exceptions as exceptions
 import regenmaschine.remote_status_codes as rsc
 
 DEFAULT_TIMEOUT = 10
 LOGGER = logging.getLogger(__name__)
-
-
-class BrokenAPICall(Exception):
-    """ Exception for when RainMachine's API is broken """
-    pass
 
 
 class Response(object):  # pylint: disable=too-few-public-methods
@@ -126,8 +122,9 @@ def broken_remote_api(function):
     def decorator(self, *args, **kwargs):
         """ Decorate! """
         if self.using_remote_api:
-            raise BrokenAPICall('{}() currently broken in remote API'.format(
-                function.__name__))
+            raise exceptions.BrokenAPICall(
+                '{}() currently broken in remote API'.format(
+                    function.__name__))
         else:
             return function(self, *args, **kwargs)
 

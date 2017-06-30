@@ -81,12 +81,13 @@ def test_remote_api_broken(local_auth_response_200, local_url,
             cookies=local_cookies)
         mock.post(
             '{}/s/{}/api/4/program/1/start'.format(remote_url, sprinkler_id),
-            exc=rm.api.BrokenAPICall('start() currently broken in remote API'))
+            exc=rm.exceptions.BrokenAPICall(
+                'start() currently broken in remote API'))
 
         auth_local = rm.Authenticator.create_local('192.168.1.100', '12345')
         auth_remote = rm.Authenticator.create_remote('user@host.com', '12345')
 
-        with pytest.raises(rm.api.BrokenAPICall) as exc_info:
+        with pytest.raises(rm.exceptions.BrokenAPICall) as exc_info:
             client = rm.Client(auth_remote)
             client.programs._broken_remote_api_test()
             assert 'currently broken in remote API' in str(exc_info)

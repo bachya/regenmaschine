@@ -10,16 +10,10 @@ Github: https://github.com/bachya/regenmaschine
 import json
 
 import regenmaschine.api as api
+import regenmaschine.exceptions as exceptions
 
 API_LOCAL_BASE = 'https://{}:8080/api/4'
 API_REMOTE_BASE = 'https://my.rainmachine.com'
-
-__all__ = ['Authenticator', 'InvalidAuthenticator']
-
-
-class InvalidAuthenticator(Exception):
-    """ Generic auth error """
-    pass
 
 
 # pylint: disable=too-many-instance-attributes
@@ -92,7 +86,7 @@ class Authenticator(api.BaseAPI):
                 setattr(klass, k, v)
             return klass
         except KeyError:
-            raise InvalidAuthenticator('Invalid Authenticator data')
+            raise exceptions.InvalidAuthenticator('Invalid Authenticator data')
 
     @classmethod
     def loads(cls, auth_str):
@@ -101,4 +95,4 @@ class Authenticator(api.BaseAPI):
             auth_dict = json.loads(auth_str)
             return cls.load(auth_dict)
         except ValueError:
-            raise InvalidAuthenticator('Invalid Authenticator data')
+            raise exceptions.InvalidAuthenticator('Invalid Authenticator data')
