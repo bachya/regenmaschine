@@ -13,10 +13,11 @@ import regenmaschine.program as program
 import regenmaschine.parser as parser
 import regenmaschine.restrictions as restrictions
 import regenmaschine.stats as stats
+import regenmaschine.watering as watering
 import regenmaschine.zone as zone
 
-
-class Client(object):  # pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,too-many-instance-attributes
+class Client(object):
     """ A client to interact with the bulk of the RainMachine API """
 
     def __init__(self, auth, timeout=api.DEFAULT_TIMEOUT):
@@ -37,4 +38,5 @@ class Client(object):  # pylint: disable=too-few-public-methods
         self.programs = program.Programs(**kwargs)
         self.restrictions = restrictions.Restrictions(**kwargs)
         self.stats = stats.Stats(**kwargs)
+        self.watering = watering.Watering(**kwargs)
         self.zones = zone.Zones(**kwargs)
