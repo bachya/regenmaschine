@@ -35,14 +35,11 @@ REQUIRED = ['maya', 'requests']
 PACKAGES = ['regenmaschine']
 
 ABOUT = dict()
-with open(
-        os.path.join(HERE, 'regenmaschine', '__version__.py'),
-        'r',
-        encoding='utf-8') as f:
-    exec (f.read(), ABOUT)  # pylint: disable=exec-used
+with open(os.path.join(HERE, 'regenmaschine', '__version__.py'), 'r') as f:
+    exec(f.read(), ABOUT)  # pylint: disable=exec-used
 
 setup(
-    name='maya',
+    name='regenmaschine',
     version=ABOUT['__version__'],
     description='A simple API for RainMachine sprinkler controllers',
     LONG_DESC=LONG_DESC,
