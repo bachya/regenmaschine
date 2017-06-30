@@ -11,9 +11,9 @@ Regenmaschine: A Simple Python Library for RainMachine™
   :target: https://saythanks.io/to/bachya
 
 Regenmaschine (German for "rain machine") is a simple, clean, well-tested Python
-library for interacting with `RainMachine smart sprinkler controllers
+library for interacting with `RainMachine™ smart sprinkler controllers
 <http://www.rainmachine.com/>`_. It gives developers an easy API to manage their
-controllers over a LAN or via RainMachine's cloud API.
+controllers over a LAN or via RainMachine™'s cloud API.
 
 💧 Installation
 ===============
@@ -158,7 +158,7 @@ Beyond that, Regenmaschine defines a few exceptions of its own:
 Authentication Caching
 ----------------------
 
-Although there doesn't appear to be a limit to the number of times RainMachine
+Although there doesn't appear to be a limit to the number of times RainMachine™
 will allow authentication to occur, for speed/efficiency, it is often desirable
 to use the same credentials long-term. The :code:`auth` object can be dumped
 and saved:
