@@ -161,7 +161,7 @@ Authentication Caching
 Although there doesn't appear to be a limit to the number of times RainMachine
 will allow authentication to occur, for speed/efficiency, it is often desirable
 to use the same credentials long-term. The :code:`auth` object can be dumped
-and saved in any number of manners:
+and saved:
 
 .. code-block:: python
 
@@ -177,10 +177,10 @@ client:
 .. code-block:: python
 
   # Outputs a dict:
-  auth.load(auth_json)
+  rm.Authenticator.load(auth_json)
 
   # Outputs a string version of the dict:
-  auth.loads(auth_str)
+  rm.Authenticator.loads(auth_str)
 
 *Beware:* the dumped :code:`auth` object contains the access token needed to
 query the API, as well as the information needed to reconstruct the client.
