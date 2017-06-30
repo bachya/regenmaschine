@@ -4,6 +4,7 @@ docs:
 	cd docs && make html
 init:
 	pip install pipenv
+	pipenv lock
 	pipenv install --dev
 prod: test coverage
 test:
