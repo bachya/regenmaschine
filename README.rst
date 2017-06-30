@@ -10,10 +10,13 @@ Regenmaschine: A Simple Python Library for RainMachine™
 .. image:: https://img.shields.io/badge/SayThanks-!-1EAEDB.svg
   :target: https://saythanks.io/to/bachya
 
+.. image:: https://codecov.io/gh/bachya/regenmaschine/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/bachya/regenmaschine
+
 Regenmaschine (German for "rain machine") is a simple, clean, well-tested Python
 library for interacting with `RainMachine™ smart sprinkler controllers
 <http://www.rainmachine.com/>`_. It gives developers an easy API to manage their
-controllers over a LAN or via RainMachine™'s cloud API.
+controllers over a LAN or via RainMachine™'s cloud.
 
 💧 Installation
 ===============
@@ -140,20 +143,9 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/zone
   client.zones.start(3, 60)                     # Starts zone 3 for 60 seconds
   client.zones.stop(3)                          # Stops zone 3
 
-Exceptions
-----------
-
-Regenmaschine relies on two other libraries:
-`Requests <https://github.com/requests/requests>`_ and
-`Maya <https://github.com/kennethreitz/maya>`_; as such, Regenmaschine may
-raise any of the exceptions that they provide.
-
-Beyond that, Regenmaschine defines a few exceptions of its own:
-
-* :code:`BrokenAPICall`: returned when an API call only works on the local or remote
-  APIs, but not both
-* :code:`InvalidAuthenticator`: returned when invalid authentication data is fed
-  into :code:`rm.Authenticator.load()` or :code:`rm.Authenticator.loads()`
+  # You can also simulate what a zone will do:
+  properties = client.zones.get(2, advanced_properties=True)
+  client.zones.simulate(properties)
 
 Authentication Caching
 ----------------------
@@ -186,12 +178,29 @@ client:
 query the API, as well as the information needed to reconstruct the client.
 Therefore, it should be cached and stored securely.
 
+Exceptions
+----------
+
+Regenmaschine relies on two other libraries:
+`Requests <https://github.com/requests/requests>`_ and
+`Maya <https://github.com/kennethreitz/maya>`_; as such, Regenmaschine may
+raise any of the exceptions that they provide.
+
+Beyond that, Regenmaschine defines a few exceptions of its own:
+
+* :code:`regenmaschine.exceptions.BrokenAPICall`: returned when an API call only
+  works on the local or remote APIs, but not both
+* :code:`regenmaschine.exceptions.InvalidAuthenticator`: returned when invalid
+  authentication data is fed into :code:`regenmaschine.Authenticator.load()` or
+  :code:`regenmaschine.Authenticator.loads()`
+
 💧 Contributing
 ===============
 
 #. Check for open features/bugs or initiate a discussion on one.
-#. Form the repository.
-#. Install the dev environment: :code:`pip install pipenv; pipenv lock; pipenv install --dev`.
+#. Fork the repository.
+#. Install the dev environment: :code:`pip install pipenv; pipenv lock; pipenv
+   install --dev`.
 #. Code your new feature or bug fix.
 #. Write a test that covers your new functionality.
 #. Run tests: :code:`pipenv run make test`
