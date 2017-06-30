@@ -47,6 +47,16 @@ create a client:
 
   client = rm.Client(auth)
 
+Diagnostics
+-----------
+
+More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/diagnostics>`_
+
+.. code-block:: python
+
+  client.diagnostics.current() # Returns current diagnostic info
+  client.diagnostics.log()     # Returns entire device log
+
 Programs
 --------
 
@@ -61,19 +71,30 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/prog
   client.programs.start(7)  # Starts a program
   client.programs.stop(7)   # Stops a program
 
-Zones
------
+Restrictions
+------------
 
-More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/zones>`_
+More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/restrictions>`_
 
 .. code-block:: python
 
-  client.zones.all()                            # Returns all zone info
-  client.zones.all(advanced_properties=True)    # Returns advanced info for all zones
-  client.zones.get(2)                           # Returns advanced info about a single zone
-  client.zones.get(2, advanced_properties=True) # Returns info about a single zone
-  client.zones.start(3, <number_of_seconds>)    # Starts a zone for X seconds
-  client.zones.stop(3)                          # Stops a zone
+  client.restrictions.current()   # Returns currently active restrictions
+  client.restrictions.hourly()    # Returns restrictions over the next hour
+  client.restrictions.raindelay() # Returns all restrictions due to rain
+  client.restrictions.universal() # Returns the global list of restrictions
+
+Stats
+-----
+
+More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/daily-stats>`_
+
+.. code-block:: python
+
+  client.stats.on_date('6/29/2017')           # Returns all stats for a date
+  client.stats.on_date('2017-06-29')          # Returns all stats for a date
+  client.stats.on_date('1 week ago')          # Returns all stats for a date
+  client.stats.upcoming()                     # Returns expected stats for the next 7 days
+  client.stats.upcoming(include_details=True) # Deeper look at the next 7 days
 
 Watering
 --------
@@ -95,18 +116,28 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/wate
   client.watering.runs('2 days ago', 3) # Alternate view of log()
   client.watering.stop_all()            # Immediately stops all programs and zones
 
-Stats
------
+Weather Services
+----------------
 
-More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/daily-stats>`_
+More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/weather-services>`_
 
 .. code-block:: python
 
-  client.stats.on_date('6/29/2017')           # Returns all stats for a date
-  client.stats.on_date('2017-06-29')          # Returns all stats for a date
-  client.stats.on_date('1 week ago')          # Returns all stats for a date
-  client.stats.upcoming()                     # Returns expected stats for the next 7 days
-  client.stats.upcoming(include_details=True) # Deeper look at the next 7 days
+  client.parsers.current() # Returns current weather services being used
+
+Zones
+-----
+
+More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/zones>`_
+
+.. code-block:: python
+
+  client.zones.all()                            # Returns all zone info
+  client.zones.all(advanced_properties=True)    # Returns advanced info for all zones
+  client.zones.get(2)                           # Returns advanced info about a single zone
+  client.zones.get(2, advanced_properties=True) # Returns info about a single zone
+  client.zones.start(3, <number_of_seconds>)    # Starts a zone for X seconds
+  client.zones.stop(3)                          # Stops a zone
 
 Exceptions
 ----------
