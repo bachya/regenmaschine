@@ -66,11 +66,11 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/prog
 .. code-block:: python
 
   client.programs.all()     # Returns all program info
-  client.programs.get(1)    # Returns info about a single program
+  client.programs.get(1)    # Returns info about program with UID of 1
   client.programs.next()    # Returns the next run date/time for all programs
   client.programs.running() # Returns all running programs
-  client.programs.start(7)  # Starts a program
-  client.programs.stop(7)   # Stops a program
+  client.programs.start(7)  # Starts program 7
+  client.programs.stop(7)   # Stops program 7
 
 Restrictions
 ------------
@@ -108,7 +108,7 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/wate
   client.watering.log()                 # Returns log of all watering
   client.watering.log(details=True)     # Returns comprehensive log of all watering
   client.watering.log('6/29/2017', 2)   # Returns log for 6/27-6/29
-  client.watering.log('2017-06-29', 2)  # Alternate view of log()
+  client.watering.log('2017-06-29', 2)  # Returns log for 6/27-6/29
   client.watering.log('2 days ago', 3)  # Returns log 2-5 days ago
 
   client.watering.queue()               # Returns the active queue of watering activities
@@ -135,10 +135,10 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/zone
 
   client.zones.all()                            # Returns all zone info
   client.zones.all(advanced_properties=True)    # Returns advanced info for all zones
-  client.zones.get(2)                           # Returns advanced info about a single zone
-  client.zones.get(2, advanced_properties=True) # Returns info about a single zone
-  client.zones.start(3, <number_of_seconds>)    # Starts a zone for X seconds
-  client.zones.stop(3)                          # Stops a zone
+  client.zones.get(2)                           # Returns info about a zone with UID of 2
+  client.zones.get(2, advanced_properties=True) # Returns advanced info about zone 2
+  client.zones.start(3, 60)                     # Starts zone 3 for 60 seconds
+  client.zones.stop(3)                          # Stops zone 3
 
 Exceptions
 ----------
