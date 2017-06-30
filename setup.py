@@ -42,11 +42,11 @@ setup(
     name='regenmaschine',
     version=ABOUT['__version__'],
     description='A simple API for RainMachine sprinkler controllers',
-    LONG_DESC=LONG_DESC,
+    long_description=LONG_DESC,
     author='Aaron Bach',
     author_email='bachya1208@gmail.com',
     url='https://github.com/bachya/regenmaschine',
-    PACKAGES=PACKAGES,
+    packages=PACKAGES,
     install_requires=REQUIRED,
     license='MIT',
     classifiers=(
