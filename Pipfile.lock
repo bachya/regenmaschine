@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "28145be3ecedc143b3bc323b6568147302f99565d9029a16d210a91f48937231"
+            "sha256": "61cfe14792cfccc00eab3574997e70bbccc30d7660c54bd06a46f7e9ff979c69"
         },
         "requires": {},
         "sources": [
@@ -76,6 +76,9 @@
         },
         "chardet": {
             "version": "==3.0.4"
+        },
+        "codecov": {
+            "version": "==2.0.9"
         },
         "coverage": {
             "version": "==4.4.1"

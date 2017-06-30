@@ -8,4 +8,4 @@ install: "make"
 
 # command to run tests
 script:
-  - "make tests"
+  - "make test && make upload_coverage"
