@@ -14,3 +14,8 @@ Regenmaschine (German for "rain machine") is a simple, clean, well-tested Python
 library for interacting with `RainMachine smart sprinkler controllers
 <http://www.rainmachine.com/>`_. It gives developers an easy API to manage their
 controllers over a LAN or via RainMachine's cloud API.
+
+💧 Installation
+---------------
+
+  $ pip install regenmaschine
