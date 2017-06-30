@@ -7,4 +7,4 @@ Github: https://github.com/bachya/regenmaschine
 
 # -*- coding: utf-8 -*-
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'

@@ -17,6 +17,7 @@ controllers over a LAN or via RainMachine's cloud API.
 
 💧 Installation
 ===============
+
 .. code-block:: bash
 
   $ pip install regenmaschine
@@ -184,3 +185,14 @@ client:
 *Beware:* the dumped :code:`auth` object contains the access token needed to
 query the API, as well as the information needed to reconstruct the client.
 Therefore, it should be cached and stored securely.
+
+💧 Contributing
+===============
+
+#. Check for open features/bugs or initiate a discussion on one.
+#. Form the repository and make your changes on a new branch.
+#. Write a test that covers your new functionality.
+#. Run tests: :code:`make test`
+#. Build new docs: :code:`make docs`
+#. Add yourself to AUTHORS.rst.
+#. Submit a pull request!
