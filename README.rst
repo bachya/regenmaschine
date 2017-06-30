@@ -47,7 +47,42 @@ create a client:
 
   client = rm.Client(auth)
 
-Caching the :code:`auth` Object
--------------------------------
+Programs
+--------
 
-Assuming this succeeds, the
+.. code-block:: python
+
+  client.programs.all()             # Returns all program information
+  client.programs.get(<program_id>) # Returns info about a single program
+  client.programs.next()            # Returns the next run date/time for all programs
+
+Authentication Caching
+----------------------
+
+Although there doesn't appear to be a limit to the number of times RainMachine
+will allow authentication to occur, for speed/efficiency, it is often desirable
+to use the same credentials long-term. The :code:`auth` object can be dumped
+and saved in any number of manners:
+
+.. code-block:: python
+
+  # Outputs a dict:
+  auth_json = auth.dump()
+
+  # Outputs a string version of the dict:
+  auth_str = auth.dumps()
+
+At any point, this authentication can be loaded back into a Regenmaschine
+client:
+
+.. code-block:: python
+
+  # Outputs a dict:
+  auth.load(auth_json)
+
+  # Outputs a string version of the dict:
+  auth.loads(auth_str)
+
+*Beware:* the dumped :code:`auth` object contains the access token needed to
+query the API, as well as the information needed to reconstruct the client.
+Therefore, it should be cached and stored securely.
