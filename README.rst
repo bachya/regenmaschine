@@ -52,9 +52,37 @@ Programs
 
 .. code-block:: python
 
-  client.programs.all()             # Returns all program information
-  client.programs.get(<program_id>) # Returns info about a single program
-  client.programs.next()            # Returns the next run date/time for all programs
+  client.programs.all()               # Returns all program information
+  client.programs.get(<program_id>)   # Returns info about a single program
+  client.programs.next()              # Returns the next run date/time for all programs
+  client.programs.running()           # Returns all running programs
+  client.programs.start(<program_id>) # Starts a program
+  client.programs.stop(<program_id>)  # Stops a program
+
+Zones
+-----
+
+.. code-block:: python
+
+  client.zones.all(<advanced_properties=False>)            # Returns all zone information
+  client.zones.get(<zone_id>, <advanced_properties=False>) # Returns info about a single zone
+  client.zones.start(<zone_id>, <number_of_seconds>)       # Starts a zone for X seconds
+  client.zones.stop(<zone_id>)                             # Stops a zone
+
+Exceptions
+----------
+
+Regenmaschine relies on two other libraries:
+`Requests<https://github.com/requests/requests>`_ and
+`Maya<https://github.com/kennethreitz/maya>`_; as such, Regenmaschine may
+raise any of the exceptions that they provide.
+
+Beyond that, Regenmaschine defines a few exceptions of its own:
+
+* :code:`BrokenAPICall`: returned when an API call only works on the local or remote
+  APIs, but not both
+* :code:`InvalidAuthenticator`: returned when invalid authentication data is fed
+  into :code:`rm.Authenticator.load()` or :code:`rm.Authenticator.loads()`
 
 Authentication Caching
 ----------------------
