@@ -25,7 +25,6 @@ class Response(object):  # pylint: disable=too-few-public-methods
     def __init__(self, requests_response_object):
         """ Initialize! """
         self.object = requests_response_object
-
         self.body = self.object.json()
         self.error = None
         self.successful = self.object.ok
@@ -52,7 +51,6 @@ class Response(object):  # pylint: disable=too-few-public-methods
         if not self.successful:
             raise requests.exceptions.HTTPError(
                 '{} for url: {}'.format(self.error, self.object.request.url))
-
 
 
 class BaseAPI(object):  # pylint: disable=too-few-public-methods
@@ -101,29 +99,36 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
         response.raise_for_status()
         return response
 
-    def _session_request(self, url, method, params=None, data=None, **kwargs):
+    def _session_method(self, url, method, params=None, data=None, **kwargs):
         """ Wrapper for session-based requests """
         kwargs.setdefault('allow_redirects', True)
         return self.session.request(
             method=method, url=url, params=params, data=data, **kwargs)
 
-    def _session_get(self, url, params=None, **kwargs):
+    def _session_get(self, url, **kwargs):
         """ Session-based GET request """
-        return self._session_request(url, 'get', params=params, **kwargs)
+        return self._session_method(url, 'get', **kwargs)
 
-    def _session_post(self, url, data=None, **kwargs):
+    def _session_post(self, url, **kwargs):
         """ Session-based GET request """
-        return self._session_request(url, 'post', data=data, **kwargs)
+        return self._session_method(url, 'post', **kwargs)
+
+    def _super_request(self, method, api_endpoint, **kwargs):
+        """ Executes a "super" (aka, session-available) request """
+        if method == 'get':
+            _method = self._session_get if self.session else requests.get
+        else:
+            _method = self._session_post if self.session else requests.post
+
+        return self._request(_method, api_endpoint, **kwargs)
 
     def _get(self, api_endpoint, **kwargs):
         """ Generic GET request """
-        return self._request(self._session_get if self.session else
-                             requests.get, api_endpoint, **kwargs)
+        return self._super_request('get', api_endpoint, **kwargs)
 
     def _post(self, api_endpoint, **kwargs):
         """ Generic GET request """
-        return self._request(self._session_post if self.session else
-                             requests.post, api_endpoint, **kwargs)
+        return self._super_request('post', api_endpoint, **kwargs)
 
 
 def broken_remote_api(function):
