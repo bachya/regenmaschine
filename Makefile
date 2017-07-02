@@ -9,6 +9,6 @@ init:
 publish:
 	python setup.py sdist bdist_wheel
 	pipenv run twine upload dist/*
-	rm -rf dist/ build/ .egg regenmaschine.egg-info
+	rm -rf dist/ build/ .egg regenmaschine.egg-info/
 test:
 	pipenv run pytest --cov-report term-missing --cov=regenmaschine -s tests/
