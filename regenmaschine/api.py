@@ -24,12 +24,11 @@ class Response(object):  # pylint: disable=too-few-public-methods
 
     def __init__(self, requests_response_object):
         """ Initialize! """
-        self.body = requests_response_object.json()
-        self.cookies = requests_response_object.cookies
-        self.error = None
         self.object = requests_response_object
-        self.request_url = requests_response_object.request.url
-        self.successful = requests_response_object.ok
+
+        self.body = self.object.json()
+        self.error = None
+        self.successful = self.object.ok
 
     def raise_for_status(self):
         """ Encapsulation that works with local and remote errors """
@@ -52,7 +51,7 @@ class Response(object):  # pylint: disable=too-few-public-methods
 
         if not self.successful:
             raise requests.exceptions.HTTPError(
-                '{} for url: {}'.format(self.error, self.request_url))
+                '{} for url: {}'.format(self.error, self.object.request.url))
 
 
 

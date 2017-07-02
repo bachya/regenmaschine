@@ -44,7 +44,7 @@ class Authenticator(api.BaseAPI):
             'sprinklerId') is None else '{}/s/{}/api/4'.format(
                 self.url, response.body.get('sprinklerId'))
         self.checksum = response.body.get('checksum')
-        self.cookies = response.cookies.get_dict()
+        self.cookies = response.object.cookies.get_dict()
         self.expiration = response.body.get('expiration')
         self.expires_in = response.body.get('expires_in')
         self.sprinkler_id = response.body.get('sprinklerId')
