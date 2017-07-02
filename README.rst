@@ -151,7 +151,7 @@ Authentication Caching
 ----------------------
 
 There doesn't appear to be a limit on the number of times RainMachine™
-will allow new access tokens to be generated. However,it may be desirable to use the same credentials long-term. Therefore, the :code:`auth` object can be dumped and saved:
+will allow new access tokens to be generated. However, it may be desirable to use the same credentials long term. Therefore, the :code:`auth` object can be dumped and saved:
 
 .. code-block:: python
 
