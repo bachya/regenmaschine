@@ -150,9 +150,8 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/zone
 Authentication Caching
 ----------------------
 
-Although there doesn't appear to be a limit to the number of times RainMachine™
-will allow authentication to occur. However, for speed/efficiency, it is often desirable
-to use the same credentials long-term. The :code:`auth` object can be dumped
+There doesn't appear to be a limit on the number of times RainMachine™
+will allow new access tokens to be generated desirable to use the same credentials long-term. The :code:`auth` object can be dumped
 and saved:
 
 .. code-block:: python
@@ -162,6 +161,8 @@ and saved:
 
   # Outputs a string version of the dict:
   auth_str = auth.dumps()
+
+Dumping the code:`auth` object will will reveal the access token used to authenticate API requests, as well as an expiration timeframe and more.
 
 At any point, this authentication can be loaded back into a Regenmaschine
 client:
