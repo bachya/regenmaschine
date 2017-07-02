@@ -37,7 +37,6 @@ class Response(object):  # pylint: disable=too-few-public-methods
         # The remote API is odd: it returns error codes in the body correctly,
         # but always seems to return a status of 200. If that happens, catch it
         # and set the correct code based on the API docs before moving on:
-        # response = Response(_response)
         remote_error_code = self.body.get('errorType')
         if remote_error_code and remote_error_code != 0:
             if remote_error_code in rsc.CODES.keys():
