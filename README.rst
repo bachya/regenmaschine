@@ -201,7 +201,7 @@ requests, as well as an expiration timeframe and more:
   }
 
 **TAKE NOTE:** the dumped :code:`auth` object contains the access token
-needed to query the API, sprinkler IDs, RainMachine credentials, and other
+needed to query the API, sprinkler IDs, RainMachine™ credentials, and other
 sensitive information. *Therefore, it should be cached and stored securely*.
 
 One common use of this mechanism would be to check the expiration date of the
