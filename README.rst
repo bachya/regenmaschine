@@ -9,6 +9,9 @@ Regenmaschine: A Simple Python Library for RainMachine™
 
 .. image:: https://codecov.io/gh/bachya/regenmaschine/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/bachya/regenmaschine
+  
+.. image:: https://img.shields.io/codeclimate/github/bachya/regenmaschine.svg
+  :target: https://codeclimate.com/github/bachya/regenmaschine
 
 .. image:: https://img.shields.io/badge/SayThanks-!-1EAEDB.svg
   :target: https://saythanks.io/to/bachya
