@@ -13,16 +13,16 @@ import regenmaschine.api as api
 class Zones(api.BaseAPI):
     """ An object to list, interact with, etc. zones """
 
-    def all(self, advanced_properties=False):
+    def all(self, properties=False):
         """ Returns all zones (optionally showing advanced properties) """
-        if advanced_properties:
+        if properties:
             return self._get('zone/properties').body
 
         return self._get('zone').body
 
-    def get(self, zone_id, advanced_properties=False):
+    def get(self, zone_id, properties=False):
         """ Returns information for a specific zone """
-        if advanced_properties:
+        if properties:
             return self._get('zone/{}/properties'.format(zone_id)).body
 
         return self._get('zone/{}'.format(zone_id)).body

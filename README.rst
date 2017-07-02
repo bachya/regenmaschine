@@ -116,18 +116,18 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/wate
 
 .. code-block:: python
 
-  # log() can have any number of the parameters shown here:
-  client.watering.log()                 # Returns log of all watering
-  client.watering.log(details=True)     # Returns comprehensive log of all watering
-  client.watering.log('6/29/2017', 2)   # Returns log for 6/27-6/29
-  client.watering.log('2017-06-29', 2)  # Returns log for 6/27-6/29
-  client.watering.log('2 days ago', 3)  # Returns log 2-5 days ago
+  client.watering.log()                              # Returns log of all watering
+  client.watering.log(details=True)                  # Returns full log of all watering
+  client.watering.log('6/29/2017', 2)                # Returns log for 6/27-6/29
+  client.watering.log('2017-06-29', 2)               # Returns log for 6/27-6/29
+  client.watering.log('2017-06-29', 2, details=True) # Returns full log for 6/27-6/29
+  client.watering.log('2 days ago', 3)               # Returns log 2-5 days ago
 
-  client.watering.queue()               # Returns the active queue of watering activities
-  client.watering.runs('6/29/2017', 2)  # Alternate view of log()
-  client.watering.runs('2017-06-29', 2) # Alternate view of log()
-  client.watering.runs('2 days ago', 3) # Alternate view of log()
-  client.watering.stop_all()            # Immediately stops all programs and zones
+  client.watering.queue()                            # Returns the active queue of watering activities
+  client.watering.runs('6/29/2017', 2)               # Alternate view of log()
+  client.watering.runs('2017-06-29', 2)              # Alternate view of log()
+  client.watering.runs('2 days ago', 3)              # Alternate view of log()
+  client.watering.stop_all()                         # Immediately stops all programs and zones
 
 Weather Services
 ----------------
@@ -145,22 +145,24 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/zone
 
 .. code-block:: python
 
-  client.zones.all()                            # Returns all zone info
-  client.zones.all(advanced_properties=True)    # Returns advanced info for all zones
-  client.zones.get(2)                           # Returns info about a zone with UID of 2
-  client.zones.get(2, advanced_properties=True) # Returns advanced info about zone 2
-  client.zones.start(3, 60)                     # Starts zone 3 for 60 seconds
-  client.zones.stop(3)                          # Stops zone 3
+  client.zones.all()                   # Returns all zone info
+  client.zones.all(properties=True)    # Returns advanced info for all zones
+  client.zones.get(2)                  # Returns info about a zone with UID of 2
+  client.zones.get(2, properties=True) # Returns advanced info about zone 2
+  client.zones.start(3, 60)            # Starts zone 3 for 60 seconds
+  client.zones.stop(3)                 # Stops zone 3
 
   # You can also simulate what a zone will do:
-  properties = client.zones.get(2, advanced_properties=True)
+  properties = client.zones.get(2, properties=True)
   client.zones.simulate(properties)
 
 Authentication Caching
 ----------------------
 
 There doesn't appear to be a limit on the number of times RainMachine™
-will allow new access tokens to be generated. However, it may be desirable to use the same credentials long term. Therefore, the :code:`auth` object can be dumped and saved:
+will allow new access tokens to be generated. However, it may be desirable to
+use the same credentials long term. Therefore, the :code:`auth` object can be
+dumped and saved:
 
 .. code-block:: python
 
@@ -170,20 +172,49 @@ will allow new access tokens to be generated. However, it may be desirable to us
   # Outputs a string version of the dict:
   auth_str = auth.dumps()
 
-At any point, this authentication can be loaded back into a Regenmaschine
-client:
+The :code:`auth` object contains the access token used to authenticate API
+requests, as well as an expiration timeframe and more:
 
 .. code-block:: python
 
-  # Outputs a dict:
-  auth = rm.Authenticator.load(auth_json)
+  {
+    "sprinkler_id": None,
+    "cookies": {
+      "access_token": "24551da62895"
+    },
+    "api_url": "https://192.168.1.100:8080/api/4",
+    "url": "https://192.168.1.100:8080/api/4",
+    "checksum": u "c5e29cdef3b1e",
+    "expires_in": 157680000,
+    "api_endpoint": "auth/login",
+    "access_token": u "24551da62895",
+    "verify_ssl": False,
+    "session": None,
+    "expiration": u "Fri, 01 Jul 2022 20:11:48 GMT",
+    "timeout": 10,
+    "status_code": 0,
+    "using_remote_api": False,
+    "data": {
+      "pwd": "MY_RM_PASSWORD",
+      "remember": 1
+    }
+  }
 
-  # Outputs a string version of the dict:
+**TAKE NOTE:** the dumped :code:`auth` object contains the access token
+needed to query the API, sprinkler IDs, RainMachine credentials, and other
+sensitive information. *Therefore, it should be cached and stored securely*.
+
+One common use of this mechanism would be to check the expiration date of the
+access token; assuming it is still valid, a corresponding client can be
+recreated quite easily:
+
+.. code-block:: python
+
+  auth = rm.Authenticator.load(auth_json)
+  # ...or...
   auth = rm.Authenticator.loads(auth_str)
 
   client = rm.Client(auth)
-
-Dumping the :code:`auth` object will will reveal the access token used to authenticate API requests, as well as an expiration timeframe and more. *Beware:* because the dumped :code:`auth` object contains the access token needed to query the API, as well as the information needed to reconstruct the client, it should be cached and stored securely.
 
 Exceptions
 ----------
