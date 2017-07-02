@@ -151,7 +151,7 @@ Authentication Caching
 ----------------------
 
 Although there doesn't appear to be a limit to the number of times RainMachine™
-will allow authentication to occur, for speed/efficiency, it is often desirable
+will allow authentication to occur. However, for speed/efficiency, it is often desirable
 to use the same credentials long-term. The :code:`auth` object can be dumped
 and saved:
 
@@ -201,8 +201,7 @@ Beyond that, Regenmaschine defines a few exceptions of its own:
 
 #. Check for open features/bugs or initiate a discussion on one.
 #. Fork the repository.
-#. Install the dev environment: :code:`pip install pipenv; pipenv lock; pipenv
-   install --dev`.
+#. Install the dev environment: :code:`make init`.
 #. Code your new feature or bug fix.
 #. Write a test that covers your new functionality.
 #. Run tests: :code:`pipenv run make test`
