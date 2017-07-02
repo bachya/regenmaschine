@@ -41,4 +41,4 @@ class Watering(api.BaseAPI):
 
     def stop_all(self):
         """ Stops all programs and zones from running """
-        return self._get('watering/stopall').body
+        return self._post('watering/stopall').body

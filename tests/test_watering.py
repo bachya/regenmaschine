@@ -55,7 +55,7 @@ def test_all_operations(
             '{}/watering/past/2017-06-29/2'.format(local_url),
             text=json.dumps(watering_runs_response_200),
             cookies=local_cookies)
-        mock.get(
+        mock.post(
             '{}/watering/stopall'.format(local_url),
             text=json.dumps(client_general_response_200),
             cookies=local_cookies)
