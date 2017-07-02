@@ -1,15 +1,21 @@
 Regenmaschine: A Simple Python Library for RainMachine™
 =======================================================
 
-.. image:: https://img.shields.io/pypi/v/regenmaschine.svg
-  :target: https://pypi.python.org/pypi/regenmaschine
-
 .. image:: https://travis-ci.org/bachya/regenmaschine.svg?branch=master
   :target: https://travis-ci.org/bachya/regenmaschine
 
+.. image:: https://img.shields.io/pypi/v/regenmaschine.svg
+  :target: https://pypi.python.org/pypi/regenmaschine
+
+.. image:: https://img.shields.io/pypi/pyversions/Regenmaschine.svg
+  :target: https://pypi.python.org/pypi/regenmaschine
+
+.. image:: https://img.shields.io/pypi/l/Regenmaschine.svg
+  :target: https://pypi.python.org/pypi/regenmaschine
+
 .. image:: https://codecov.io/gh/bachya/regenmaschine/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/bachya/regenmaschine
-  
+
 .. image:: https://img.shields.io/codeclimate/github/bachya/regenmaschine.svg
   :target: https://codeclimate.com/github/bachya/regenmaschine
 
@@ -176,7 +182,7 @@ client:
   auth = rm.Authenticator.loads(auth_str)
 
   client = rm.Client(auth)
-  
+
 Dumping the :code:`auth` object will will reveal the access token used to authenticate API requests, as well as an expiration timeframe and more. *Beware:* because the dumped :code:`auth` object contains the access token needed to query the API, as well as the information needed to reconstruct the client, it should be cached and stored securely.
 
 Exceptions

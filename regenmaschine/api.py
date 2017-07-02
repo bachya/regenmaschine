@@ -27,9 +27,33 @@ class Response(object):  # pylint: disable=too-few-public-methods
         self.body = requests_response_object.json()
         self.cookies = requests_response_object.cookies
         self.error = None
-        self.raw = requests_response_object.text
+        self.object = requests_response_object
         self.request_url = requests_response_object.request.url
         self.successful = requests_response_object.ok
+
+    def raise_for_status(self):
+        """ Encapsulation that works with local and remote errors """
+
+        # First, check for exceptions from the local API (which seems
+        # to utilize HTTP response codes correctly):
+        self.object.raise_for_status()
+
+        # The remote API is odd: it returns error codes in the body correctly,
+        # but always seems to return a status of 200. If that happens, catch it
+        # and set the correct code based on the API docs before moving on:
+        # response = Response(_response)
+        remote_error_code = self.body.get('errorType')
+        if remote_error_code and remote_error_code != 0:
+            self.successful = False
+            if remote_error_code in rsc.CODES.keys():
+                self.error = rsc.CODES[remote_error_code]
+            else:
+                self.error = rsc.CODES[99]
+
+        if not self.successful:
+            raise requests.exceptions.HTTPError(
+                '{} for url: {}'.format(self.error, self.request_url))
+
 
 
 class BaseAPI(object):  # pylint: disable=too-few-public-methods
@@ -66,44 +90,31 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
             # http://bit.ly/2rScDjk
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        _response = method(
+        resp = method(
             '{}/{}'.format(self.url, api_endpoint),
             cookies=requests.cookies.cookiejar_from_dict(self.cookies),
             verify=self.verify_ssl,
             **kwargs)
 
-        # Raises exceptions from the local API just fine; however...
-        _response.raise_for_status()
-
-        # The remote API is odd: it returns error codes in the body correctly,
-        # but always seems to return a status of 200. If that happens, catch it
-        # and set the correct code based on the API docs before moving on:
-        response = Response(_response)
-        remote_error_code = response.body.get('errorType')
-        if remote_error_code and remote_error_code != 0:
-            response.successful = False
-            if remote_error_code in rsc.CODES.keys():
-                response.error = rsc.CODES[remote_error_code]
-            else:
-                response.error = rsc.CODES[99]
-
-        if not response.successful:
-            raise requests.exceptions.HTTPError(
-                '{} for url: {}'.format(response.error, response.request_url))
-
+        # The requests object is great, but we need a little extra sugar when
+        # checking for errors from the remote API, so we use a custom wrapper:
+        response = Response(resp)
+        response.raise_for_status()
         return response
+
+    def _session_request(self, url, method, params=None, data=None, **kwargs):
+        """ Wrapper for session-based requests """
+        kwargs.setdefault('allow_redirects', True)
+        return self.session.request(
+            method=method, url=url, params=params, data=data, **kwargs)
 
     def _session_get(self, url, params=None, **kwargs):
         """ Session-based GET request """
-        kwargs.setdefault('allow_redirects', True)
-        return self.session.request(
-            method='get', url=url, params=params, **kwargs)
+        return self._session_request(url, 'get', params=params, **kwargs)
 
     def _session_post(self, url, data=None, **kwargs):
         """ Session-based GET request """
-        kwargs.setdefault('allow_redirects', True)
-        return self.session.request(
-            method='post', url=url, data=data, **kwargs)
+        return self._session_request(url, 'post', data=data, **kwargs)
 
     def _get(self, api_endpoint, **kwargs):
         """ Generic GET request """
