@@ -238,9 +238,10 @@ Beyond that, Regenmaschine defines a few exceptions of its own:
 #. Check for open features/bugs or initiate a discussion on one.
 #. Fork the repository.
 #. Install the dev environment: :code:`make init`.
+#. Enter the virtual environment: :code:`pipenv shell`
 #. Code your new feature or bug fix.
 #. Write a test that covers your new functionality.
-#. Run tests: :code:`pipenv run make test`
-#. Build new docs: :code:`pipenv run make docs`
+#. Run tests: :code:`make test`
+#. Build new docs: :code:`make docs`
 #. Add yourself to AUTHORS.rst.
 #. Submit a pull request!

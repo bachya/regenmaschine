@@ -26,8 +26,6 @@ class Response(object):  # pylint: disable=too-few-public-methods
         """ Initialize! """
         self.object = requests_response_object
         self.body = self.object.json()
-        self.error = None
-        self.successful = self.object.ok
 
     def raise_for_status(self):
         """ Encapsulation that works with local and remote errors """
@@ -42,15 +40,13 @@ class Response(object):  # pylint: disable=too-few-public-methods
         # response = Response(_response)
         remote_error_code = self.body.get('errorType')
         if remote_error_code and remote_error_code != 0:
-            self.successful = False
             if remote_error_code in rsc.CODES.keys():
-                self.error = rsc.CODES[remote_error_code]
+                error_message = rsc.CODES[remote_error_code]
             else:
-                self.error = rsc.CODES[99]
+                error_message = rsc.CODES[99]
 
-        if not self.successful:
-            raise requests.exceptions.HTTPError(
-                '{} for url: {}'.format(self.error, self.object.request.url))
+            raise requests.exceptions.HTTPError('{} for url: {}'.format(
+                error_message, self.object.request.url))
 
 
 class BaseAPI(object):  # pylint: disable=too-few-public-methods
