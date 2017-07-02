@@ -1,5 +1,5 @@
 init:
-	pip install pipenv
+	pip install --upgrade pip pipenv
 	pipenv lock
 	pipenv install --dev
 coverage:

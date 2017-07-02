@@ -8,4 +8,4 @@ install: "make"
 
 # command to run tests
 script:
-  - make travis
+  - "make travis"
