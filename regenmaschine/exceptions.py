@@ -1,10 +1,9 @@
 """
 File: exceptions.py
-Author: yourname
-Email: yourname@email.com
-Github: https://github.com/yourname
-Description:
-    """
+Author: Aaron Bach
+Email: bachya1208@gmail.com
+Github: https://github.com/bachya/regenmaschine
+"""
 
 
 class BrokenAPICall(Exception):
