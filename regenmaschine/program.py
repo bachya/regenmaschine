@@ -13,6 +13,11 @@ import regenmaschine.api as api
 class Programs(api.BaseAPI):
     """ An object to list, interact with, etc. programs """
 
+    def __init__(self, *args, **kwargs):
+        """ Initialize! """
+        self.caller = super(Programs, self)
+        super(Programs, self).__init__(*args, **kwargs)
+
     @api.broken_remote_api
     def _broken_remote_api_test(self):  #pylint: disable=no-self-use
         """ Pure test method to test the broken_remote_api decorator """
@@ -20,28 +25,26 @@ class Programs(api.BaseAPI):
 
     def all(self):
         """ Returns all programs """
-        return super(Programs, self).get('program').body
+        return self.caller.get('program').body
 
     def get(self, program_id):  # pylint: disable=arguments-differ
         """ Returns information for a specific program """
-        return super(Programs, self).get('program/{}'.format(program_id)).body
+        return self.caller.get('program/{}'.format(program_id)).body
 
     def next(self):
         """ Returns the next run date/time for all programs """
-        return super(Programs, self).get('program/nextrun').body
+        return self.caller.get('program/nextrun').body
 
     def running(self):
         """ Returns all running programs """
-        return super(Programs, self).get('watering/program').body
+        return self.caller.get('watering/program').body
 
     @api.broken_remote_api
     def start(self, program_id):
         """ Starts a program """
-        return super(Programs,
-                     self).post('program/{}/start'.format(program_id)).body
+        return self.caller.post('program/{}/start'.format(program_id)).body
 
     @api.broken_remote_api
     def stop(self, program_id):
         """ Stops a program """
-        return super(Programs,
-                     self).post('program/{}/stop'.format(program_id)).body
+        return self.caller.post('program/{}/stop'.format(program_id)).body
