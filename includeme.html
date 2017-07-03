@@ -1,0 +1,379 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>💧 Regenmaschine: A Simple Python Library for RainMachine™ &#8212; Regenmaschine 0.2.7 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Regenmaschine’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="regenmaschine-a-simple-python-library-for-rainmachine">
+<h1>💧 Regenmaschine: A Simple Python Library for RainMachine™<a class="headerlink" href="#regenmaschine-a-simple-python-library-for-rainmachine" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://travis-ci.org/bachya/regenmaschine"><img alt="https://travis-ci.org/bachya/regenmaschine.svg?branch=master" src="https://travis-ci.org/bachya/regenmaschine.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/regenmaschine"><img alt="https://img.shields.io/pypi/v/regenmaschine.svg" src="https://img.shields.io/pypi/v/regenmaschine.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/regenmaschine"><img alt="https://img.shields.io/pypi/pyversions/Regenmaschine.svg" src="https://img.shields.io/pypi/pyversions/Regenmaschine.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/regenmaschine"><img alt="https://img.shields.io/pypi/l/Regenmaschine.svg" src="https://img.shields.io/pypi/l/Regenmaschine.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/bachya/regenmaschine"><img alt="https://codecov.io/gh/bachya/regenmaschine/branch/master/graph/badge.svg" src="https://codecov.io/gh/bachya/regenmaschine/branch/master/graph/badge.svg" /></a>
+<a class="reference external image-reference" href="https://codeclimate.com/github/bachya/regenmaschine"><img alt="https://img.shields.io/codeclimate/github/bachya/regenmaschine.svg" src="https://img.shields.io/codeclimate/github/bachya/regenmaschine.svg" /></a>
+<a class="reference external image-reference" href="https://saythanks.io/to/bachya"><img alt="https://img.shields.io/badge/SayThanks-!-1EAEDB.svg" src="https://img.shields.io/badge/SayThanks-!-1EAEDB.svg" /></a>
+<p>Regenmaschine (German for “rain machine”) is a simple, clean, well-tested Python
+library for interacting with <a class="reference external" href="http://www.rainmachine.com/">RainMachine™ smart sprinkler controllers</a>. It gives developers an easy API to manage their
+controllers over a LAN or via RainMachine™’s cloud.</p>
+</div>
+<div class="section" id="installation">
+<h1>💧 Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install regenmaschine
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h1>💧 Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="authentication-creating-a-client">
+<h2>Authentication &amp; Creating a Client<a class="headerlink" href="#authentication-creating-a-client" title="Permalink to this headline">¶</a></h2>
+<p>Authentication is the first step and can be done against the local device or the
+cloud API:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">regenmaschine</span> <span class="kn">as</span> <span class="nn">rm</span>
+
+<span class="c1"># Authenticate against the local device or the remote API:</span>
+<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;MY_RM_PASSWORD&#39;</span><span class="p">)</span>
+<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_remote</span><span class="p">(</span><span class="s1">&#39;EMAIL_ADDRESS&#39;</span><span class="p">,</span> <span class="s1">&#39;MY_RM_PASSWORD&#39;</span><span class="p">)</span>
+
+<span class="c1"># Then, create a client:</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="diagnostics">
+<h2>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this headline">¶</a></h2>
+<p>More info on response formats, etc.:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/diagnostics">http://docs.rainmachine.apiary.io/#reference/diagnostics</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">current</span><span class="p">()</span> <span class="c1"># Returns current diagnostic info</span>
+<span class="n">client</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">log</span><span class="p">()</span>     <span class="c1"># Returns entire device log</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="programs">
+<h2>Programs<a class="headerlink" href="#programs" title="Permalink to this headline">¶</a></h2>
+<p>More info on response formats, etc.:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/programs">http://docs.rainmachine.apiary.io/#reference/programs</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>     <span class="c1"># Returns info on all programs</span>
+<span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>    <span class="c1"># Returns info about program with UID of 1</span>
+<span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>    <span class="c1"># Returns the next run date/time for all programs</span>
+<span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">running</span><span class="p">()</span> <span class="c1"># Returns all running programs</span>
+<span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>  <span class="c1"># Starts program 7</span>
+<span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>   <span class="c1"># Stops program 7</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="restrictions">
+<h2>Restrictions<a class="headerlink" href="#restrictions" title="Permalink to this headline">¶</a></h2>
+<p>More info on response formats, etc.:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/restrictions">http://docs.rainmachine.apiary.io/#reference/restrictions</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">restrictions</span><span class="o">.</span><span class="n">current</span><span class="p">()</span>   <span class="c1"># Returns currently active restrictions</span>
+<span class="n">client</span><span class="o">.</span><span class="n">restrictions</span><span class="o">.</span><span class="n">hourly</span><span class="p">()</span>    <span class="c1"># Returns restrictions over the next hour</span>
+<span class="n">client</span><span class="o">.</span><span class="n">restrictions</span><span class="o">.</span><span class="n">raindelay</span><span class="p">()</span> <span class="c1"># Returns all rain-related restrictions</span>
+<span class="n">client</span><span class="o">.</span><span class="n">restrictions</span><span class="o">.</span><span class="n">universal</span><span class="p">()</span> <span class="c1"># Returns the global list of restrictions</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stats">
+<h2>Stats<a class="headerlink" href="#stats" title="Permalink to this headline">¶</a></h2>
+<p>More info on response formats, etc.:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/daily-stats">http://docs.rainmachine.apiary.io/#reference/daily-stats</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">on_date</span><span class="p">(</span><span class="s1">&#39;6/29/2017&#39;</span><span class="p">)</span>           <span class="c1"># Returns all stats for a date</span>
+<span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">on_date</span><span class="p">(</span><span class="s1">&#39;2017-06-29&#39;</span><span class="p">)</span>          <span class="c1"># Returns all stats for a date</span>
+<span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">on_date</span><span class="p">(</span><span class="s1">&#39;1 week ago&#39;</span><span class="p">)</span>          <span class="c1"># Returns all stats for a date</span>
+<span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">upcoming</span><span class="p">()</span>                     <span class="c1"># Returns expected stats for the next 7 days</span>
+<span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">upcoming</span><span class="p">(</span><span class="n">include_details</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1"># Deeper look at the next 7 days</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="watering">
+<h2>Watering<a class="headerlink" href="#watering" title="Permalink to this headline">¶</a></h2>
+<p>More info on response formats, etc.:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/watering">http://docs.rainmachine.apiary.io/#reference/watering</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">()</span>                             <span class="c1"># Returns log of all watering activities</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">details</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>                 <span class="c1"># Returns full log of all watering activities</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;6/29/2017&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1"># Returns log for 6/27-6/29</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;2017-06-29&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>              <span class="c1"># Returns log for 6/27-6/29</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;2017-06-29&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>              <span class="c1"># Returns full log for 6/27-6/29</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;2 days ago&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>              <span class="c1"># Returns log 2-5 days ago</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">queue</span><span class="p">()</span>                            <span class="c1"># Returns the active queue of watering activities</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="s1">&#39;6/29/2017&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>               <span class="c1"># Alternate view of log()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="s1">&#39;2017-06-29&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>              <span class="c1"># Alternate view of log()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="s1">&#39;2 days ago&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>              <span class="c1"># Alternate view of log()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">stop_all</span><span class="p">()</span>                         <span class="c1"># Immediately stops all programs and zones</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="weather-services">
+<h2>Weather Services<a class="headerlink" href="#weather-services" title="Permalink to this headline">¶</a></h2>
+<p>More info on response formats, etc.:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/weather-services">http://docs.rainmachine.apiary.io/#reference/weather-services</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">parsers</span><span class="o">.</span><span class="n">current</span><span class="p">()</span> <span class="c1"># Returns current weather services being used</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="zones">
+<h2>Zones<a class="headerlink" href="#zones" title="Permalink to this headline">¶</a></h2>
+<p>More info on response formats, etc.:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/zones">http://docs.rainmachine.apiary.io/#reference/zones</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>                   <span class="c1"># Returns all zone info</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>    <span class="c1"># Returns advanced info for all zones</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>                  <span class="c1"># Returns info about a zone with UID of 2</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1"># Returns advanced info about zone 2</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>            <span class="c1"># Starts zone 3 for 60 seconds</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>                 <span class="c1"># Stops zone 3</span>
+
+<span class="c1"># You can also simulate what a zone will do:</span>
+<span class="n">properties</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="exceptions">
+<h1>💧 Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h1>
+<p>Regenmaschine may raise any of the following:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#bltin-exceptions">Built-in Python Exceptions</a></li>
+<li><a class="reference external" href="https://github.com/requests/requests/blob/master/requests/exceptions.py">Requests Exceptions</a></li>
+<li><a class="reference external" href="https://github.com/bachya/regenmaschine/blob/master/regenmaschine/exceptions.py">Regenmaschine Exceptions</a></li>
+</ul>
+<p>One exception to pay particular note of is
+<code class="code docutils literal"><span class="pre">regenmaschine.exceptions.BrokenAPICall</span></code>. Unfortunately, there are
+currently some API calls that work correctly in the local API, but not the
+remote API; as a result, this exception is raised to protect client libraries
+appropriately.</p>
+<p>Here is the current list of broken API calls:</p>
+<ul class="simple">
+<li><code class="code docutils literal"><span class="pre">client.programs.start()</span></code>: remote API returns an HTTP status of 500</li>
+<li><code class="code docutils literal"><span class="pre">client.programs.stop()</span></code>: remote API returns an HTTP status of 500</li>
+</ul>
+</div>
+<div class="section" id="advanced-usage">
+<h1>💧 Advanced Usage<a class="headerlink" href="#advanced-usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="connection-pooling">
+<h2>Connection Pooling<a class="headerlink" href="#connection-pooling" title="Permalink to this headline">¶</a></h2>
+<p>If desired, Regenmaschine can accept a session object that allows it to re-use
+the same HTTP connection for every call (rather than opening up a new one each
+time):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">requests.sessions</span> <span class="kn">import</span> <span class="n">Session</span>
+<span class="k">with</span> <span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+  <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;MY_RM_PASSWORD&#39;</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="authentication-caching">
+<h2>Authentication Caching<a class="headerlink" href="#authentication-caching" title="Permalink to this headline">¶</a></h2>
+<p>There doesn’t appear to be a limit on the number of times RainMachine™
+will allow new access tokens to be generated. However, it may be desirable to
+use the same credentials long term. Therefore, the <code class="code docutils literal"><span class="pre">auth</span></code> object can be
+dumped and saved:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Outputs a dict:</span>
+<span class="n">auth_json</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+
+<span class="c1"># Outputs a string version of the dict:</span>
+<span class="n">auth_str</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">dumps</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="code docutils literal"><span class="pre">auth</span></code> object contains the access token used to authenticate API
+requests, as well as an expiration timeframe and more:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;sprinkler_id&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+  <span class="s2">&quot;cookies&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;access_token&quot;</span><span class="p">:</span> <span class="s2">&quot;24551da62895&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;api_url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://192.168.1.100:8080/api/4&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://192.168.1.100:8080/api/4&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;checksum&quot;</span><span class="p">:</span> <span class="n">u</span> <span class="s2">&quot;c5e29cdef3b1e&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;expires_in&quot;</span><span class="p">:</span> <span class="mi">157680000</span><span class="p">,</span>
+  <span class="s2">&quot;api_endpoint&quot;</span><span class="p">:</span> <span class="s2">&quot;auth/login&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;access_token&quot;</span><span class="p">:</span> <span class="n">u</span> <span class="s2">&quot;24551da62895&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;verify_ssl&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+  <span class="s2">&quot;session&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+  <span class="s2">&quot;expiration&quot;</span><span class="p">:</span> <span class="n">u</span> <span class="s2">&quot;Fri, 01 Jul 2022 20:11:48 GMT&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="s2">&quot;using_remote_api&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+  <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;pwd&quot;</span><span class="p">:</span> <span class="s2">&quot;MY_RM_PASSWORD&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;remember&quot;</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>TAKE NOTE:</strong> the dumped <code class="code docutils literal"><span class="pre">auth</span></code> object contains the access token
+needed to query the API, sprinkler IDs, RainMachine™ credentials, and other
+sensitive information. <strong>Therefore, it should be cached and stored securely</strong>.</p>
+<p>One common use of this mechanism would be to check the expiration date of the
+access token; assuming it is still valid, a corresponding client can be
+recreated quite easily:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># The dict and the string versions can each be loaded:</span>
+<span class="k">if</span> <span class="n">auth_json</span><span class="p">[</span><span class="s1">&#39;expires_in&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+  <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">auth_json</span><span class="p">)</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ssl-usage">
+<h2>SSL Usage<a class="headerlink" href="#ssl-usage" title="Permalink to this headline">¶</a></h2>
+<p>By default, Regenmaschine routes all API calls – local or remote – through HTTPS.
+However, RainMachine devices use self-signed SSL certificates; therefore,
+Regenmaschine disables verifying the validity of local SSL certificates before
+processing local requests. In practice, this shouldn’t be a problem. However, for the security conscious, this behavior can be changed.</p>
+<p>First, <a class="reference external" href="https://support.rainmachine.com/hc/en-us/community/posts/115006512067-rovide-custom-SSL-Certificate">provide a CA-signed SSL certificate to the local device</a>. Then, override the default local Authenticator behavior:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Create a local Authenticator and force it to use SSL:</span>
+<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;MY_RM_PASSWORD&#39;</span><span class="p">)</span>
+<span class="n">auth</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="c1"># The client will now verify the SSL certificate on the local device before</span>
+<span class="c1"># processing every request:</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Note:</em> after this, if Regenmaschine cannot recognize a CA-signed certificate
+when querying the local device, a <code class="code docutils literal"><span class="pre">requests.exceptions.SSLError</span></code>
+exception will be raised.</p>
+<p>To disable SSL once again, re-authenticate and re-create a client:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Create a local Authenticator (with the default behavior):</span>
+<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;&lt;DEVICE_IP_ADDRESS&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;PASSWORD&gt;&#39;</span><span class="p">)</span>
+
+<span class="c1"># The client will now refrain from verifying the SSL connection&#39;s validity:</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="contributing">
+<h1>💧 Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<ol class="arabic simple">
+<li><a class="reference external" href="https://github.com/bachya/regenmaschine/issues">Check for open features/bugs</a>
+or <a class="reference external" href="https://github.com/bachya/regenmaschine/issues/new">initiate a discussion on one</a>.</li>
+<li><a class="reference external" href="https://github.com/bachya/regenmaschine/fork">Fork the repository</a>.</li>
+<li>Install the dev environment: <code class="code docutils literal"><span class="pre">make</span> <span class="pre">init</span></code>.</li>
+<li>Enter the virtual environment: <code class="code docutils literal"><span class="pre">pipenv</span> <span class="pre">shell</span></code></li>
+<li>Code your new feature or bug fix.</li>
+<li>Write a test that covers your new functionality.</li>
+<li>Run tests: <code class="code docutils literal"><span class="pre">make</span> <span class="pre">test</span></code></li>
+<li>Build new docs: <code class="code docutils literal"><span class="pre">make</span> <span class="pre">docs</span></code></li>
+<li>Add yourself to AUTHORS.rst.</li>
+<li>Submit a pull request!</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">💧 Regenmaschine: A Simple Python Library for RainMachine™</a></li>
+<li><a class="reference internal" href="#installation">💧 Installation</a></li>
+<li><a class="reference internal" href="#usage">💧 Usage</a><ul>
+<li><a class="reference internal" href="#authentication-creating-a-client">Authentication &amp; Creating a Client</a></li>
+<li><a class="reference internal" href="#diagnostics">Diagnostics</a></li>
+<li><a class="reference internal" href="#programs">Programs</a></li>
+<li><a class="reference internal" href="#restrictions">Restrictions</a></li>
+<li><a class="reference internal" href="#stats">Stats</a></li>
+<li><a class="reference internal" href="#watering">Watering</a></li>
+<li><a class="reference internal" href="#weather-services">Weather Services</a></li>
+<li><a class="reference internal" href="#zones">Zones</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exceptions">💧 Exceptions</a></li>
+<li><a class="reference internal" href="#advanced-usage">💧 Advanced Usage</a><ul>
+<li><a class="reference internal" href="#connection-pooling">Connection Pooling</a></li>
+<li><a class="reference internal" href="#authentication-caching">Authentication Caching</a></li>
+<li><a class="reference internal" href="#ssl-usage">SSL Usage</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#contributing">💧 Contributing</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Regenmaschine’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/includeme.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Aaron Bach.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/includeme.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
