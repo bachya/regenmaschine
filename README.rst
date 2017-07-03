@@ -1,5 +1,5 @@
 💧 Regenmaschine: A Simple Python Library for RainMachine™
-=======================================================
+==========================================================
 
 .. image:: https://travis-ci.org/bachya/regenmaschine.svg?branch=master
   :target: https://travis-ci.org/bachya/regenmaschine
