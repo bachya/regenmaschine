@@ -54,26 +54,45 @@
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
+        <div class="sphinxsidebarwrapper"><!-- Alabaster (krTheme++) Hacks -->
 
-   <div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  </ul></li>
-</ul>
-</div>
+<!-- CSS Adjustments (I'm very picky.) -->
+<style type="text/css">
+  /* Rezzy requires precise alignment. */
 
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  img.logo {
+    margin-left: -20px!important;
+  }
+  /* "Quick Search" should be capitalized. */
+
+  div#searchbox h3 {
+    text-transform: capitalize;
+  }
+  /* Make the document a little wider, less code is cut-off. */
+
+  div.document {
+    width: 1008px;
+  }
+  /* Much-improved spacing around code blocks. */
+
+  div.highlight pre {
+    padding: 11px 14px;
+  }
+  /* Remain Responsive! */
+
+  @media screen and (max-width: 1008px) {
+    div.sphinxsidebar {
+      display: none;
+    }
+    div.document {
+      width: 100%!important;
+    }
+    /* Have code blocks escape the document right-margin. */
+    div.highlight pre {
+      margin-right: -30px;
+    }
+  }
+</style>
         </div>
       </div>
       <div class="clearer"></div>
@@ -81,12 +100,12 @@
     <div class="footer">
       &copy;2017, Aaron Bach.
       
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
-      
     </div>
 
+    
+    <a href="https://github.com/bachya/regenmaschine" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
     
 
     
