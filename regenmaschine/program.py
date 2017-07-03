@@ -23,6 +23,11 @@ class Programs(api.BaseAPI):
         """ Pure test method to test the broken_remote_api decorator """
         return {'status': 'ok'}
 
+    @staticmethod
+    def _build_start_stop_endpoint(program_id, action):
+        """ To make Code Climate happy... """
+        return 'program/{}/{}'.format(program_id, action)
+
     def all(self):
         """ Returns all programs """
         return self.caller.get('program').body
@@ -42,9 +47,11 @@ class Programs(api.BaseAPI):
     @api.broken_remote_api
     def start(self, program_id):
         """ Starts a program """
-        return self.caller.post('program/{}/start'.format(program_id)).body
+        return self.caller.post(
+            self._build_start_stop_endpoint(program_id, 'start')).body
 
     @api.broken_remote_api
     def stop(self, program_id):
         """ Stops a program """
-        return self.caller.post('program/{}/stop'.format(program_id)).body
+        return self.caller.post(
+            self._build_start_stop_endpoint(program_id, 'stop')).body
