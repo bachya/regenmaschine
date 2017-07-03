@@ -69,7 +69,7 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
         self.using_remote_api = using_remote_api
         self.verify_ssl = verify_ssl
 
-    def _request(self, method, api_endpoint, **kwargs):
+    def request(self, method_type, api_endpoint, **kwargs):
         """ Generic request method """
         kwargs.setdefault('headers', {})['Content-Type'] = 'application/json'
         if self.access_token:
@@ -77,13 +77,16 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
 
         if not self.verify_ssl:
             # RainMachine uses a self-signed certificate for the local device;
-            # in that case, the easiest thing to do is turn off and disable
-            # warnings; if SSL is desired, the remote API should be used.
-            # http://bit.ly/2rScDjk
+            # unless it is replaced with a signed one, SSL warnings will stop
+            # requests from completing, so we offer the ability to shut that
+            # behavior off:
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+        url = '{}/{}'.format(self.url, api_endpoint)
+        method = getattr(self.session
+                         if self.session else requests, method_type)
         resp = method(
-            '{}/{}'.format(self.url, api_endpoint),
+            url,
             cookies=requests.cookies.cookiejar_from_dict(self.cookies),
             verify=self.verify_ssl,
             **kwargs)
@@ -94,36 +97,13 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
         response.raise_for_status()
         return response
 
-    def _session_method(self, url, method, params=None, data=None, **kwargs):
-        """ Wrapper for session-based requests """
-        kwargs.setdefault('allow_redirects', True)
-        return self.session.request(
-            method=method, url=url, params=params, data=data, **kwargs)
+    def get(self, api_endpoint, **kwargs):
+        """ Generic GET request (prefixed to avoid future name collisions) """
+        return self.request('get', api_endpoint, **kwargs)
 
-    def _session_get(self, url, **kwargs):
-        """ Session-based GET request """
-        return self._session_method(url, 'get', **kwargs)
-
-    def _session_post(self, url, **kwargs):
-        """ Session-based GET request """
-        return self._session_method(url, 'post', **kwargs)
-
-    def _super_request(self, method, api_endpoint, **kwargs):
-        """ Executes a "super" (aka, session-available) request """
-        if method == 'get':
-            _method = self._session_get if self.session else requests.get
-        else:
-            _method = self._session_post if self.session else requests.post
-
-        return self._request(_method, api_endpoint, **kwargs)
-
-    def _get(self, api_endpoint, **kwargs):
-        """ Generic GET request """
-        return self._super_request('get', api_endpoint, **kwargs)
-
-    def _post(self, api_endpoint, **kwargs):
-        """ Generic GET request """
-        return self._super_request('post', api_endpoint, **kwargs)
+    def post(self, api_endpoint, **kwargs):
+        """ Generic POST request (prefixed to avoid future name collisions) """
+        return self.request('post', api_endpoint, **kwargs)
 
 
 def broken_remote_api(function):

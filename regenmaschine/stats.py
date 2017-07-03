@@ -18,12 +18,12 @@ class Stats(api.BaseAPI):
     def on_date(self, date):
         """ Returns stats for a particular date """
         parser = maya.when(date)
-        return self._get('dailystats/{}'.format(parser.datetime().strftime(
+        return self.get('dailystats/{}'.format(parser.datetime().strftime(
             '%Y-%m-%d'))).body
 
     def upcoming(self, include_details=False):
         """ Returns expected stats for the next 7 days (w/ optional details)"""
         if include_details:
-            return self._get('dailystats/details').body
+            return self.get('dailystats/details').body
 
-        return self._get('dailystats').body
+        return self.get('dailystats').body

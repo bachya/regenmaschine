@@ -11,7 +11,6 @@ Github: https://github.com/bachya/regenmaschine
 
 import json
 
-import requests
 import requests_mock
 
 import regenmaschine as rm
@@ -20,7 +19,7 @@ from tests.fixtures.misc import *
 from tests.fixtures.program import *
 
 
-def test_session(local_auth_response_200, local_cookies, local_url,
+def test_cookies(local_auth_response_200, local_cookies, local_url,
                  programs_all_response_200):
     """ Tests connection pooling with a session """
     with requests_mock.Mocker() as mock:
@@ -33,10 +32,7 @@ def test_session(local_auth_response_200, local_cookies, local_url,
             text=json.dumps(programs_all_response_200),
             cookies=local_cookies)
 
-        auth = rm.Authenticator.create_local('192.168.1.100', '12345',
-                                             requests.Session())
-        assert auth.session is not None
-
+        auth = rm.Authenticator.create_local('192.168.1.100', '12345')
         client = rm.Client(auth)
         assert client.programs.all() == programs_all_response_200
         assert client.programs.cookies == local_cookies

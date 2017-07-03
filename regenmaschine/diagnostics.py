@@ -15,8 +15,8 @@ class Diagnostics(api.BaseAPI):
 
     def current(self):
         """ Returns all current/up-to-date diagnostic information """
-        return self._get('diag').body
+        return self.get('diag').body
 
     def log(self):
         """ Returns the entire device log """
-        return self._get('diag/log').body
+        return self.get('diag/log').body

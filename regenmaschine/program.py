@@ -20,26 +20,28 @@ class Programs(api.BaseAPI):
 
     def all(self):
         """ Returns all programs """
-        return self._get('program').body
+        return super(Programs, self).get('program').body
 
-    def get(self, program_id):
+    def get(self, program_id):  # pylint: disable=arguments-differ
         """ Returns information for a specific program """
-        return self._get('program/{}'.format(program_id)).body
+        return super(Programs, self).get('program/{}'.format(program_id)).body
 
     def next(self):
         """ Returns the next run date/time for all programs """
-        return self._get('program/nextrun').body
+        return super(Programs, self).get('program/nextrun').body
 
     def running(self):
         """ Returns all running programs """
-        return self._get('watering/program').body
+        return super(Programs, self).get('watering/program').body
 
     @api.broken_remote_api
     def start(self, program_id):
         """ Starts a program """
-        return self._post('program/{}/start'.format(program_id)).body
+        return super(Programs,
+                     self).post('program/{}/start'.format(program_id)).body
 
     @api.broken_remote_api
     def stop(self, program_id):
         """ Stops a program """
-        return self._post('program/{}/stop'.format(program_id)).body
+        return super(Programs,
+                     self).post('program/{}/stop'.format(program_id)).body

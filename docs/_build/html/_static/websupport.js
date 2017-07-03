@@ -664,7 +664,7 @@
   var opts = {
     processVoteURL: '/_process_vote',
     addCommentURL: '/_add_comment',
-    getCommentsURL: '/_get_comments',
+    getCommentsURL: '/get_comments',
     acceptCommentURL: '/_accept_comment',
     deleteCommentURL: '/_delete_comment',
     commentImage: '/static/_static/comment.png',

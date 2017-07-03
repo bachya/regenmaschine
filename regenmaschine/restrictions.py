@@ -15,16 +15,16 @@ class Restrictions(api.BaseAPI):
 
     def current(self):
         """ Returns all current restrictions """
-        return self._get('restrictions/currently').body
+        return self.get('restrictions/currently').body
 
     def hourly(self):
         """ Returns all hourly restrictions """
-        return self._get('restrictions/hourly').body
+        return self.get('restrictions/hourly').body
 
     def raindelay(self):
         """ Returns all restrictions due to rain """
-        return self._get('restrictions/raindelay').body
+        return self.get('restrictions/raindelay').body
 
     def universal(self):
         """ Returns all global restrictions """
-        return self._get('restrictions/global').body
+        return self.get('restrictions/global').body

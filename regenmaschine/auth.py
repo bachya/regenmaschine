@@ -38,7 +38,7 @@ class Authenticator(api.BaseAPI):
 
     def authenticate(self):
         """ Retrieves access token (and related info) from the API """
-        response = self._post(self.api_endpoint, data=json.dumps(self.data))
+        response = self.post(self.api_endpoint, data=json.dumps(self.data))
         self.access_token = response.body.get('access_token')
         self.api_url = self.url if response.body.get(
             'sprinklerId') is None else '{}/s/{}/api/4'.format(

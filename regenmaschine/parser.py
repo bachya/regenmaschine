@@ -15,4 +15,4 @@ class Parsers(api.BaseAPI):  # pylint: disable=too-few-public-methods
 
     def current(self):
         """ Returns all current parsers """
-        return self._get('parser').body
+        return self.get('parser').body

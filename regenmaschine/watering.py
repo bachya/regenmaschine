@@ -27,18 +27,18 @@ class Watering(api.BaseAPI):
             date = parser.datetime().strftime('%Y-%m-%d')
             api_route = '{}/{}/{}'.format(api_route, date, num_of_days)
 
-        return self._get(api_route).body
+        return self.get(api_route).body
 
     def queue(self):
         """ Returns the queue of active watering activities """
-        return self._get('watering/queue').body
+        return self.get('watering/queue').body
 
     def runs(self, date, num_of_days):
         """ Similar to log, but returns et0 and qpf info, as well """
         parser = maya.when(date)
         date = parser.datetime().strftime('%Y-%m-%d')
-        return self._get('watering/past/{}/{}'.format(date, num_of_days)).body
+        return self.get('watering/past/{}/{}'.format(date, num_of_days)).body
 
     def stop_all(self):
         """ Stops all programs and zones from running """
-        return self._post('watering/stopall').body
+        return self.post('watering/stopall').body
