@@ -251,12 +251,9 @@ SSL Usage
 By default, Regenmaschine routes all API calls – local or remote – through HTTPS.
 However, RainMachine devices use self-signed SSL certificates; therefore,
 Regenmaschine disables verifying the validity of local SSL certificates before
-processing local requests.
+processing local requests. In practice, this shouldn't be a problem. However, for the security conscious, this behavior can be changed.
 
-In practice, this shouldn't be a problem. However, for the security conscious,
-this behavior can be changed. First, `provide a CA-signed SSL certificate to the local device <https://support.rainmachine.com/hc/en-us/community/posts/115006512067-rovide-custom-SSL-Certificate>`_.
-
-Then, override the default local Authenticator behavior:
+First, `provide a CA-signed SSL certificate to the local device <https://support.rainmachine.com/hc/en-us/community/posts/115006512067-rovide-custom-SSL-Certificate>`_. Then, override the default local Authenticator behavior:
 
 .. code-block:: python
 
@@ -268,8 +265,9 @@ Then, override the default local Authenticator behavior:
   # processing the request:
   client = rm.Client(auth)
 
-*Note:* if Regenmaschine cannot recognize a CA-signed certificate, an exception
-will be raised.
+*Note:* after this, if Regenmaschine cannot recognize a CA-signed certificate
+when querying the local device, a :code:`requests.exceptions.SSLError`
+exception will be raised.
 
 💧 Contributing
 ===============
