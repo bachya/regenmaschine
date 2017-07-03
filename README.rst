@@ -262,12 +262,22 @@ First, `provide a CA-signed SSL certificate to the local device <https://support
   auth.verify_ssl = True
 
   # The client will now verify the SSL certificate on the local device before
-  # processing the request:
+  # processing every request:
   client = rm.Client(auth)
 
 *Note:* after this, if Regenmaschine cannot recognize a CA-signed certificate
 when querying the local device, a :code:`requests.exceptions.SSLError`
 exception will be raised.
+
+To disable SSL once again, re-authenticate and re-create a client:
+
+.. code-block:: python
+
+  # Create a local Authenticator (with the default behavior):
+  auth = rm.Authenticator.create_local('<DEVICE_IP_ADDRESS>', '<PASSWORD>')
+
+  # The client will now refrain from verifying the SSL connection's validity:
+  client = rm.Client(auth)
 
 💧 Contributing
 ===============
