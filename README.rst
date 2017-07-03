@@ -268,7 +268,7 @@ Then, override the default local Authenticator behavior:
   # processing the request:
   client = rm.Client(auth)
 
-_Note:_ if Regenmaschine cannot recognize a CA-signed certificate, an exception
+*Note:* if Regenmaschine cannot recognize a CA-signed certificate, an exception
 will be raised.
 
 💧 Contributing
