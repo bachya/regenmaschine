@@ -47,17 +47,12 @@ cloud API:
 
   import regenmaschine as rm
 
-  # Using the local API:
+  # Authenticate against the local device or the remote API:
   auth = rm.Authenticator.create_local('<DEVICE_IP_ADDRESS>', '<PASSWORD>')
-
-  # Using the remote API:
   auth = rm.Authenticator.create_remote('<EMAIL ADDRESS>', '<PASSWORD>')
 
-If authentication is successful, this :code:`auth` object can then be used to
-create a client:
-
-.. code-block:: python
-
+  # If authentication is successful, this :code:`auth` object can then be used
+  # to create a client:
   client = rm.Client(auth)
 
 Diagnostics
@@ -156,6 +151,41 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/zone
   properties = client.zones.get(2, properties=True)
   client.zones.simulate(properties)
 
+💧 Exceptions
+=============
+
+Regenmaschine relies on two other libraries:
+`Requests <https://github.com/requests/requests>`_ and
+`Maya <https://github.com/kennethreitz/maya>`_; as such, any exception that they
+provide may be raised.
+
+Beyond that, Regenmaschine defines a few exceptions of its own:
+
+* :code:`regenmaschine.exceptions.BrokenAPICall`: returned when an API call only
+  works on the local or remote APIs, but not both
+* :code:`regenmaschine.exceptions.InvalidAuthenticator`: returned when invalid
+  authentication data is fed into :code:`regenmaschine.Authenticator.load()` or
+  :code:`regenmaschine.Authenticator.loads()`
+
+💧 Advanced Usage
+=================
+
+Connection Pooling
+------------------
+
+If desired, Regenmaschine can accept a session object that allows it to re-use
+the same HTTP connection for every call (rather than opening up a new one each
+time):
+
+.. code-block:: python
+
+  from requests.sessions import Session
+  with Session() as session:
+    auth = rm.Authenticator.create_local('<DEVICE_IP_ADDRESS>', '<PASSWORD>')
+    client = rm.Client(auth)
+    client.zones.all()
+    client.zones.get(1)
+
 Authentication Caching
 ----------------------
 
@@ -210,27 +240,34 @@ recreated quite easily:
 
 .. code-block:: python
 
+  # The dict and the string versions can each be loaded:
   auth = rm.Authenticator.load(auth_json)
-  # ...or...
   auth = rm.Authenticator.loads(auth_str)
-
   client = rm.Client(auth)
 
-Exceptions
-----------
+SSL Usage
+---------
 
-Regenmaschine relies on two other libraries:
-`Requests <https://github.com/requests/requests>`_ and
-`Maya <https://github.com/kennethreitz/maya>`_; as such, Regenmaschine may
-raise any of the exceptions that they provide.
+By default, Regenmaschine routes all API calls – local or remote – through HTTPS.
+However, RainMachine devices use self-signed SSL certificates; therefore,
+Regenmaschine disables verifying the validity of local SSL certificates before
+processing requests.
 
-Beyond that, Regenmaschine defines a few exceptions of its own:
+In practice, this shouldn't be a problem. However, for the security conscious,
+this behavior can be changed. First, `provide a CA-signed SSL certificate to the local device <https://support.rainmachine.com/hc/en-us/community/posts/115006512067-
+   rovide-custom-SSL-Certificate>`_.
 
-* :code:`regenmaschine.exceptions.BrokenAPICall`: returned when an API call only
-  works on the local or remote APIs, but not both
-* :code:`regenmaschine.exceptions.InvalidAuthenticator`: returned when invalid
-  authentication data is fed into :code:`regenmaschine.Authenticator.load()` or
-  :code:`regenmaschine.Authenticator.loads()`
+Then, override the default local Authenticator behavior:
+
+.. code-block:: python
+
+  # The dict and the string versions can each be loaded:
+  auth = rm.Authenticator.create_local('<DEVICE_IP_ADDRESS>', '<PASSWORD>')
+  auth.verify_ssl = True
+  client = rm.Client(auth)
+
+_Note:_ if Regenmaschine cannot recognize a CA-signed certificate, an exception
+will be raised.
 
 💧 Contributing
 ===============
