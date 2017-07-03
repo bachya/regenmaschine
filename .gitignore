@@ -1,8 +1,0 @@
-.cache
-__pycache__
-*.pyc
-.coverage
-dist
-*.egg-info
-build
-coverage.xml
