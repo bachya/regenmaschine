@@ -6,7 +6,7 @@
 💧 Regenmaschine: A Simple Python Library for RainMachine™
 ==========================================================
 
-Release v\ |version|. (:ref:`Installation <install>`)
+Release v\ |version|
 
 .. image:: https://travis-ci.org/bachya/regenmaschine.svg?branch=master
   :target: https://travis-ci.org/bachya/regenmaschine
