@@ -40,7 +40,7 @@ controllers over a LAN or via RainMachine™'s cloud.
 Authentication & Creating a Client
 ----------------------------------
 
-Authentication is the first step and an be done against the local device or the
+Authentication is the first step and can be done against the local device or the
 cloud API:
 
 .. code-block:: python
@@ -48,17 +48,17 @@ cloud API:
   import regenmaschine as rm
 
   # Authenticate against the local device or the remote API:
-  auth = rm.Authenticator.create_local('<DEVICE_IP_ADDRESS>', '<PASSWORD>')
-  auth = rm.Authenticator.create_remote('<EMAIL ADDRESS>', '<PASSWORD>')
+  auth = rm.Authenticator.create_local('192.168.1.100', 'MY_RM_PASSWORD')
+  auth = rm.Authenticator.create_remote('EMAIL_ADDRESS', 'MY_RM_PASSWORD')
 
-  # If authentication is successful, this :code:`auth` object can then be used
-  # to create a client:
+  # Then, create a client:
   client = rm.Client(auth)
 
 Diagnostics
 -----------
 
-More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/diagnostics>`_
+More info on response formats, etc.:
+`<http://docs.rainmachine.apiary.io/#reference/diagnostics>`_
 
 .. code-block:: python
 
@@ -68,11 +68,12 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/diag
 Programs
 --------
 
-More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/programs>`_
+More info on response formats, etc.:
+`<http://docs.rainmachine.apiary.io/#reference/programs>`_
 
 .. code-block:: python
 
-  client.programs.all()     # Returns all program info
+  client.programs.all()     # Returns info on all programs
   client.programs.get(1)    # Returns info about program with UID of 1
   client.programs.next()    # Returns the next run date/time for all programs
   client.programs.running() # Returns all running programs
@@ -82,19 +83,21 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/prog
 Restrictions
 ------------
 
-More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/restrictions>`_
+More info on response formats, etc.:
+`<http://docs.rainmachine.apiary.io/#reference/restrictions>`_
 
 .. code-block:: python
 
   client.restrictions.current()   # Returns currently active restrictions
   client.restrictions.hourly()    # Returns restrictions over the next hour
-  client.restrictions.raindelay() # Returns all restrictions due to rain
+  client.restrictions.raindelay() # Returns all rain-related restrictions
   client.restrictions.universal() # Returns the global list of restrictions
 
 Stats
 -----
 
-More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/daily-stats>`_
+More info on response formats, etc.:
+`<http://docs.rainmachine.apiary.io/#reference/daily-stats>`_
 
 .. code-block:: python
 
@@ -107,16 +110,17 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/dail
 Watering
 --------
 
-More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/watering>`_
+More info on response formats, etc.:
+`<http://docs.rainmachine.apiary.io/#reference/watering>`_
 
 .. code-block:: python
 
-  client.watering.log()                              # Returns log of all watering
-  client.watering.log(details=True)                  # Returns full log of all watering
-  client.watering.log('6/29/2017', 2)                # Returns log for 6/27-6/29
-  client.watering.log('2017-06-29', 2)               # Returns log for 6/27-6/29
-  client.watering.log('2017-06-29', 2, details=True) # Returns full log for 6/27-6/29
-  client.watering.log('2 days ago', 3)               # Returns log 2-5 days ago
+  client.watering.log()                             # Returns log of all watering activities
+  client.watering.log(details=True)                 # Returns full log of all watering activities
+  client.watering.log('6/29/2017', 2, details=True) # Returns log for 6/27-6/29
+  client.watering.log('2017-06-29', 2)              # Returns log for 6/27-6/29
+  client.watering.log('2017-06-29', 2)              # Returns full log for 6/27-6/29
+  client.watering.log('2 days ago', 3)              # Returns log 2-5 days ago
 
   client.watering.queue()                            # Returns the active queue of watering activities
   client.watering.runs('6/29/2017', 2)               # Alternate view of log()
@@ -127,7 +131,8 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/wate
 Weather Services
 ----------------
 
-More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/weather-services>`_
+More info on response formats, etc.:
+`<http://docs.rainmachine.apiary.io/#reference/weather-services>`_
 
 .. code-block:: python
 
@@ -136,7 +141,8 @@ More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/weat
 Zones
 -----
 
-More info on responses, etc: `<http://docs.rainmachine.apiary.io/#reference/zones>`_
+More info on response formats, etc.:
+`<http://docs.rainmachine.apiary.io/#reference/zones>`_
 
 .. code-block:: python
 
@@ -160,6 +166,17 @@ Regenmaschine may raise any of the following:
 * `Requests Exceptions <https://github.com/requests/requests/blob/master/requests/exceptions.py>`_
 * `Regenmaschine Exceptions <https://github.com/bachya/regenmaschine/blob/master/regenmaschine/exceptions.py>`_
 
+One exception to pay particular note of is
+:code:`regenmaschine.exceptions.BrokenAPICall`. Unfortunately, there are
+currently some API calls that work correctly in the local API, but not the
+remote API; as a result, this exception is raised to protect client libraries
+appropriately.
+
+Here is the current list of broken API calls:
+
+* :code:`client.programs.start()`: remote API returns an HTTP status of 500
+* :code:`client.programs.stop()`: remote API returns an HTTP status of 500
+
 💧 Advanced Usage
 =================
 
@@ -174,7 +191,7 @@ time):
 
   from requests.sessions import Session
   with Session() as session:
-    auth = rm.Authenticator.create_local('<DEVICE_IP_ADDRESS>', '<PASSWORD>')
+    auth = rm.Authenticator.create_local('192.168.1.100', 'MY_RM_PASSWORD', session)
     client = rm.Client(auth)
     client.zones.all()
     client.zones.get(1)
@@ -225,7 +242,7 @@ requests, as well as an expiration timeframe and more:
 
 **TAKE NOTE:** the dumped :code:`auth` object contains the access token
 needed to query the API, sprinkler IDs, RainMachine™ credentials, and other
-sensitive information. *Therefore, it should be cached and stored securely*.
+sensitive information. **Therefore, it should be cached and stored securely**.
 
 One common use of this mechanism would be to check the expiration date of the
 access token; assuming it is still valid, a corresponding client can be
@@ -234,9 +251,9 @@ recreated quite easily:
 .. code-block:: python
 
   # The dict and the string versions can each be loaded:
-  auth = rm.Authenticator.load(auth_json)
-  auth = rm.Authenticator.loads(auth_str)
-  client = rm.Client(auth)
+  if auth_json['expires_in'] > 1000:
+    auth = rm.Authenticator.load(auth_json)
+    client = rm.Client(auth)
 
 SSL Usage
 ---------
@@ -251,7 +268,7 @@ First, `provide a CA-signed SSL certificate to the local device <https://support
 .. code-block:: python
 
   # Create a local Authenticator and force it to use SSL:
-  auth = rm.Authenticator.create_local('<DEVICE_IP_ADDRESS>', '<PASSWORD>')
+  auth = rm.Authenticator.create_local('192.168.1.100', 'MY_RM_PASSWORD')
   auth.verify_ssl = True
 
   # The client will now verify the SSL certificate on the local device before
@@ -275,8 +292,9 @@ To disable SSL once again, re-authenticate and re-create a client:
 💧 Contributing
 ===============
 
-#. Check for open features/bugs or initiate a discussion on one.
-#. Fork the repository.
+#. `Check for open features/bugs <https://github.com/bachya/regenmaschine/issues>`_
+   or `initiate a discussion on one <https://github.com/bachya/regenmaschine/issues/new>`_.
+#. `Fork the repository <https://github.com/bachya/regenmaschine/fork>`_.
 #. Install the dev environment: :code:`make init`.
 #. Enter the virtual environment: :code:`pipenv shell`
 #. Code your new feature or bug fix.
