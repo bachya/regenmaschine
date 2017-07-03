@@ -158,11 +158,7 @@ Regenmaschine may raise any of the following:
 
 * `Built-in Python Exceptions <https://docs.python.org/3/library/exceptions.html#bltin-exceptions>`_
 * `Requests Exceptions <https://github.com/requests/requests/blob/master/requests/exceptions.py>`_
-* :code:`regenmaschine.exceptions.BrokenAPICall`: returned when an API call only
-  works on the local or remote APIs, but not both
-* :code:`regenmaschine.exceptions.InvalidAuthenticator`: returned when invalid
-  authentication data is fed into :code:`regenmaschine.Authenticator.load()` or
-  :code:`regenmaschine.Authenticator.loads()`
+* `Regenmaschine Exceptions <https://github.com/bachya/regenmaschine/blob/master/regenmaschine/exceptions.py>`_
 
 💧 Advanced Usage
 =================

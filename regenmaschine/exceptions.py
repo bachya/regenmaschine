@@ -8,10 +8,10 @@ Description:
 
 
 class BrokenAPICall(Exception):
-    """ Exception for when RainMachine's API is broken """
+    """ This API call doesn't work on both local _and_ remote APIs """
     pass
 
 
 class InvalidAuthenticator(Exception):
-    """ Generic auth error """
+    """ Could not create an Authenticator from the provided data """
     pass
