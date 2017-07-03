@@ -6,7 +6,7 @@ SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
 SPHINXPROJ    = Regenmaschine
 SOURCEDIR     = .
-BUILDDIR      = _build
+BUILDDIR      = ../../regenmaschine-docs
 
 # Put it first so that "make" without argument is like "make help".
 help:
