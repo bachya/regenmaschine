@@ -39,16 +39,17 @@ class Authenticator(api.BaseAPI):
     def authenticate(self):
         """ Retrieves access token (and related info) from the API """
         response = self.post(self.api_endpoint, data=json.dumps(self.data))
-        self.access_token = response.body.get('access_token')
-        self.api_url = self.url if response.body.get(
+        data = response.object.json()
+        self.access_token = data.get('access_token')
+        self.api_url = self.url if data.get(
             'sprinklerId') is None else '{}/s/{}/api/4'.format(
-                self.url, response.body.get('sprinklerId'))
-        self.checksum = response.body.get('checksum')
+                self.url, data.get('sprinklerId'))
+        self.checksum = data.get('checksum')
         self.cookies = response.object.cookies.get_dict()
-        self.expiration = response.body.get('expiration')
-        self.expires_in = response.body.get('expires_in')
-        self.sprinkler_id = response.body.get('sprinklerId')
-        self.status_code = response.body.get('statusCode')
+        self.expiration = data.get('expiration')
+        self.expires_in = data.get('expires_in')
+        self.sprinkler_id = data.get('sprinklerId')
+        self.status_code = data.get('statusCode')
 
     @classmethod
     def create_local(cls, ip_address, password, session=None):

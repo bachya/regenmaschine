@@ -20,24 +20,23 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Response(object):  # pylint: disable=too-few-public-methods
-    """ A simpler response class """
+    """ A simple wrapper for a Requests response object """
 
     def __init__(self, requests_response_object):
         """ Initialize! """
         self.object = requests_response_object
-        self.body = self.object.json()
 
     def raise_for_status(self):
         """ Encapsulation that works with local and remote errors """
 
-        # First, check for exceptions from the local API (which seems
+        # First, check for HTTP exceptions from the local API (which seems
         # to utilize HTTP response codes correctly):
         self.object.raise_for_status()
 
         # The remote API is odd: it returns error codes in the body correctly,
         # but always seems to return a status of 200. If that happens, catch it
         # and set the correct code based on the API docs before moving on:
-        remote_error_code = self.body.get('errorType')
+        remote_error_code = self.object.json().get('errorType')
         if remote_error_code and remote_error_code != 0:
             if remote_error_code in rsc.CODES.keys():
                 error_message = rsc.CODES[remote_error_code]
@@ -91,7 +90,7 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
             verify=self.verify_ssl,
             **kwargs)
 
-        # The requests object is great, but we need a little extra sugar when
+        # The Requests object is great, but we need a little extra sugar when
         # checking for errors from the remote API, so we use a custom wrapper:
         response = Response(resp)
         response.raise_for_status()
