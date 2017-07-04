@@ -7,8 +7,15 @@ Github: https://github.com/bachya/regenmaschine
 
 # -*- coding: utf-8 -*-
 
-import regenmaschine.__version__ as v
+import regenmaschine
 
 def test_version():
     """ Test that we have a version """
-    assert v.__version__ is not None
+    assert regenmaschine.__author__ != ''
+    assert regenmaschine.__author_email__ != ''
+    assert regenmaschine.__copyright__ != ''
+    assert regenmaschine.__description__ != ''
+    assert regenmaschine.__license__ != ''
+    assert regenmaschine.__title__ != ''
+    assert regenmaschine.__url__ != ''
+    assert regenmaschine.__version__ != ''

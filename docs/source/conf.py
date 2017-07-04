@@ -105,10 +105,13 @@ html_theme_options = {
 html_static_path = ['_static']
 
 html_sidebars = {
-    'index': ['sourcelink.html', 'searchbox.html', 'hacks.html'],
+    'index': [
+        'localtoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html',
+        'hacks.html'
+    ],
     '**': [
-        'globaltoc.html', 'relations.html', 'sourcelink.html',
-        'searchbox.html', 'hacks.html'
+        'globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html',
+        'hacks.html'
     ]
 }
 
