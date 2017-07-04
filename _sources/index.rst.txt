@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-💧 Regenmaschine: A Simple Python Library for RainMachine™
-==========================================================
+Regenmaschine: A Simple Python Library for RainMachine™
+=======================================================
 
 Release v\ |version|
 
@@ -33,3 +33,24 @@ Regenmaschine (German for "rain machine") is a simple, clean, well-tested Python
 library for interacting with `RainMachine™ smart sprinkler controllers
 <http://www.rainmachine.com/>`_. It gives developers an easy API to manage their
 controllers over a LAN or via RainMachine™'s cloud.
+
+The Main Features
+-----------------
+
+- Query the local device - no internet needed!
+- Query the remote RainMachine™ API
+- Manage, view, and control programs and zones
+- View useful info (watering restrictions, stats, weather information, etc.)
+- Retrieve diagnostics from the local device
+- Pool HTTP connections
+- Easy authentication caching
+- and more!
+
+The Guide
+---------
+
+.. toctree::
+   :maxdepth: 2
+
+   guide/installation
+
