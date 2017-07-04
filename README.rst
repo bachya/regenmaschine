@@ -73,6 +73,7 @@ Full documentation for Regenmaschine can be found here: http://bachya.github.io/
 #. Build new docs: :code:`make docs`
 #. Add yourself to AUTHORS.rst.
 #. Submit a pull request!
+
 .. Authentication & Creating a Client
 .. ----------------------------------
 
