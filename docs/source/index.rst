@@ -53,4 +53,5 @@ The Guide
    :maxdepth: 2
 
    guide/installation
+   guide/quickstart
 
