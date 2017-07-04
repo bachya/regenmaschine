@@ -11,7 +11,7 @@ To install Regenmaschine, enter the following in any terminal application:
   $ pip install regenmaschine
 
 If you don't have :code:`pip` installed, use `the official installation guide
-<http://docs.python-guide.org/en/latest/starting/installation/`_.
+<http://docs.python-guide.org/en/latest/starting/installation/>`_.
 
 Via the Source Code
 -------------------
