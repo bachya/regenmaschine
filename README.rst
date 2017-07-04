@@ -34,9 +34,45 @@ controllers over a LAN or via RainMachine™'s cloud.
 
   $ pip install regenmaschine
 
-💧 Usage
-========
+💧 Example
+==========
 
+.. code-block:: python
+
+  import regenmaschine as rm
+
+  # Authenticate against the local device or the remote API:
+  auth = rm.Authenticator.create_local('192.168.1.100', 'MY_RM_PASSWORD')
+  auth = rm.Authenticator.create_remote('EMAIL_ADDRESS', 'MY_RM_PASSWORD')
+
+  # Create a client:
+  client = rm.Client(auth)
+
+  # Get information on all programs:
+  program_info = client.programs.all()
+
+  # Turn on zone 3 for 5 minutes:
+  client.zones.start(3, 300)
+
+💧 More Information
+===================
+
+Full documentation for Regenmaschine can be found here: http://bachya.github.io/regenmaschine
+
+💧 Contributing
+===============
+
+#. `Check for open features/bugs <https://github.com/bachya/regenmaschine/issues>`_
+   or `initiate a discussion on one <https://github.com/bachya/regenmaschine/issues/new>`_.
+#. `Fork the repository <https://github.com/bachya/regenmaschine/fork>`_.
+#. Install the dev environment: :code:`make init`.
+#. Enter the virtual environment: :code:`pipenv shell`
+#. Code your new feature or bug fix.
+#. Write a test that covers your new functionality.
+#. Run tests: :code:`make test`
+#. Build new docs: :code:`make docs`
+#. Add yourself to AUTHORS.rst.
+#. Submit a pull request!
 .. Authentication & Creating a Client
 .. ----------------------------------
 
@@ -289,17 +325,3 @@ controllers over a LAN or via RainMachine™'s cloud.
 ..   # The client will now refrain from verifying the SSL connection's validity:
 ..   client = rm.Client(auth)
 
-.. 💧 Contributing
-.. ===============
-
-.. #. `Check for open features/bugs <https://github.com/bachya/regenmaschine/issues>`_
-..    or `initiate a discussion on one <https://github.com/bachya/regenmaschine/issues/new>`_.
-.. #. `Fork the repository <https://github.com/bachya/regenmaschine/fork>`_.
-.. #. Install the dev environment: :code:`make init`.
-.. #. Enter the virtual environment: :code:`pipenv shell`
-.. #. Code your new feature or bug fix.
-.. #. Write a test that covers your new functionality.
-.. #. Run tests: :code:`make test`
-.. #. Build new docs: :code:`make docs`
-.. #. Add yourself to AUTHORS.rst.
-.. #. Submit a pull request!
