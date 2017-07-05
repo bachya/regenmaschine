@@ -28,5 +28,43 @@ device/service against which it was authenticated. Put simply, if you create a
 "local client" and later want a "remote client," you'll need to re-authenticate
 and re-create the client.
 
-Client Usage
-------------
+Working with Programs
+---------------------
+
+RainMachine™ programs are collections of zone actions grouped together. For
+complete information on the response formats for program operations, check out
+the official RainMachine™ API docs:
+`<http://docs.rainmachine.apiary.io/#reference/programs>`_
+
+In terms of retrieving program information, Regenmaschine offers several
+methods:
+
+.. code-block:: python
+
+  # Returns information on all programs:
+  client.programs.all()
+  # >>> {u'programs': [{u'startDate': u'2017-07-01',}] ... }
+
+  # Returns information on a specific program (in this case, program #6):
+  client.programs.get(6)
+  # >>> {u'status': 0, u'ignoreInternetWeather': False, ... }
+
+  # Returns the next run date/time for all programs:
+  client.programs.next()
+  # >>> {u'nextRuns': [{u'pid': 3, u'startTime': u'06:00'}, ] ... }
+
+  # Returns all running programs:
+  client.programs.running()
+  # >>> {u'programs': [{u'startDate': u'2017-07-01',}] ... }
+
+Regenmaschine also offers methods for starting and stopping programs:
+
+.. code-block:: python
+
+  # Starts program 7:
+  client.programs.start(7)
+  # >>> {u'message': u'OK', u'statusCode': 0}
+
+  # Stops program 7:
+  client.programs.stop(7)
+  # >>> {u'message': u'OK', u'statusCode': 0}
