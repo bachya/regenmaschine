@@ -51,6 +51,15 @@ controllers over a LAN or via RainMachine™'s cloud.
   # Get information on all programs:
   program_info = client.programs.all()
 
+  # Turn on program 1:
+  client.programs.start(1)
+
+  # Stop program 1:
+  client.programs.stop(1)
+
+  # Get information on all zones:
+  zone_info = client.programs.all()
+
   # Turn on zone 3 for 5 minutes:
   client.zones.start(3, 300)
 
