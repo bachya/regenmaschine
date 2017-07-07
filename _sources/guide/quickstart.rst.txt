@@ -98,7 +98,7 @@ information. To retrieve information on all zones:
   # >>> { "zones": [ { "uid": 1, "name": "Backyard Landscaping",}] ... }
 
 To retrieve even more detailed information about all zones, simply set the
-:code:`properties` parameter to :code:`True`:
+:code:`properties` parameter to :code:`True` before running:
 .. code-block:: python
 
   client.zones.all(properties=True)
@@ -112,7 +112,7 @@ To retrieve information about a specific Zzone (in this case, zone #2):
   # >>> { "uid": 1, "name": "Backyard Landscaping", "state": 0, ... }
 
 Once again, detailed information about a zone can be retrieved by setting the
-:code:`properties` parameter to :code:`True`:
+:code:`properties` parameter to :code:`True` before running:
 
 .. code-block:: python
 

@@ -118,7 +118,7 @@ information. To retrieve information on all zones:</p>
 </pre></div>
 </div>
 <p>To retrieve even more detailed information about all zones, simply set the
-<code class="code docutils literal"><span class="pre">properties</span></code> parameter to <code class="code docutils literal"><span class="pre">True</span></code>:
+<code class="code docutils literal"><span class="pre">properties</span></code> parameter to <code class="code docutils literal"><span class="pre">True</span></code> before running:
 .. code-block:: python</p>
 <blockquote>
 <div>client.zones.all(properties=True)
@@ -129,7 +129,7 @@ information. To retrieve information on all zones:</p>
 </pre></div>
 </div>
 <p>Once again, detailed information about a zone can be retrieved by setting the
-<code class="code docutils literal"><span class="pre">properties</span></code> parameter to <code class="code docutils literal"><span class="pre">True</span></code>:</p>
+<code class="code docutils literal"><span class="pre">properties</span></code> parameter to <code class="code docutils literal"><span class="pre">True</span></code> before running:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="c1"># &gt;&gt;&gt; { &quot;uid&quot;: 1, &quot;name&quot;: &quot;Backyard Landscaping&quot;, &quot;valveid&quot;: 1, ... }</span>
 </pre></div>
