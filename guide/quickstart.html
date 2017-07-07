@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Quickstart &#8212; Regenmaschine 0.2.7 documentation</title>
+    <title>Quickstart &#8212; Regenmaschine 0.2.8 documentation</title>
     
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.2.7',
+        VERSION:     '0.2.8',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -26,6 +26,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advanced Topics" href="advanced.html" />
     <link rel="prev" title="Installation" href="installation.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -57,20 +58,21 @@ cloud API:</p>
 <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_remote</span><span class="p">(</span><span class="s1">&#39;EMAIL_ADDRESS&#39;</span><span class="p">,</span> <span class="s1">&#39;MY_RM_PASSWORD&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This Authenticator object can then be used to instantiate a Regenmaschine client:</p>
+<p>This <code class="code docutils literal"><span class="pre">Authenticator</span></code> object can then be used to instantiate a
+Regenmaschine <code class="code docutils literal"><span class="pre">Client</span></code>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>It’s important to note that once instantiated, the client only knows about the
-device/service against which it was authenticated. Put simply, if you create a
-“local client” and later want a “remote client,” you’ll need to re-authenticate
-and re-create the client.</p>
+<p>It’s important to note that once instantiated, the <code class="code docutils literal"><span class="pre">Client</span></code> only knows
+about the device/service against which it was authenticated. Put simply, if
+you create a “local <code class="code docutils literal"><span class="pre">Client</span></code>” and later want a “remote <code class="code docutils literal"><span class="pre">Client</span></code>,”
+you’ll need to re-authenticate and re-create the <code class="code docutils literal"><span class="pre">Client</span></code>.</p>
 </div>
 <div class="section" id="programs">
 <h2>Programs<a class="headerlink" href="#programs" title="Permalink to this headline">¶</a></h2>
-<p>RainMachine™ programs are collections of zone actions grouped together. For
-complete information on the response formats for program operations, check out
-the official RainMachine™ API docs:
+<p>RainMachine™ <code class="code docutils literal"><span class="pre">programs</span></code> are collections of zone actions grouped together.
+For complete information on the response formats for program operations, check
+out the official RainMachine™ API docs:
 <a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/programs">http://docs.rainmachine.apiary.io/#reference/programs</a></p>
 <p>In terms of retrieving program information, Regenmaschine offers several
 methods. To retrieve information on all programs:</p>
@@ -107,7 +109,7 @@ start program #7:</p>
 </div>
 <div class="section" id="zones">
 <h2>Zones<a class="headerlink" href="#zones" title="Permalink to this headline">¶</a></h2>
-<p>RainMachine™ zones are physical locations where watering occurs. For
+<p>RainMachine™ <code class="code docutils literal"><span class="pre">zones</span></code> are physical locations where watering occurs. For
 complete information on the response formats for zone operations, check out
 the official RainMachine™ API docs:
 <a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/zones">http://docs.rainmachine.apiary.io/#reference/zones</a></p>
@@ -123,7 +125,7 @@ information. To retrieve information on all zones:</p>
 <span class="c1"># &gt;&gt;&gt; { &quot;zones&quot;: [ { &quot;uid&quot;: 1, &quot;name&quot;: &quot;Backyard Landscaping&quot;, ] ... }</span>
 </pre></div>
 </div>
-<p>To retrieve information about a specific Zzone (in this case, zone #2):</p>
+<p>To retrieve information about a specific zone (in this case, zone #2):</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="c1"># &gt;&gt;&gt; { &quot;uid&quot;: 1, &quot;name&quot;: &quot;Backyard Landscaping&quot;, &quot;state&quot;: 0, ... }</span>
 </pre></div>
@@ -137,10 +139,12 @@ information. To retrieve information on all zones:</p>
 <p>As with programs, zones can also be started and stopped from Regenmaschine. To
 start zone 3 for 60 seconds:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;statusCode&quot;: 0, &quot;message&quot;: &quot;OK&quot; }</span>
 </pre></div>
 </div>
 <p>…and to stop it:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;statusCode&quot;: 0, &quot;message&quot;: &quot;OK&quot; }</span>
 </pre></div>
 </div>
 <p>Regenmaschine also can return a “simulated run” for zones, which provivdes an
@@ -150,6 +154,139 @@ understanding of what a specific zone will do when run next. To do this:</p>
 
 <span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
 <span class="c1"># &gt;&gt;&gt; { &quot;referenceTime&quot;: 1243, &quot;currentFieldCapacity&quot;: 30.92 }</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="watering">
+<h2>Watering<a class="headerlink" href="#watering" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="code docutils literal"><span class="pre">watering</span></code> component of Regenmaschine provides some comprehensive
+data and operations for programs <em>and</em> zones. For complete information on the
+response formats for zone operations, check out the official RainMachine™ API
+docs:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/watering">http://docs.rainmachine.apiary.io/#reference/watering</a></p>
+<p>To return the log of all recent watering activities:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;waterLog&quot;: { &quot;days&quot;: [ { &quot;date&quot;: &quot;2017-06-29&quot;, } ] } ... }</span>
+</pre></div>
+</div>
+<p>An even more detailed log can be retrieved by setting the <code class="code docutils literal"><span class="pre">details</span></code>
+parameter to <code class="code docutils literal"><span class="pre">True</span></code> before running:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">details</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;waterLog&quot;: { &quot;days&quot;: [ { &quot;date&quot;: &quot;2017-07-07&quot;,  } ] } ... }</span>
+</pre></div>
+</div>
+<p>Regenmaschine can retrieve log entries for specific days (with the starting
+date being any normal, acceptable date format); furthermore, the trusty
+<code class="code docutils literal"><span class="pre">details</span></code> parameter can be included or removed at will:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Returns log for 6/27-6/29</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;2017-06-29&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Returns detailed log for 6/27-6/29:</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;6/29/2017&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="c1"># Returns log for 2-5 days ago:</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;2 days ago&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Log-style information can also be retrieved as a series of “runs”:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="s1">&#39;6/29/2017&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="s1">&#39;2017-06-29&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="s1">&#39;2 days ago&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To retrieve the active queue of upcoming water activities:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">queue</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;queue&quot;: [ { &quot;availableWater&quot;: 0, &quot;realDuration&quot;: 0,}] ... }</span>
+</pre></div>
+</div>
+<p>Finally, to stop <em>all</em> watering activities at once:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">watering</span><span class="o">.</span><span class="n">stop_all</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;statusCode&quot;: 0, &quot;message&quot;: &quot;OK&quot; }</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="restrictions">
+<h2>Restrictions<a class="headerlink" href="#restrictions" title="Permalink to this headline">¶</a></h2>
+<p>RainMachine™ <code class="code docutils literal"><span class="pre">restrictions</span></code> represent reasons that would prevent the
+device from completing watering activities. For complete information on the
+response formats for restriction operations, check out the official RainMachine™
+API docs:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/restrictions">http://docs.rainmachine.apiary.io/#reference/restrictions</a></p>
+<p>To retrieve currently active restrictions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">restrictions</span><span class="o">.</span><span class="n">current</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;hourly&quot;: false, &quot;freeze&quot;: false, &quot;month&quot;: false, ... }</span>
+</pre></div>
+</div>
+<p>To retrieve restrictions that will be active over the next hour:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">restrictions</span><span class="o">.</span><span class="n">hourly</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;hourlyRestrictions&quot;: [] }</span>
+</pre></div>
+</div>
+<p>To retrieve all temporary restrictions due to a rain delay:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">restrictions</span><span class="o">.</span><span class="n">raindelay</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;delayCounter&quot;: -1 }</span>
+</pre></div>
+</div>
+<p>To retrieve all global (always-active) restrictions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">restrictions</span><span class="o">.</span><span class="n">universal</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;hotDaysExtraWatering&quot;: false, &quot;freezeProtectEnabled&quot;: false, ... }</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="weather-services">
+<h2>Weather Services<a class="headerlink" href="#weather-services" title="Permalink to this headline">¶</a></h2>
+<p>Weather services (referred to by RainMachine™ as <code class="code docutils literal"><span class="pre">parsers</span></code>) represent
+the weather services actively in use by the device. For complete information
+on the response formats for parser operations, check out the official
+RainMachine™ API docs:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/weather-services">http://docs.rainmachine.apiary.io/#reference/weather-services</a></p>
+<p>To retrieve a list of all current, actively-used weather services:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">parsers</span><span class="o">.</span><span class="n">current</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;parsers&quot;: [ { &quot;lastRun&quot;: null, &quot;lastKnownError&quot;: &quot;&quot;, } ] ... }</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stats">
+<h2>Stats<a class="headerlink" href="#stats" title="Permalink to this headline">¶</a></h2>
+<p>RainMachine™ <code class="code docutils literal"><span class="pre">stats</span></code> are statistics on device usage, etc. For complete
+information on the response formats for stat operations, check out the
+official RainMachine™ API docs:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/daily-stats">http://docs.rainmachine.apiary.io/#reference/daily-stats</a></p>
+<p>To retrieve the expected statistics for the next 7 days:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">upcoming</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;DailyStats&quot;: [ { &quot;id&quot;: 0, &quot;day&quot;: &quot;2017-06-27&quot;, &quot;mint&quot;: 14,}] ... }</span>
+</pre></div>
+</div>
+<p>More detailed statistics can be retrieved by setting the <code class="code docutils literal"><span class="pre">include_details</span></code>
+parameter to <code class="code docutils literal"><span class="pre">True</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">upcoming</span><span class="p">(</span><span class="n">include_details</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;DailyStatsDetails&quot;: [ { &quot;dayTimestamp&quot;: 1498543200,  } ] ... }</span>
+</pre></div>
+</div>
+<p>It is also possible to get statistics for a date (in any reasonable format).
+If a date in the past is given, actual statistics will be returned; dates in the
+future will return expected statistics:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">on_date</span><span class="p">(</span><span class="s1">&#39;6/29/2017&#39;</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">on_date</span><span class="p">(</span><span class="s1">&#39;2017-06-29&#39;</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">on_date</span><span class="p">(</span><span class="s1">&#39;1 week ago&#39;</span><span class="p">)</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;id&quot;: -10, &quot;day&quot;: &quot;2017-06-27&quot;, &quot;mint&quot;: 17.94, ... }</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="diagnostics">
+<h2>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this headline">¶</a></h2>
+<p>RainMachine™ <code class="code docutils literal"><span class="pre">diagnostics</span></code> are exactly what they sound like! For complete
+information on the response formats for diagnostic operations, check out the
+official RainMachine™ API docs:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/diagnostics">http://docs.rainmachine.apiary.io/#reference/diagnostics</a></p>
+<p>To retrieve current diagnostic information:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">current</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;hasWifi&quot;: true, &quot;uptime&quot;: &quot;18 days, 16:16:48&quot;, ... }</span>
+</pre></div>
+</div>
+<p>To retrieve the entire device log:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">log</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;log&quot;: &quot;--------------------------- GENERAL RAINMACHINE LOG -- ... }</span>
 </pre></div>
 </div>
 </div>
@@ -168,14 +305,21 @@ understanding of what a specific zone will do when run next. To do this:</p>
 <li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#programs">Programs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#zones">Zones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#watering">Watering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#restrictions">Restrictions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#weather-services">Weather Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stats">Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diagnostics">Diagnostics</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Topics</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="advanced.html" title="next chapter">Advanced Topics</a></li>
   </ul></li>
 </ul>
 </div>

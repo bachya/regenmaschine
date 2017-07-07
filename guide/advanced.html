@@ -1,0 +1,269 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Advanced Topics &#8212; Regenmaschine 0.2.8 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.8',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="advanced-topics">
+<h1>Advanced Topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h1>
+<p>Developers with an interest in Regenmaschine’s guts should consume and absorb
+all of the topics contained here.</p>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Regenmaschine may raise any of the following:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#bltin-exceptions">Built-in Python Exceptions</a></li>
+<li><a class="reference external" href="https://github.com/requests/requests/blob/master/requests/exceptions.py">Requests Exceptions</a></li>
+<li><a class="reference external" href="https://github.com/bachya/regenmaschine/blob/master/regenmaschine/exceptions.py">Regenmaschine Exceptions</a></li>
+</ul>
+<p>One exception to pay particular note of is
+<code class="code docutils literal"><span class="pre">regenmaschine.exceptions.BrokenAPICall</span></code>. Unfortunately, there are
+currently some API calls that work correctly in the local API, but not the
+remote API; as a result, this exception is raised to protect client libraries
+appropriately.</p>
+<p>Here is the current list of “broken” RainMachine™ API calls:</p>
+<ul class="simple">
+<li><code class="code docutils literal"><span class="pre">client.programs.start()</span></code>: remote API returns an HTTP status of 500</li>
+<li><code class="code docutils literal"><span class="pre">client.programs.stop()</span></code>: remote API returns an HTTP status of 500</li>
+</ul>
+</div>
+<div class="section" id="authentication-caching">
+<h2>Authentication Caching<a class="headerlink" href="#authentication-caching" title="Permalink to this headline">¶</a></h2>
+<p>There doesn’t appear to be a limit on the number of times RainMachine™
+will allow new access tokens to be generated. However, it may be desirable to
+use the same credentials long term. Therefore, the <code class="code docutils literal"><span class="pre">auth</span></code> object can be
+dumped and saved:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Outputs a dict:</span>
+<span class="n">auth_json</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+
+<span class="c1"># Outputs a string version of the dict:</span>
+<span class="n">auth_str</span> <span class="o">=</span> <span class="n">auth</span><span class="o">.</span><span class="n">dumps</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The <code class="code docutils literal"><span class="pre">auth</span></code> object contains the access token used to authenticate API
+requests, as well as an expiration timeframe and more:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;sprinkler_id&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+  <span class="s2">&quot;cookies&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;access_token&quot;</span><span class="p">:</span> <span class="s2">&quot;24551da62895&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;api_url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://192.168.1.100:8080/api/4&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://192.168.1.100:8080/api/4&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;checksum&quot;</span><span class="p">:</span> <span class="n">u</span> <span class="s2">&quot;c5e29cdef3b1e&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;expires_in&quot;</span><span class="p">:</span> <span class="mi">157680000</span><span class="p">,</span>
+  <span class="s2">&quot;api_endpoint&quot;</span><span class="p">:</span> <span class="s2">&quot;auth/login&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;access_token&quot;</span><span class="p">:</span> <span class="n">u</span> <span class="s2">&quot;24551da62895&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;verify_ssl&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+  <span class="s2">&quot;session&quot;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+  <span class="s2">&quot;expiration&quot;</span><span class="p">:</span> <span class="n">u</span> <span class="s2">&quot;Fri, 01 Jul 2022 20:11:48 GMT&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+  <span class="s2">&quot;status_code&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="s2">&quot;using_remote_api&quot;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
+  <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;pwd&quot;</span><span class="p">:</span> <span class="s2">&quot;MY_RM_PASSWORD&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;remember&quot;</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>TAKE NOTE:</strong> the dumped <code class="code docutils literal"><span class="pre">auth</span></code> object contains the access token
+needed to query the API, sprinkler IDs, RainMachine™ credentials, and other
+sensitive information. <em>Therefore, it should be cached and stored securely</em>.</p>
+<p>One common use of this mechanism would be to check the expiration date of the
+access token; assuming it is still valid, a corresponding client can be
+recreated quite easily:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">auth_json</span><span class="p">[</span><span class="s1">&#39;expires_in&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
+  <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">auth_json</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;12345&#39;</span><span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ssl-usage">
+<h2>SSL Usage<a class="headerlink" href="#ssl-usage" title="Permalink to this headline">¶</a></h2>
+<p>By default, Regenmaschine routes all API calls – local or remote – through HTTPS.
+However, RainMachine devices use self-signed SSL certificates; therefore,
+Regenmaschine disables verifying the validity of local SSL certificates before
+processing local requests. In practice, this shouldn’t be a problem. However, for the security conscious, this behavior can be changed.</p>
+<p>First, <a class="reference external" href="https://support.rainmachine.com/hc/en-us/community/posts/115006512067-rovide-custom-SSL-Certificate">provide a CA-signed SSL certificate to the local device</a>. Then, override the default local Authenticator behavior:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Create a local Authenticator and force it to use SSL:</span>
+<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;MY_RM_PASSWORD&#39;</span><span class="p">)</span>
+<span class="n">auth</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="c1"># The client will now verify the SSL certificate on the local device before</span>
+<span class="c1"># processing every request:</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><em>Note:</em> after this, if Regenmaschine cannot recognize a CA-signed certificate
+when querying the local device, a <code class="code docutils literal"><span class="pre">requests.exceptions.SSLError</span></code>
+exception will be raised.</p>
+<p>To disable SSL once again, re-authenticate and re-create a client:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Create a local Authenticator (with the default behavior):</span>
+<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;&lt;DEVICE_IP_ADDRESS&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;PASSWORD&gt;&#39;</span><span class="p">)</span>
+
+<span class="c1"># The client will now refrain from verifying the SSL connection&#39;s validity:</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="connection-pooling">
+<h2>Connection Pooling<a class="headerlink" href="#connection-pooling" title="Permalink to this headline">¶</a></h2>
+<p>If desired, Regenmaschine can accept a session object that allows it to re-use
+the same HTTP connection for every call (rather than opening up a new one each
+time):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">requests.sessions</span> <span class="kn">import</span> <span class="n">Session</span>
+<span class="k">with</span> <span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
+  <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;12345&#39;</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span>
+  <span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
+
+  <span class="c1"># Each of these calls uses the same HTTP connection:</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+  <span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced Topics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#authentication-caching">Authentication Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ssl-usage">SSL Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#connection-pooling">Connection Pooling</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="quickstart.html" title="previous chapter">Quickstart</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guide/advanced.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><!-- Alabaster (krTheme++) Hacks -->
+
+<!-- CSS Adjustments (I'm very picky.) -->
+<style type="text/css">
+  /* Rezzy requires precise alignment. */
+
+  img.logo {
+    margin-left: -20px!important;
+  }
+  /* "Quick Search" should be capitalized. */
+
+  div#searchbox h3 {
+    text-transform: capitalize;
+  }
+  /* Make the document a little wider, less code is cut-off. */
+
+  div.document {
+    width: 1008px;
+  }
+  /* Much-improved spacing around code blocks. */
+
+  div.highlight pre {
+    padding: 11px 14px;
+  }
+  /* Remain Responsive! */
+
+  @media screen and (max-width: 1008px) {
+    div.sphinxsidebar {
+      display: none;
+    }
+    div.document {
+      width: 100%!important;
+    }
+    /* Have code blocks escape the document right-margin. */
+    div.highlight pre {
+      margin-right: -30px;
+    }
+  }
+</style>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Aaron Bach.
+      
+      |
+      <a href="../_sources/guide/advanced.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/bachya/regenmaschine" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
