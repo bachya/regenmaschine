@@ -106,7 +106,7 @@ html_static_path = ['_static']
 
 html_sidebars = {
     'index': [
-        'localtoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html',
+        'globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html',
         'hacks.html'
     ],
     '**': [

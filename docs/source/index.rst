@@ -54,4 +54,4 @@ The Guide
 
    guide/installation
    guide/quickstart
-
+   guide/advanced
