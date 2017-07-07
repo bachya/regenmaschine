@@ -66,16 +66,17 @@ To retrieve all running programs:
   client.programs.running()
   # >>> {u'programs': [{u'startDate': u'2017-07-01',}] ... }
 
-Regenmaschine also offers methods for starting and stopping programs:
+Regenmaschine also offers two methods to spur programs into (in)action. To
+start program #7:
 
 .. code-block:: python
-
-  # Starts program 7:
 
   client.programs.start(7)
   # >>> {u'message': u'OK', u'statusCode': 0}
 
-  # Stops program 7:
+...and to stop it:
+
+.. code-block:: python
 
   client.programs.stop(7)
   # >>> {u'message': u'OK', u'statusCode': 0}
@@ -88,16 +89,57 @@ complete information on the response formats for zone operations, check out
 the official RainMachine™ API docs:
 `<http://docs.rainmachine.apiary.io/#reference/zones>`_
 
+As with programs, Regenmaschine offers several retrieval methods for zone
+information. To retrieve information on all zones:
+
 .. code-block:: python
 
-  client.zones.all()                   # Returns all zone info
-  client.zones.all(properties=True)    # Returns advanced info for all zones
-  client.zones.get(2)                  # Returns info about a zone with UID of 2
-  client.zones.get(2, properties=True) # Returns advanced info about zone 2
-  client.zones.start(3, 60)            # Starts zone 3 for 60 seconds
-  client.zones.stop(3)                 # Stops zone 3
+  client.zones.all()
+  # >>> { "zones": [ { "uid": 1, "name": "Backyard Landscaping",}] ... }
 
-  # You can also simulate what a zone will do:
+To retrieve even more detailed information about all zones, simply set the
+:code:`properties` parameter to :code:`True`:
+.. code-block:: python
+
+  client.zones.all(properties=True)
+  # >>> { "zones": [ { "uid": 1, "name": "Backyard Landscaping", ] ... }
+
+To retrieve information about a specific Zzone (in this case, zone #2):
+
+.. code-block:: python
+
+  client.zones.get(2)
+  # >>> { "uid": 1, "name": "Backyard Landscaping", "state": 0, ... }
+
+Once again, detailed information about a zone can be retrieved by setting the
+:code:`properties` parameter to :code:`True`:
+
+.. code-block:: python
+
+  client.zones.get(2, properties=True)
+  # >>> { "uid": 1, "name": "Backyard Landscaping", "valveid": 1, ... }
+
+As with programs, zones can also be started and stopped from Regenmaschine. To
+start zone 3 for 60 seconds:
+
+.. code-block:: python
+
+  client.zones.start(3, 60)
+
+...and to stop it:
+
+.. code-block:: python
+
+  client.zones.stop(3)
+
+Regenmaschine also can return a "simulated run" for zones, which provivdes an
+understanding of what a specific zone will do when run next. To do this:
+
+.. code-block:: python
+
+  # Get the complete properties of the zone we want to simulate:
   properties = client.zones.get(2, properties=True)
+
   client.zones.simulate(properties)
+  # >>> { "referenceTime": 1243, "currentFieldCapacity": 30.92 }
 
