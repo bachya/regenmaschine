@@ -11,7 +11,7 @@
   :target: https://pypi.python.org/pypi/regenmaschine
 
 .. image:: https://img.shields.io/pypi/l/Regenmaschine.svg
-  :target: https://pypi.python.org/pypi/regenmaschine
+  :target: https://github.com/bachya/regenmaschine/blob/master/LICENSE
 
 .. image:: https://codecov.io/gh/bachya/regenmaschine/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/bachya/regenmaschine
