@@ -52,6 +52,7 @@ cloud API:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">regenmaschine</span> <span class="kn">as</span> <span class="nn">rm</span>
 
 <span class="c1"># Authenticate against the local device or the remote API:</span>
+
 <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;MY_RM_PASSWORD&#39;</span><span class="p">)</span>
 <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_remote</span><span class="p">(</span><span class="s1">&#39;EMAIL_ADDRESS&#39;</span><span class="p">,</span> <span class="s1">&#39;MY_RM_PASSWORD&#39;</span><span class="p">)</span>
 </pre></div>
@@ -65,39 +66,62 @@ device/service against which it was authenticated. Put simply, if you create a
 “local client” and later want a “remote client,” you’ll need to re-authenticate
 and re-create the client.</p>
 </div>
-<div class="section" id="working-with-programs">
-<h2>Working with Programs<a class="headerlink" href="#working-with-programs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="programs">
+<h2>Programs<a class="headerlink" href="#programs" title="Permalink to this headline">¶</a></h2>
 <p>RainMachine™ programs are collections of zone actions grouped together. For
 complete information on the response formats for program operations, check out
 the official RainMachine™ API docs:
 <a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/programs">http://docs.rainmachine.apiary.io/#reference/programs</a></p>
 <p>In terms of retrieving program information, Regenmaschine offers several
-methods:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Returns information on all programs:</span>
-<span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+methods. To retrieve information on all programs:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 <span class="c1"># &gt;&gt;&gt; {u&#39;programs&#39;: [{u&#39;startDate&#39;: u&#39;2017-07-01&#39;,}] ... }</span>
-
-<span class="c1"># Returns information on a specific program (in this case, program #6):</span>
-<span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To retrieve information on a specific program (in this case, program #6):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 <span class="c1"># &gt;&gt;&gt; {u&#39;status&#39;: 0, u&#39;ignoreInternetWeather&#39;: False, ... }</span>
-
-<span class="c1"># Returns the next run date/time for all programs:</span>
-<span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To retrieve the next run date/time for all programs:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
 <span class="c1"># &gt;&gt;&gt; {u&#39;nextRuns&#39;: [{u&#39;pid&#39;: 3, u&#39;startTime&#39;: u&#39;06:00&#39;}, ] ... }</span>
-
-<span class="c1"># Returns all running programs:</span>
-<span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">running</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To retrieve all running programs:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">running</span><span class="p">()</span>
 <span class="c1"># &gt;&gt;&gt; {u&#39;programs&#39;: [{u&#39;startDate&#39;: u&#39;2017-07-01&#39;,}] ... }</span>
 </pre></div>
 </div>
 <p>Regenmaschine also offers methods for starting and stopping programs:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Starts program 7:</span>
+
 <span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
 <span class="c1"># &gt;&gt;&gt; {u&#39;message&#39;: u&#39;OK&#39;, u&#39;statusCode&#39;: 0}</span>
 
 <span class="c1"># Stops program 7:</span>
+
 <span class="n">client</span><span class="o">.</span><span class="n">programs</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
 <span class="c1"># &gt;&gt;&gt; {u&#39;message&#39;: u&#39;OK&#39;, u&#39;statusCode&#39;: 0}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="zones">
+<h2>Zones<a class="headerlink" href="#zones" title="Permalink to this headline">¶</a></h2>
+<p>RainMachine™ zones are physical locations where watering occurs. For
+complete information on the response formats for zone operations, check out
+the official RainMachine™ API docs:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/zones">http://docs.rainmachine.apiary.io/#reference/zones</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>                   <span class="c1"># Returns all zone info</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>    <span class="c1"># Returns advanced info for all zones</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>                  <span class="c1"># Returns info about a zone with UID of 2</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1"># Returns advanced info about zone 2</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>            <span class="c1"># Starts zone 3 for 60 seconds</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">stop</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>                 <span class="c1"># Stops zone 3</span>
+
+<span class="c1"># You can also simulate what a zone will do:</span>
+<span class="n">properties</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -114,7 +138,8 @@ methods:</p>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#authentication">Authentication</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#working-with-programs">Working with Programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#programs">Programs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#zones">Zones</a></li>
 </ul>
 </li>
 </ul>

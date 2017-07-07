@@ -14,6 +14,7 @@ cloud API:
   import regenmaschine as rm
 
   # Authenticate against the local device or the remote API:
+
   auth = rm.Authenticator.create_local('192.168.1.100', 'MY_RM_PASSWORD')
   auth = rm.Authenticator.create_remote('EMAIL_ADDRESS', 'MY_RM_PASSWORD')
 
@@ -28,8 +29,8 @@ device/service against which it was authenticated. Put simply, if you create a
 "local client" and later want a "remote client," you'll need to re-authenticate
 and re-create the client.
 
-Working with Programs
----------------------
+Programs
+--------
 
 RainMachine™ programs are collections of zone actions grouped together. For
 complete information on the response formats for program operations, check out
@@ -37,23 +38,31 @@ the official RainMachine™ API docs:
 `<http://docs.rainmachine.apiary.io/#reference/programs>`_
 
 In terms of retrieving program information, Regenmaschine offers several
-methods:
+methods. To retrieve information on all programs:
 
 .. code-block:: python
 
-  # Returns information on all programs:
   client.programs.all()
   # >>> {u'programs': [{u'startDate': u'2017-07-01',}] ... }
 
-  # Returns information on a specific program (in this case, program #6):
+To retrieve information on a specific program (in this case, program #6):
+
+.. code-block:: python
+
   client.programs.get(6)
   # >>> {u'status': 0, u'ignoreInternetWeather': False, ... }
 
-  # Returns the next run date/time for all programs:
+To retrieve the next run date/time for all programs:
+
+.. code-block:: python
+
   client.programs.next()
   # >>> {u'nextRuns': [{u'pid': 3, u'startTime': u'06:00'}, ] ... }
 
-  # Returns all running programs:
+To retrieve all running programs:
+
+.. code-block:: python
+
   client.programs.running()
   # >>> {u'programs': [{u'startDate': u'2017-07-01',}] ... }
 
@@ -62,9 +71,33 @@ Regenmaschine also offers methods for starting and stopping programs:
 .. code-block:: python
 
   # Starts program 7:
+
   client.programs.start(7)
   # >>> {u'message': u'OK', u'statusCode': 0}
 
   # Stops program 7:
+
   client.programs.stop(7)
   # >>> {u'message': u'OK', u'statusCode': 0}
+
+Zones
+-----
+
+RainMachine™ zones are physical locations where watering occurs. For
+complete information on the response formats for zone operations, check out
+the official RainMachine™ API docs:
+`<http://docs.rainmachine.apiary.io/#reference/zones>`_
+
+.. code-block:: python
+
+  client.zones.all()                   # Returns all zone info
+  client.zones.all(properties=True)    # Returns advanced info for all zones
+  client.zones.get(2)                  # Returns info about a zone with UID of 2
+  client.zones.get(2, properties=True) # Returns advanced info about zone 2
+  client.zones.start(3, 60)            # Starts zone 3 for 60 seconds
+  client.zones.stop(3)                 # Stops zone 3
+
+  # You can also simulate what a zone will do:
+  properties = client.zones.get(2, properties=True)
+  client.zones.simulate(properties)
+
