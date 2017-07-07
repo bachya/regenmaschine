@@ -99,6 +99,7 @@ information. To retrieve information on all zones:
 
 To retrieve even more detailed information about all zones, simply set the
 :code:`properties` parameter to :code:`True` before running:
+
 .. code-block:: python
 
   client.zones.all(properties=True)

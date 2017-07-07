@@ -118,11 +118,11 @@ information. To retrieve information on all zones:</p>
 </pre></div>
 </div>
 <p>To retrieve even more detailed information about all zones, simply set the
-<code class="code docutils literal"><span class="pre">properties</span></code> parameter to <code class="code docutils literal"><span class="pre">True</span></code> before running:
-.. code-block:: python</p>
-<blockquote>
-<div>client.zones.all(properties=True)
-# &gt;&gt;&gt; { “zones”: [ { “uid”: 1, “name”: “Backyard Landscaping”, ] … }</div></blockquote>
+<code class="code docutils literal"><span class="pre">properties</span></code> parameter to <code class="code docutils literal"><span class="pre">True</span></code> before running:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">properties</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;zones&quot;: [ { &quot;uid&quot;: 1, &quot;name&quot;: &quot;Backyard Landscaping&quot;, ] ... }</span>
+</pre></div>
+</div>
 <p>To retrieve information about a specific Zzone (in this case, zone #2):</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">zones</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="c1"># &gt;&gt;&gt; { &quot;uid&quot;: 1, &quot;name&quot;: &quot;Backyard Landscaping&quot;, &quot;state&quot;: 0, ... }</span>
