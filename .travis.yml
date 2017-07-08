@@ -6,6 +6,8 @@ python:
   - "3.5"
   - "3.6"
 install: "make init"
+script: "make ci"
+cache: "pip"
 jobs:
   include:
     - stage: "test"
