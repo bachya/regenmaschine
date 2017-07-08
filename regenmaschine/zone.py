@@ -25,7 +25,8 @@ class Zones(api.BaseAPI):
 
         return self.parent.get('zone').object.json()
 
-    def get(self, zone_id, properties=False):  # pylint: disable=arguments-differ
+    # pylint: disable=arguments-differ
+    def get(self, zone_id, properties=False):
         """ Returns information for a specific zone """
         if properties:
             return self.parent.get(

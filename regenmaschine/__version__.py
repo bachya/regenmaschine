@@ -10,7 +10,7 @@ Github: https://github.com/bachya/regenmaschine
 __author__ = 'Aaron Bach'
 __author_email__ = 'bachya1208@gmail.com'
 __copyright__ = 'Copyright 2017 Aaron Bach'
-__description__ = 'A simple Python library for RainMachine sprinkler controllers'
+__description__ = 'A Python library for RainMachine sprinkler controllers'
 __license__ = 'MIT'
 __title__ = 'regenmaschine'
 __url__ = 'http://bachya.github.io/regenmaschine'

@@ -19,7 +19,7 @@ class Programs(api.BaseAPI):
         self.parent.__init__(*args, **kwargs)
 
     @api.broken_remote_api
-    def _broken_remote_api_test(self):  #pylint: disable=no-self-use
+    def _broken_remote_api_test(self):  # pylint: disable=no-self-use
         """ Pure test method to test the broken_remote_api decorator """
         return {'status': 'ok'}
 

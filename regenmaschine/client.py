@@ -16,6 +16,7 @@ import regenmaschine.stats as stats
 import regenmaschine.watering as watering
 import regenmaschine.zone as zone
 
+
 # pylint: disable=too-few-public-methods,too-many-instance-attributes
 class Client(object):
     """ A client to interact with the bulk of the RainMachine API """

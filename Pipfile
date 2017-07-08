@@ -7,9 +7,11 @@ coverage = "*"
 pytest = "*"
 pytest-cov = "*"
 requests-mock = "*"
-Sphinx = "*"
 twine = "*"
 codecov = "*"
+tox = "*"
+Sphinx = "*"
+flake8 = "*"
 
 [packages]
 requests = "*"
