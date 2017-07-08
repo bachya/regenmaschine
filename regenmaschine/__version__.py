@@ -14,4 +14,4 @@ __description__ = 'A simple Python library for RainMachine sprinkler controllers
 __license__ = 'MIT'
 __title__ = 'regenmaschine'
 __url__ = 'http://bachya.github.io/regenmaschine'
-__version__ = '0.2.9'
+__version__ = '0.2.10'
