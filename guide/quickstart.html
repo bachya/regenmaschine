@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Quickstart &#8212; Regenmaschine 0.2.12 documentation</title>
+    <title>Quickstart &#8212; Regenmaschine 0.3.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.2.12',
+        VERSION:     '0.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -273,6 +273,29 @@ future will return expected statistics:</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="provision-info">
+<h2>Provision Info<a class="headerlink" href="#provision-info" title="Permalink to this headline">¶</a></h2>
+<p>RainMachine™ provides <code class="code docutils literal"><span class="pre">provision</span></code> info for every device; contained within
+is device information, such as device name, network information, and more. For
+information on the response formats for diagnostic operations, check out the
+official RainMachine™ API docs:
+<a class="reference external" href="http://docs.rainmachine.apiary.io/#reference/provision">http://docs.rainmachine.apiary.io/#reference/provision</a></p>
+<p>To retrieve the device name:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">provision</span><span class="o">.</span><span class="n">device_name</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;name&quot;: &quot;Home&quot; }</span>
+</pre></div>
+</div>
+<p>To retrieve all device settings:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">settings</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;system&quot;: { &quot;httpenabled&quot;: true, &quot;rainsensorsnoozeduration&quot;:  } ... }</span>
+</pre></div>
+</div>
+<p>To retrieve wifi information:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">wifi</span><span class="p">()</span>
+<span class="c1"># &gt;&gt;&gt; { &quot;macAddress&quot;: &quot;00:00:00:00:00:00&quot;, &quot;ssid&quot;: &quot;My Wifi&quot;, ... }</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="diagnostics">
 <h2>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this headline">¶</a></h2>
 <p>RainMachine™ <code class="code docutils literal"><span class="pre">diagnostics</span></code> are exactly what they sound like! For complete
@@ -309,6 +332,7 @@ official RainMachine™ API docs:
 <li class="toctree-l2"><a class="reference internal" href="#restrictions">Restrictions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#weather-services">Weather Services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#stats">Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#provision-info">Provision Info</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#diagnostics">Diagnostics</a></li>
 </ul>
 </li>
