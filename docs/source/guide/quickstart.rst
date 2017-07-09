@@ -295,6 +295,36 @@ future will return expected statistics:
   client.stats.on_date('1 week ago')
   # >>> { "id": -10, "day": "2017-06-27", "mint": 17.94, ... }
 
+Provision Info
+--------------
+
+RainMachine™ provides :code:`provision` info for every device; contained within
+is device information, such as device name, network information, and more. For
+information on the response formats for diagnostic operations, check out the
+official RainMachine™ API docs:
+`<http://docs.rainmachine.apiary.io/#reference/provision>`_
+
+To retrieve the device name:
+
+.. code-block:: python
+
+  client.provision.device_name()
+  # >>> { "name": "Home" }
+
+To retrieve all device settings:
+
+.. code-block:: python
+
+  client.diagnostics.settings()
+  # >>> { "system": { "httpenabled": true, "rainsensorsnoozeduration":  } ... }
+
+To retrieve wifi information:
+
+.. code-block:: python
+
+  client.diagnostics.wifi()
+  # >>> { "macAddress": "00:00:00:00:00:00", "ssid": "My Wifi", ... }
+
 Diagnostics
 -----------
 

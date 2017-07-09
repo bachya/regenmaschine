@@ -11,6 +11,7 @@ import regenmaschine.api as api
 import regenmaschine.diagnostics as diagnostics
 import regenmaschine.program as program
 import regenmaschine.parser as parser
+import regenmaschine.provision as provision
 import regenmaschine.restrictions as restrictions
 import regenmaschine.stats as stats
 import regenmaschine.watering as watering
@@ -37,6 +38,7 @@ class Client(object):
         self.diagnostics = diagnostics.Diagnostics(**kwargs)
         self.parsers = parser.Parsers(**kwargs)
         self.programs = program.Programs(**kwargs)
+        self.provision = provision.Provision(**kwargs)
         self.restrictions = restrictions.Restrictions(**kwargs)
         self.stats = stats.Stats(**kwargs)
         self.watering = watering.Watering(**kwargs)
