@@ -12,6 +12,7 @@ codecov = "*"
 tox = "*"
 Sphinx = "*"
 flake8 = "*"
+detox = "*"
 
 [packages]
 requests = "*"
