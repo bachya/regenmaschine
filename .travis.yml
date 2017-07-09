@@ -10,8 +10,6 @@ script: "make ci"
 cache: "pip"
 jobs:
   include:
-    - stage: "test"
-      script: "make ci"
     - stage: "coverage"
       python: "3.6"
       script: "pipenv run codecov"
