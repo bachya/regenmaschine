@@ -10,7 +10,6 @@ Exceptions
 Regenmaschine may raise any of the following:
 
 * `Built-in Python Exceptions <https://docs.python.org/3/library/exceptions.html#bltin-exceptions>`_
-* `Requests Exceptions <https://github.com/requests/requests/blob/master/requests/exceptions.py>`_
 * `Regenmaschine Exceptions <https://github.com/bachya/regenmaschine/blob/master/regenmaschine/exceptions.py>`_
 
 One exception to pay particular note of is

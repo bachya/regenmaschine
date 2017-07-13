@@ -11,6 +11,11 @@ class BrokenAPICall(Exception):
     pass
 
 
+class HTTPError(Exception):
+    """ Some sort of HTTP error occurred """
+    pass
+
+
 class InvalidAuthenticator(Exception):
     """ Could not create an Authenticator from the provided data """
     pass

@@ -10,7 +10,7 @@ Github: https://github.com/bachya/regenmaschine
 import logging
 
 import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import requests.packages.urllib3 as rurllib3
 
 import regenmaschine.exceptions as exceptions
 import regenmaschine.remote_status_codes as rsc
@@ -31,7 +31,10 @@ class Response(object):  # pylint: disable=too-few-public-methods
 
         # First, check for HTTP exceptions from the local API (which seems
         # to utilize HTTP response codes correctly):
-        self.object.raise_for_status()
+        try:
+            self.object.raise_for_status()
+        except requests.exceptions.HTTPError as exc_info:
+            raise exceptions.HTTPError(str(exc_info))
 
         # The remote API is odd: it returns error codes in the body correctly,
         # but always seems to return a status of 200. If that happens, catch it
@@ -43,7 +46,7 @@ class Response(object):  # pylint: disable=too-few-public-methods
             else:
                 error_message = rsc.CODES[99]
 
-            raise requests.exceptions.HTTPError('{} for url: {}'.format(
+            raise exceptions.HTTPError('{} for url: {}'.format(
                 error_message, self.object.request.url))
 
 
@@ -79,7 +82,8 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
             # unless it is replaced with a signed one, SSL warnings will stop
             # requests from completing, so we offer the ability to shut that
             # behavior off:
-            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+            rurllib3.disable_warnings(
+                rurllib3.exceptions.InsecureRequestWarning)
 
         url = '{}/{}'.format(self.url, api_endpoint)
         method = getattr(self.session
