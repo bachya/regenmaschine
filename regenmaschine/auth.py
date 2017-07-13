@@ -38,7 +38,7 @@ class Authenticator(api.BaseAPI):
 
     def authenticate(self):
         """ Retrieves access token (and related info) from the API """
-        response = self.post(self.api_endpoint, data=json.dumps(self.data))
+        response = self.post(self.api_endpoint, json=self.data)
         data = response.object.json()
         self.access_token = data.get('access_token')
         self.api_url = self.url if data.get(

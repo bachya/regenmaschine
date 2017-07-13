@@ -38,12 +38,12 @@ class Zones(api.BaseAPI):
         """
         Simulates a zone activity (based on advanced zone properties)
         """
-        return self.parent.post('zone/simulate', data=zone_data).object.json()
+        return self.parent.post('zone/simulate', json=zone_data).object.json()
 
     def start(self, zone_id, seconds):
         """ Starts a zone for a specific number of seconds """
         return self.parent.post(
-            'zone/{}/start'.format(zone_id), data={'time':
+            'zone/{}/start'.format(zone_id), json={'time':
                                                    seconds}).object.json()
 
     def stop(self, zone_id):
