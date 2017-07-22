@@ -5,8 +5,5 @@ __pycache__
 dist
 *.egg-info
 build
-coverage.xmlreport.xml
 .tox
-report.xml
-coverage.xml
 .ta

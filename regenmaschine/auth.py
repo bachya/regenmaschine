@@ -12,7 +12,7 @@ import json
 import regenmaschine.api as api
 import regenmaschine.exceptions as exceptions
 
-API_LOCAL_BASE = 'https://{}:8080/api/4'
+API_LOCAL_BASE = '{}://{}:{}/api/4'
 API_REMOTE_BASE = 'https://my.rainmachine.com'
 
 
@@ -52,9 +52,17 @@ class Authenticator(api.BaseAPI):
         self.status_code = data.get('statusCode')
 
     @classmethod
-    def create_local(cls, ip_address, password, session=None):
+    def create_local(  # pylint: disable=too-many-arguments
+            cls,
+            ip_address,
+            password,
+            port=8080,
+            https=True,
+            session=None):
         """ Creates a local authenticator"""
-        klass = cls(API_LOCAL_BASE.format(ip_address), False, session)
+        klass = cls(
+            API_LOCAL_BASE.format('https' if https else 'http', ip_address,
+                                  port), False, session)
         klass.api_endpoint = 'auth/login'
         klass.data = {'pwd': password, 'remember': 1}
         klass.verify_ssl = False

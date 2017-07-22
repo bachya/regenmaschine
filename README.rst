@@ -42,8 +42,8 @@ controllers over a LAN or via RainMachine™'s cloud.
   import regenmaschine as rm
 
   # Authenticate against the local device or the remote API:
-  auth = rm.Authenticator.create_local('192.168.1.100', 'MY_RM_PASSWORD')
-  auth = rm.Authenticator.create_remote('EMAIL_ADDRESS', 'MY_RM_PASSWORD')
+  auth = rm.Authenticator.create_local('192.168.1.100', 'password', port=8080, https=True)
+  auth = rm.Authenticator.create_remote('email@host.com', 'password')
 
   # Create a client:
   client = rm.Client(auth)

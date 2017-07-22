@@ -80,7 +80,7 @@ recreated quite easily:
   if auth_json['expires_in'] > 1000:
     auth = rm.Authenticator.load(auth_json)
   else:
-    auth = rm.Authenticator.create_local('192.168.1.100', '12345')
+    auth = rm.Authenticator.create_local('192.168.1.100', 'password')
 
   client = rm.Client(auth)
 
@@ -97,7 +97,7 @@ First, `provide a CA-signed SSL certificate to the local device <https://support
 .. code-block:: python
 
   # Create a local Authenticator and force it to use SSL:
-  auth = rm.Authenticator.create_local('192.168.1.100', 'MY_RM_PASSWORD')
+  auth = rm.Authenticator.create_local('192.168.1.100', 'password')
   auth.verify_ssl = True
 
   # The client will now verify the SSL certificate on the local device before
@@ -113,7 +113,7 @@ To disable SSL once again, re-authenticate and re-create a client:
 .. code-block:: python
 
   # Create a local Authenticator (with the default behavior):
-  auth = rm.Authenticator.create_local('<DEVICE_IP_ADDRESS>', '<PASSWORD>')
+  auth = rm.Authenticator.create_local('192.168.1.100', 'password')
 
   # The client will now refrain from verifying the SSL connection's validity:
   client = rm.Client(auth)
@@ -129,7 +129,7 @@ time):
 
   from requests.sessions import Session
   with Session() as session:
-    auth = rm.Authenticator.create_local('192.168.1.100', '12345', session)
+    auth = rm.Authenticator.create_local('192.168.1.100', 'password', session)
     client = rm.Client(auth)
 
     # Each of these calls uses the same HTTP connection:

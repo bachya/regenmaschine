@@ -1,7 +1,7 @@
 ci:
 	pipenv run py.test --junitxml=report.xml
 coverage:
-	pipenv run py.test --verbose --cov-report term --cov-report xml --cov=regenmaschine tests
+	pipenv run py.test --verbose --cov-report term-missing --cov-report xml --cov=regenmaschine tests
 docs:
 	cd docs && make html
 flake8:

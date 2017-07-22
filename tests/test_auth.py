@@ -12,7 +12,6 @@ Github: https://github.com/bachya/regenmaschine
 import json
 
 import pytest
-import requests
 import requests_mock
 
 import regenmaschine as rm
@@ -95,6 +94,31 @@ class TestLocalAuthenticator(object):
             with pytest.raises(rm.exceptions.HTTPError) as exc_info:
                 rm.Authenticator.create_local('192.168.1.100', '12345')
                 assert '404 Client Error: Not Found' in str(exc_info)
+
+    def test_local_different_port(self, local_auth_response_200):
+        """ Tests setting a different port for local connections """
+        url = 'https://192.168.1.100:80/api/4/auth/login'
+        with requests_mock.Mocker() as mock:
+            mock.post(url, text=json.dumps(local_auth_response_200))
+
+            auth = rm.Authenticator.create_local(
+                '192.168.1.100', '12345', port=80)
+            assert ':80/' in auth.url
+
+    def test_local_http_https(self, local_auth_response_200):
+        """ Tests setting a different port for local connections """
+        http_url = 'http://192.168.1.100:80/api/4/auth/login'
+        https_url = 'https://192.168.1.100:8080/api/4/auth/login'
+        with requests_mock.Mocker() as mock:
+            mock.post(http_url, text=json.dumps(local_auth_response_200))
+            mock.post(https_url, text=json.dumps(local_auth_response_200))
+
+            http_auth = rm.Authenticator.create_local(
+                '192.168.1.100', '12345', port=80, https=False)
+            https_auth = rm.Authenticator.create_local(
+                '192.168.1.100', '12345', port=8080, https=True)
+            assert 'http://' in http_auth.url
+            assert 'https://' in https_auth.url
 
 
 class TestRemoteCredentials(object):
