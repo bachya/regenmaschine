@@ -51,13 +51,14 @@ cloud API:</p>
 
 <span class="c1"># Authenticate against the local device or the remote API:</span>
 
-<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>
+<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">,</span> <span class="n">https</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_remote</span><span class="p">(</span><span class="s1">&#39;email@host.com&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Note that if your RainMachine uses a port other than 8080 (the default on newer
 units), you can use the optional <code class="code docutils literal"><span class="pre">port</span></code> parameter to change it when
-creating a local Authenticator.</p>
+creating a local Authenticator. You can also enable/disable HTTPS depending on
+your needs via the optional <code class="code docutils literal"><span class="pre">https</span></code> parameter.</p>
 <p>This <code class="code docutils literal"><span class="pre">Authenticator</span></code> object can then be used to instantiate a
 Regenmaschine <code class="code docutils literal"><span class="pre">Client</span></code>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
