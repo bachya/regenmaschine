@@ -18,10 +18,11 @@ cloud API:
   auth = rm.Authenticator.create_local('192.168.1.100', 'password', port=8080, https=True)
   auth = rm.Authenticator.create_remote('email@host.com', 'password')
 
-Note that if your RainMachine uses a port other than 8080 (the default on newer
-units), you can use the optional :code:`port` parameter to change it when
-creating a local Authenticator. You can also enable/disable HTTPS depending on
-your needs via the optional :code:`https` parameter.
+Authenticating against the local device adds a few additional configuration
+parameters:
+
+- :code:`port`: allows for changing the device's port number
+- :code:`https`: allows for enabling/disabling HTTPS as needed
 
 This :code:`Authenticator` object can then be used to instantiate a
 Regenmaschine :code:`Client`:
