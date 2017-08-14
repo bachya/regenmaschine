@@ -1,9 +1,10 @@
-.cache
-__pycache__
-*.pyc
-.coverage
-dist
 *.egg-info
-build
-.tox
+*.pyc
+.cache
+.coverage
 .ta
+.tox
+__pycache__
+build
+coverage.xml
+dist

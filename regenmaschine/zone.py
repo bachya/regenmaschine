@@ -48,4 +48,6 @@ class Zones(api.BaseAPI):
 
     def stop(self, zone_id):
         """ Stops a zone """
-        return self.parent.post('zone/{}/stop'.format(zone_id)).object.json()
+        return self.parent.post(
+            'zone/{}/stop'.format(zone_id), json={'zid':
+                                                  zone_id}).object.json()
