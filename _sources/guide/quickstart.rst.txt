@@ -15,8 +15,12 @@ cloud API:
 
   # Authenticate against the local device or the remote API:
 
-  auth = rm.Authenticator.create_local('192.168.1.100', 'MY_RM_PASSWORD')
-  auth = rm.Authenticator.create_remote('EMAIL_ADDRESS', 'MY_RM_PASSWORD')
+  auth = rm.Authenticator.create_local('192.168.1.100', 'password', port=8080)
+  auth = rm.Authenticator.create_remote('email@host.com', 'password')
+
+Note that if your RainMachine uses a port other than 8080 (the default on newer
+units), you can use the optional :code:`port` parameter to change it when
+creating a local Authenticator.
 
 This :code:`Authenticator` object can then be used to instantiate a
 Regenmaschine :code:`Client`:

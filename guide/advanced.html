@@ -5,16 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Advanced Topics &#8212; Regenmaschine 0.3.0 documentation</title>
-    
+    <title>Advanced Topics &#8212; Regenmaschine 0.3.2 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '0.3.0',
+        VERSION:     '0.3.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -51,7 +48,6 @@ all of the topics contained here.</p>
 <p>Regenmaschine may raise any of the following:</p>
 <ul class="simple">
 <li><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#bltin-exceptions">Built-in Python Exceptions</a></li>
-<li><a class="reference external" href="https://github.com/requests/requests/blob/master/requests/exceptions.py">Requests Exceptions</a></li>
 <li><a class="reference external" href="https://github.com/bachya/regenmaschine/blob/master/regenmaschine/exceptions.py">Regenmaschine Exceptions</a></li>
 </ul>
 <p>One exception to pay particular note of is
@@ -113,7 +109,7 @@ recreated quite easily:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">auth_json</span><span class="p">[</span><span class="s1">&#39;expires_in&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
   <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">auth_json</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-  <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;12345&#39;</span><span class="p">)</span>
+  <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
 </pre></div>
@@ -127,7 +123,7 @@ Regenmaschine disables verifying the validity of local SSL certificates before
 processing local requests. In practice, this shouldn’t be a problem. However, for the security conscious, this behavior can be changed.</p>
 <p>First, <a class="reference external" href="https://support.rainmachine.com/hc/en-us/community/posts/115006512067-rovide-custom-SSL-Certificate">provide a CA-signed SSL certificate to the local device</a>. Then, override the default local Authenticator behavior:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Create a local Authenticator and force it to use SSL:</span>
-<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;MY_RM_PASSWORD&#39;</span><span class="p">)</span>
+<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)</span>
 <span class="n">auth</span><span class="o">.</span><span class="n">verify_ssl</span> <span class="o">=</span> <span class="bp">True</span>
 
 <span class="c1"># The client will now verify the SSL certificate on the local device before</span>
@@ -140,7 +136,7 @@ when querying the local device, a <code class="code docutils literal"><span clas
 exception will be raised.</p>
 <p>To disable SSL once again, re-authenticate and re-create a client:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Create a local Authenticator (with the default behavior):</span>
-<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;&lt;DEVICE_IP_ADDRESS&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;PASSWORD&gt;&#39;</span><span class="p">)</span>
+<span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)</span>
 
 <span class="c1"># The client will now refrain from verifying the SSL connection&#39;s validity:</span>
 <span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
@@ -154,7 +150,7 @@ the same HTTP connection for every call (rather than opening up a new one each
 time):</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">requests.sessions</span> <span class="kn">import</span> <span class="n">Session</span>
 <span class="k">with</span> <span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-  <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;12345&#39;</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span>
+  <span class="n">auth</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Authenticator</span><span class="o">.</span><span class="n">create_local</span><span class="p">(</span><span class="s1">&#39;192.168.1.100&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span>
   <span class="n">client</span> <span class="o">=</span> <span class="n">rm</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>
 
   <span class="c1"># Each of these calls uses the same HTTP connection:</span>
