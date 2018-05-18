@@ -88,10 +88,10 @@ class TestLocalAuthenticator(object):
         with requests_mock.Mocker() as mock:
             mock.post(
                 url,
-                exc=rm.exceptions.HTTPError(
+                exc=rm.exceptions.RainMachineError(
                     '404 Client Error: Not Found in url: {}'.format(url)))
 
-            with pytest.raises(rm.exceptions.HTTPError) as exc_info:
+            with pytest.raises(rm.exceptions.RainMachineError) as exc_info:
                 rm.Authenticator.create_local('192.168.1.100', '12345')
                 assert '404 Client Error: Not Found' in str(exc_info)
 
@@ -133,7 +133,7 @@ class TestRemoteCredentials(object):
                 text=json.dumps(expected_response),
                 cookies=local_cookies)
 
-            with pytest.raises(rm.exceptions.HTTPError) as exc_info:
+            with pytest.raises(rm.exceptions.RainMachineError) as exc_info:
                 rm.Authenticator.create_remote('user@host.com', '12345')
                 assert rsc.CODES[remote_error_code] in str(exc_info)
 

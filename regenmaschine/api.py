@@ -34,7 +34,7 @@ class Response(object):  # pylint: disable=too-few-public-methods
         try:
             self.object.raise_for_status()
         except requests.exceptions.HTTPError as exc_info:
-            raise exceptions.HTTPError(str(exc_info))
+            raise exceptions.RainMachineError(str(exc_info))
 
         # The remote API is odd: it returns error codes in the body correctly,
         # but always seems to return a status of 200. If that happens, catch it
@@ -46,7 +46,7 @@ class Response(object):  # pylint: disable=too-few-public-methods
             else:
                 error_message = rsc.CODES[99]
 
-            raise exceptions.HTTPError('{} for url: {}'.format(
+            raise exceptions.RainMachineError('{} for url: {}'.format(
                 error_message, self.object.request.url))
 
 
@@ -88,11 +88,16 @@ class BaseAPI(object):  # pylint: disable=too-few-public-methods
         url = '{}/{}'.format(self.url, api_endpoint)
         method = getattr(self.session
                          if self.session else requests, method_type)
-        resp = method(
-            url,
-            cookies=requests.cookies.cookiejar_from_dict(self.cookies),
-            verify=self.verify_ssl,
-            **kwargs)
+
+        try:
+            resp = method(
+                url,
+                cookies=requests.cookies.cookiejar_from_dict(self.cookies),
+                verify=self.verify_ssl,
+                timeout=5,
+                **kwargs)
+        except requests.exceptions.Timeout as exc:
+            raise exceptions.RainMachineError(exc)
 
         # The Requests object is great, but we need a little extra sugar when
         # checking for errors from the remote API, so we use a custom wrapper:

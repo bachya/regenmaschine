@@ -11,11 +11,11 @@ class BrokenAPICall(Exception):
     pass
 
 
-class HTTPError(Exception):
-    """ Some sort of HTTP error occurred """
+class InvalidAuthenticator(Exception):
+    """ Could not create an Authenticator from the provided data """
     pass
 
 
-class InvalidAuthenticator(Exception):
-    """ Could not create an Authenticator from the provided data """
+class RainMachineError(Exception):
+    """ Some sort of generic error occurred """
     pass

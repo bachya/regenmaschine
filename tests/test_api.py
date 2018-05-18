@@ -13,6 +13,7 @@ import json
 
 import pytest
 import requests_mock
+from requests.exceptions import Timeout
 
 import regenmaschine as rm
 from tests.fixtures.auth import *
@@ -25,9 +26,16 @@ def test_bad_api_call(local_url):
     with requests_mock.Mocker() as mock:
         mock.post('{}/auth/login'.format(local_url), status_code=404)
 
-        with pytest.raises(rm.exceptions.HTTPError) as exc_info:
+        with pytest.raises(rm.exceptions.RainMachineError) as exc_info:
             rm.Authenticator.create_local('192.168.1.100', '12345')
             assert '404' in str(exc_info)
+
+    with requests_mock.Mocker() as mock:
+        mock.post('{}/auth/login'.format(local_url), exc=Timeout)
+
+        with pytest.raises(rm.exceptions.RainMachineError) as exc_info:
+            rm.Authenticator.create_local('192.168.1.100', '12345')
+            assert 'Timeout' in str(exc_info)
 
 
 def test_cookies(local_auth_response_200, local_cookies, local_url,
