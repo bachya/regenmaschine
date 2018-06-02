@@ -4,7 +4,7 @@ verify_ssl = true
 
 [dev-packages]
 coverage = "*"
-pytest = "*"
+pytest-aiohttp = "*"
 pytest-cov = "*"
 requests-mock = "*"
 twine = "*"
@@ -15,5 +15,5 @@ flake8 = "*"
 detox = "*"
 
 [packages]
-requests = "*"
-maya = "*"
+aiodns = "*"
+aiohttp = "*"

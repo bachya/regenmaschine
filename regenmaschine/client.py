@@ -1,45 +1,66 @@
-"""
-File: client.py
-Author: Aaron Bach
-Email: bachya1208@gmail.com
-Github: https://github.com/bachya/regenmaschine
-"""
+"""Define a client to interact with a RainMachine hub."""
+import datetime
 
-# -*- coding: utf-8 -*-
+from aiohttp import ClientSession, client_exceptions
 
-import regenmaschine.api as api
-import regenmaschine.diagnostics as diagnostics
-import regenmaschine.program as program
-import regenmaschine.parser as parser
-import regenmaschine.provision as provision
-import regenmaschine.restrictions as restrictions
-import regenmaschine.stats as stats
-import regenmaschine.watering as watering
-import regenmaschine.zone as zone
+from .errors import RequestError
+from .program import Program
+
+API_VERSION = '4'
 
 
-# pylint: disable=too-few-public-methods,too-many-instance-attributes
-class Client(object):
-    """ A client to interact with the bulk of the RainMachine API """
+class Client(object):  # pylint: disable=too-many-instance-attributes
+    """Define the client."""
 
-    def __init__(self, auth, timeout=api.DEFAULT_TIMEOUT):
-        """ Initialize! """
-        self.auth = auth
-        kwargs = {
-            'url': auth.api_url,
-            'access_token': auth.access_token,
-            'cookies': auth.cookies,
-            'session': auth.session,
-            'timeout': timeout,
-            'using_remote_api': auth.using_remote_api,
-            'verify_ssl': auth.verify_ssl
-        }
+    def __init__(self,
+                 host: str,
+                 websession: ClientSession,
+                 *,
+                 port: int = 8080,
+                 ssl: bool = True) -> None:
+        """Initialize."""
+        self._access_token = None
+        self._access_token_expiration = None  # type: datetime
+        self._authenticated = False
+        self.host = host
+        self.port = port
+        self.ssl = ssl
+        self.websession = websession
 
-        self.diagnostics = diagnostics.Diagnostics(**kwargs)
-        self.parsers = parser.Parsers(**kwargs)
-        self.programs = program.Programs(**kwargs)
-        self.provision = provision.Provision(**kwargs)
-        self.restrictions = restrictions.Restrictions(**kwargs)
-        self.stats = stats.Stats(**kwargs)
-        self.watering = watering.Watering(**kwargs)
-        self.zones = zone.Zones(**kwargs)
+        self.diagnostics = None
+        self.parsers = None
+        self.programs = None  # type: Program
+        self.provision = None
+        self.restrictions = None
+        self.stats = None
+        self.watering = None
+        self.zones = None
+
+    async def authenticate(self, passwd: str) -> None:
+        """Authenticate against the RainMachine device."""
+        json = {'pwd': passwd, 'remember': 1}
+        data = await self.request('post', 'auth/login', json=json)
+        self._access_token = data['access_token']
+        self._access_token_expiration = (
+            datetime.datetime.now() +
+            datetime.timedelta(seconds=data['expires_in']))
+
+        self.programs = Program(self.request)
+
+    async def request(self, method: str, endpoint: str, *,
+                      json: dict = None) -> dict:
+        """Make a request against the RainMachine device."""
+        url = 'https://{0}:{1}/api/{2}/{3}'.format(self.host, self.port,
+                                                   API_VERSION, endpoint)
+
+        try:
+            headers = {'Content-Type': 'application/json'}
+            async with self.websession.request(
+                    method, url, headers=headers, json=json,
+                    ssl=self.ssl) as resp:
+                resp.raise_for_status()
+                data = await resp.json(content_type=None)
+                return data
+        except client_exceptions.ClientError as err:
+            raise RequestError('Error requesting data from {}: {}'.format(
+                self.host, err)) from None
