@@ -3,8 +3,13 @@ import datetime
 
 from aiohttp import ClientSession, client_exceptions
 
-from .errors import RequestError
+from .errors import ExpiredTokenError, RequestError, UnauthenticatedError
+from .diagnostics import Diagnostics
+from .parser import Parser
 from .program import Program
+from .provision import Provision
+from .restriction import Restriction
+from .zone import Zone
 
 API_VERSION = '4'
 
@@ -20,38 +25,48 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
                  ssl: bool = True) -> None:
         """Initialize."""
         self._access_token = None
-        self._access_token_expiration = None  # type: datetime
+        self._access_token_expiration = None  # type: datetime.datetime
         self._authenticated = False
         self.host = host
         self.port = port
         self.ssl = ssl
         self.websession = websession
 
-        self.diagnostics = None
-        self.parsers = None
-        self.programs = None  # type: Program
-        self.provision = None
-        self.restrictions = None
+        self.diagnostics = Diagnostics(self.request)
+        self.parsers = Parser(self.request)
+        self.programs = Program(self.request)
+        self.provisioning = Provision(self.request)
+        self.restrictions = Restriction(self.request)
         self.stats = None
         self.watering = None
-        self.zones = None
+        self.zones = Zone(self.request)
 
     async def authenticate(self, passwd: str) -> None:
         """Authenticate against the RainMachine device."""
         json = {'pwd': passwd, 'remember': 1}
-        data = await self.request('post', 'auth/login', json=json)
+        data = await self.request(
+            'post', 'auth/login', json=json, auth=False)
+        self._authenticated = True
         self._access_token = data['access_token']
         self._access_token_expiration = (
             datetime.datetime.now() +
             datetime.timedelta(seconds=data['expires_in']))
 
-        self.programs = Program(self.request)
-
-    async def request(self, method: str, endpoint: str, *,
-                      json: dict = None) -> dict:
+    async def request(self,
+                      method: str,
+                      endpoint: str,
+                      *,
+                      json: dict = None,
+                      auth: bool = True) -> dict:
         """Make a request against the RainMachine device."""
         url = 'https://{0}:{1}/api/{2}/{3}'.format(self.host, self.port,
                                                    API_VERSION, endpoint)
+
+        if auth and not self._authenticated:
+            raise UnauthenticatedError('You must authenticate first!')
+
+        if auth and datetime.datetime.now() > self._access_token_expiration:
+            raise ExpiredTokenError('Your token is expired; re-authenticate!')
 
         try:
             headers = {'Content-Type': 'application/json'}
