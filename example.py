@@ -1,5 +1,6 @@
 """Run an example script to quickly test."""
 import asyncio
+import datetime
 
 from aiohttp import ClientSession
 
@@ -49,6 +50,7 @@ async def run(websession):
         # print('STOPPING PROGRAM #1')
         # print(await client.programs.stop(1))
 
+        print()
         print('ALL ACTIVE ZONES')
         for zone in await client.zones.all(details=True):
             print('Zone #{0}: {1} (soil: {2})'.format(
@@ -102,6 +104,30 @@ async def run(websession):
             print(restriction['name'])
         raindelay = await client.restrictions.raindelay()
         print('Rain Delay Counter: {0}'.format(raindelay['delayCounter']))
+
+        print()
+        print('STATS')
+        today = await client.stats.on_date(date=datetime.date.today())
+        print('Min for Today: {0}'.format(today['mint']))
+        for day in await client.stats.upcoming(details=True):
+            print('{0} Min: {1}'.format(day['day'], day['mint']))
+
+        print()
+        print('WATERING')
+        for day in await client.watering.log(date=datetime.date.today()):
+            print('{0} duration: {1}'.format(day['date'], day['realDuration']))
+        queue = await client.watering.queue()
+        print('Current Queue: {0}'.format(queue))
+
+        print('Runs:')
+        for watering_run in await client.watering.runs(
+                date=datetime.date.today()):
+            print('{0} ({1})'.format(watering_run['dateTime'],
+                                     watering_run['et0']))
+
+        print()
+        print('STOPPING ALL WATERING')
+        print(await client.watering.stop_all())
 
     except RequestError as err:
         print(err)

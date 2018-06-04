@@ -9,6 +9,8 @@ from .parser import Parser
 from .program import Program
 from .provision import Provision
 from .restriction import Restriction
+from .stats import Stats
+from .watering import Watering
 from .zone import Zone
 
 API_VERSION = '4'
@@ -37,15 +39,14 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
         self.programs = Program(self.request)
         self.provisioning = Provision(self.request)
         self.restrictions = Restriction(self.request)
-        self.stats = None
-        self.watering = None
+        self.stats = Stats(self.request)
+        self.watering = Watering(self.request)
         self.zones = Zone(self.request)
 
     async def authenticate(self, passwd: str) -> None:
         """Authenticate against the RainMachine device."""
         json = {'pwd': passwd, 'remember': 1}
-        data = await self.request(
-            'post', 'auth/login', json=json, auth=False)
+        data = await self.request('post', 'auth/login', json=json, auth=False)
         self._authenticated = True
         self._access_token = data['access_token']
         self._access_token_expiration = (
@@ -56,6 +57,8 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
                       method: str,
                       endpoint: str,
                       *,
+                      headers: dict = None,
+                      params: dict = None,
                       json: dict = None,
                       auth: bool = True) -> dict:
         """Make a request against the RainMachine device."""
@@ -68,10 +71,22 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
         if auth and datetime.datetime.now() > self._access_token_expiration:
             raise ExpiredTokenError('Your token is expired; re-authenticate!')
 
+        if not headers:
+            headers = {}
+        headers.update({'Content-Type': 'application/json'})
+
+        if not params:
+            params = {}
+        if auth:
+            params.update({'access_token': self._access_token})
+
         try:
-            headers = {'Content-Type': 'application/json'}
             async with self.websession.request(
-                    method, url, headers=headers, json=json,
+                    method,
+                    url,
+                    headers=headers,
+                    params=params,
+                    json=json,
                     ssl=self.ssl) as resp:
                 resp.raise_for_status()
                 data = await resp.json(content_type=None)
