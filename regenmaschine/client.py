@@ -23,6 +23,8 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
                  host: str,
                  websession: ClientSession,
                  *,
+                 mac: str = None,
+                 name: str = None,
                  port: int = 8080,
                  ssl: bool = True) -> None:
         """Initialize."""
@@ -30,6 +32,8 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
         self._access_token_expiration = None  # type: datetime.datetime
         self._authenticated = False
         self.host = host
+        self.mac = mac
+        self.name = name
         self.port = port
         self.ssl = ssl
         self.websession = websession
