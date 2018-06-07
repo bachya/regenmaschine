@@ -43,6 +43,9 @@ class DatagramEndpointProtocol(asyncio.DatagramProtocol):
 
     def connection_made(self, transport):
         self._endpoint._transport = transport
+        sock = self._endpoint._transport.get_extra_info("socket")
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
     def connection_lost(self, exc):
         if exc is not None:  # pragma: no cover
@@ -54,9 +57,6 @@ class DatagramEndpointProtocol(asyncio.DatagramProtocol):
 
     def datagram_received(self, data, addr):
         self._endpoint.feed_datagram(data, addr)
-        sock = self._endpoint._transport.get_extra_info("socket")
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
     def error_received(self, exc):
         msg = 'Endpoint received an error: {!r}'

@@ -11,6 +11,11 @@ class ExpiredTokenError(RainMachineError):
     pass
 
 
+class DiscoveryFailedError(RainMachineError):
+    """Define an error related to discovery not finding a RainMachine."""
+    pass
+
+
 class RequestError(RainMachineError):
     """Define an error related to invalid requests."""
     pass

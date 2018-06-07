@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 from aiohttp import ClientSession
 
 from .client import Client
+from .errors import DiscoveryFailedError
 from .udp import open_local_endpoint
 
 _LOGGER = logging.getLogger(__name__)
@@ -33,11 +34,11 @@ async def scan(websession: ClientSession) -> Client:
 
         kind, mac, name, url, _ = data_parts
         if kind != 'SPRINKLER':
-            return None
+            raise DiscoveryFailedError('No valid RainMachine units found')
 
         scheme, netloc, _, _, _, _ = urlparse(url)
         host, port = netloc.split(':')
         ssl = scheme == 'https'
         return Client(host, websession, mac=mac, name=name, port=port, ssl=ssl)
     except asyncio.TimeoutError:
-        return None
+        raise DiscoveryFailedError('No valid RainMachine units found')

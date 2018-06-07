@@ -57,6 +57,11 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
             datetime.datetime.now() +
             datetime.timedelta(seconds=data['expires_in']))
 
+        if not (self.name or self.mac):
+            wifi_data = await self.provisioning.wifi()
+            self.mac = wifi_data['macAddress']
+            self.name = await self.provisioning.device_name
+
     async def request(self,
                       method: str,
                       endpoint: str,
@@ -81,6 +86,7 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
 
         if not params:
             params = {}
+
         if auth:
             params.update({'access_token': self._access_token})
 
