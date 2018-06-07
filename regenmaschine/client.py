@@ -3,7 +3,7 @@ import datetime
 
 from aiohttp import ClientSession, client_exceptions
 
-from .errors import ExpiredTokenError, RequestError, UnauthenticatedError
+from .errors import RequestError, UnauthenticatedError
 from .diagnostics import Diagnostics
 from .parser import Parser
 from .program import Program
@@ -13,7 +13,7 @@ from .stats import Stats
 from .watering import Watering
 from .zone import Zone
 
-API_VERSION = '4'
+API_URL_SCAFFOLD = 'https://{0}:{1}/api/4'
 
 
 class Client(object):  # pylint: disable=too-many-instance-attributes
@@ -71,14 +71,8 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
                       json: dict = None,
                       auth: bool = True) -> dict:
         """Make a request against the RainMachine device."""
-        url = 'https://{0}:{1}/api/{2}/{3}'.format(self.host, self.port,
-                                                   API_VERSION, endpoint)
-
         if auth and not self._authenticated:
             raise UnauthenticatedError('You must authenticate first!')
-
-        if auth and datetime.datetime.now() > self._access_token_expiration:
-            raise ExpiredTokenError('Your token is expired; re-authenticate!')
 
         if not headers:
             headers = {}
@@ -93,7 +87,9 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
         try:
             async with self.websession.request(
                     method,
-                    url,
+                    '{0}/{1}'.format(
+                        API_URL_SCAFFOLD.format(self.host, self.port),
+                        endpoint),
                     headers=headers,
                     params=params,
                     json=json,

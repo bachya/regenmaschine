@@ -1,6 +1,13 @@
 [
-  "tests/test_client.py::test_manual",
+  "tests/test_client.py::test_create",
   "tests/test_client.py::test_discovery_success",
   "tests/test_client.py::test_discovery_failure_type",
-  "tests/test_client.py::test_discovery_failure_timeout"
+  "tests/test_client.py::test_discovery_failure_timeout",
+  "tests/test_client.py::test_authentication_success",
+  "tests/test_client.py::test_authentication_failure",
+  "tests/test_client.py::test_unauthenticated_request",
+  "tests/test_diagnostics.py::test_endpoints",
+  "tests/test_parser.py::test_endpoints",
+  "tests/test_program.py::test_endpoints",
+  "tests/test_provisioning.py::test_endpoints"
 ]

@@ -6,11 +6,6 @@ class RainMachineError(Exception):
     pass
 
 
-class ExpiredTokenError(RainMachineError):
-    """Define an error related to expired tokens."""
-    pass
-
-
 class DiscoveryFailedError(RainMachineError):
     """Define an error related to discovery not finding a RainMachine."""
     pass

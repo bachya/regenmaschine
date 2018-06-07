@@ -7,16 +7,16 @@ verify_ssl = true
 [dev-packages]
 
 coverage = "*"
+"flake8" = "*"
+aresponses = "*"
+codecov = "*"
+detox = "*"
 pytest-aiohttp = "*"
 pytest-cov = "*"
-twine = "*"
-codecov = "*"
-tox = "*"
-sphinx = "*"
-"flake8" = "*"
-detox = "*"
-aresponses = "*"
 pytest-mock = "*"
+sphinx = "*"
+tox = "*"
+twine = "*"
 
 
 [packages]
