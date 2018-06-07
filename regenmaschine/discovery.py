@@ -14,7 +14,7 @@ _LOGGER = logging.getLogger(__name__)
 DEFAULT_BROADCAST_ADDRESS = '192.168.1.255'
 DEFAULT_BROADCAST_PORT = 15800
 DEFAULT_RECEIVE_PORT = 15900
-DEFAULT_TIMEOUT = 5
+DEFAULT_TIMEOUT = 10
 
 
 async def scan(websession: ClientSession) -> Client:
