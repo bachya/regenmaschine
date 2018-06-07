@@ -1,11 +1,11 @@
 """Define an object to interact with zones."""
-from aiohttp import ClientSession
+from typing import Awaitable, Callable
 
 
 class Zone(object):
     """Define a zone object."""
 
-    def __init__(self, request: ClientSession) -> None:
+    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
         self._request = request
 
@@ -33,9 +33,8 @@ class Zone(object):
 
     async def start(self, zone_id: int, time: int) -> dict:
         """Start a program."""
-        json = {'time': time}
         return await self._request(
-            'post', 'zone/{0}/start'.format(zone_id), json=json)
+            'post', 'zone/{0}/start'.format(zone_id), json={'time': time})
 
     async def stop(self, zone_id: int) -> dict:
         """Stop a program."""

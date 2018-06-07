@@ -1,13 +1,12 @@
 """Define an object to interact with generic watering data/actions."""
 import datetime
-
-from aiohttp import ClientSession
+from typing import Awaitable, Callable
 
 
 class Watering(object):
     """Define a watering object."""
 
-    def __init__(self, request: ClientSession) -> None:
+    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
         self._request = request
 

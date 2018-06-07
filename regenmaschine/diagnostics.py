@@ -1,11 +1,11 @@
 """Define an object to interact with RainMachine diagnostics."""
-from aiohttp import ClientSession
+from typing import Awaitable, Callable
 
 
 class Diagnostics(object):
     """Define a diagnostics object."""
 
-    def __init__(self, request: ClientSession) -> None:
+    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
         self._request = request
 
