@@ -1,5 +1,5 @@
 """Define tests for the client object."""
-# pylint: disable=redefined-outer-name
+# pylint: disable=redefined-outer-name,unused-import
 
 import asyncio
 import json
@@ -14,7 +14,7 @@ from regenmaschine.errors import (
 
 from .const import (
     TEST_HOST, TEST_MAC, TEST_NAME, TEST_PASSWORD, TEST_PORT, TEST_URL)
-from .test_provisioning import fixture_device_name, fixture_wifi
+from .test_provisioning import fixture_device_name, fixture_wifi  # noqa
 
 
 @pytest.fixture(scope='module')
@@ -103,7 +103,7 @@ async def test_discovery_failure_timeout(event_loop, mocker):
             await scan(websession)
 
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio  # noqa
 async def test_authentication_success(aresponses, authentication_success,
                                       fixture_device_name, event_loop,
                                       fixture_wifi):

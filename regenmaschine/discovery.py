@@ -36,13 +36,12 @@ async def scan(websession: ClientSession) -> Client:
 
         scheme, netloc, _, _, _, _ = urlparse(url)
         host, port = netloc.split(':')
-        ssl = scheme == 'https'
         return Client(
             host,
             websession,
             mac=mac,
             name=name,
             port=int(port),
-            ssl=bool(ssl))
+            ssl=bool(scheme == 'https'))
     except asyncio.TimeoutError:
         raise DiscoveryFailedError('No valid RainMachine units found')
