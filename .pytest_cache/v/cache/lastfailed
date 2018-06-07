@@ -1,0 +1,3 @@
+{
+  "tests/test_client.py::test_manual_client": true
+}

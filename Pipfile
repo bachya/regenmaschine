@@ -1,19 +1,25 @@
 [[source]]
+
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 
+
 [dev-packages]
+
 coverage = "*"
 pytest-aiohttp = "*"
 pytest-cov = "*"
-requests-mock = "*"
 twine = "*"
 codecov = "*"
 tox = "*"
-Sphinx = "*"
-flake8 = "*"
+sphinx = "*"
+"flake8" = "*"
 detox = "*"
+aresponses = "*"
+pytest-mock = "*"
+
 
 [packages]
+
 aiodns = "*"
 aiohttp = "*"

@@ -14,7 +14,7 @@ _LOGGER = logging.getLogger(__name__)
 DEFAULT_BROADCAST_ADDRESS = '192.168.1.255'
 DEFAULT_BROADCAST_PORT = 15800
 DEFAULT_RECEIVE_PORT = 15900
-DEFAULT_TIMEOUT = 10
+DEFAULT_TIMEOUT = 5
 
 
 async def scan(websession: ClientSession) -> Client:
@@ -29,8 +29,6 @@ async def scan(websession: ClientSession) -> Client:
         local.close()
 
         data_parts = list(filter(None, data.decode().split('|')))
-        if not data_parts:
-            return None
 
         kind, mac, name, url, _ = data_parts
         if kind != 'SPRINKLER':
@@ -39,6 +37,12 @@ async def scan(websession: ClientSession) -> Client:
         scheme, netloc, _, _, _, _ = urlparse(url)
         host, port = netloc.split(':')
         ssl = scheme == 'https'
-        return Client(host, websession, mac=mac, name=name, port=port, ssl=ssl)
+        return Client(
+            host,
+            websession,
+            mac=mac,
+            name=name,
+            port=int(port),
+            ssl=bool(ssl))
     except asyncio.TimeoutError:
         raise DiscoveryFailedError('No valid RainMachine units found')

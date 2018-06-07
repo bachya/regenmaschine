@@ -1,0 +1,6 @@
+[
+  "tests/test_client.py::test_manual",
+  "tests/test_client.py::test_discovery_success",
+  "tests/test_client.py::test_discovery_failure_type",
+  "tests/test_client.py::test_discovery_failure_timeout"
+]
