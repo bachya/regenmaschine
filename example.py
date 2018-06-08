@@ -49,15 +49,15 @@ async def programs(client: Client) -> None:
     for program in await client.programs.running():
         print('Program #{0}'.format(program['uid']))
 
-    # print()
-    # print('STARTING PROGRAM #1')
-    # print(await client.programs.start(1))
+    print()
+    print('STARTING PROGRAM #1')
+    print(await client.programs.start(1))
 
-    # await asyncio.sleep(3)
+    await asyncio.sleep(3)
 
-    # print()
-    # print('STOPPING PROGRAM #1')
-    # print(await client.programs.stop(1))
+    print()
+    print('STOPPING PROGRAM #1')
+    print(await client.programs.stop(1))
 
 
 async def provisioning(client: Client) -> None:

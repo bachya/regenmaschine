@@ -27,6 +27,18 @@ library for interacting with `RainMachine™ smart sprinkler controllers
 <http://www.rainmachine.com/>`_. It gives developers an easy API to manage their
 controllers over a LAN or via RainMachine™'s cloud.
 
+💧 PLEASE READ: 1.0.0 and Beyond
+================================
+
+Version 1.0.0 of Regenmaschine makes several breaking, but necessary changes:
+
+* Moves the underlying library from Requests to aiohttp
+* Changes the entire library to use `asyncio`
+* Makes 3.6 the minimum version of Python required
+
+If you wish to continue using the previous, synchronous version of
+Regenmaschine, make sure to pin version 0.4.2.
+
 💧 Installation
 ===============
 
@@ -37,36 +49,115 @@ controllers over a LAN or via RainMachine™'s cloud.
 💧 Example
 ==========
 
+Every utilization of Regenmaschine starts within an aiohttp ClientSession:
+
 .. code-block:: python
 
-  import regenmaschine as rm
+  import asyncio
 
-  # Authenticate against the local device or the remote API:
-  auth = rm.Authenticator.create_local('192.168.1.100', 'password', port=8080, https=True)
-  auth = rm.Authenticator.create_remote('email@host.com', 'password')
+  from aiohttp import ClientSession
 
-  # Create a client:
-  client = rm.Client(auth)
+  from regenmaschine import Client
 
-  # Get information on all programs:
-  program_info = client.programs.all()
 
-  # Turn on program 1:
+  async def main() -> None:
+      """Create the aiohttp session and run the example."""
+      async with ClientSession() as websession:
+          await run(websession)
+
+
+  async def run(websession):
+      """Run."""
+      # YOUR CODE HERE
+
+  asyncio.get_event_loop().run_until_complete(main())
+
+Clients can be created manually:
+
+.. code-block:: python
+
+  client = Client('192.168.1.100', websession, port=9999)
+
+...or you can attempt to discover one on your local network:
+
+.. code-block:: python
+
+  from regenmaschine import DiscoveryFailedError
+
+  try:
+    client = Client('192.168.1.100', websession, port=9999)
+  except DiscoveryFailedError:
+    print("Couldn't find a valid RainMachine unit via discovery")
+
+Once you have a client, authenticate it by using your RainMachine password:
+
+.. code-block:: python
+
+  await client.authenticate('my_password_123')
+
+You can now get some properties with your authenticated client:
+
+.. code-block:: python
+
+  print('Name: {0}'.format(client.name))
+  print('Host: {0}'.format(client.host))
+  print('MAC Address: {0}'.format(client.mac))
+
+...and get to work controlling your RainMachine!
+
+.. code-block:: python
+
+  # Get all diagnostic information:
+  diagnostics = await client.diagnostics.current()
+
+  # Get all weather parsers:
+  parsers = await client.parsers.current():
+
+  # Get all programs:
+  programs = await client.programs.all():
+
+  # Get a specific program:
+  program_1 = await client.programs.get(1)
+
+  # Get the next run time for all programs:
+  runs = await client.programs.next()
+
+  # Get all running programs:
+  programs = await client.programs.running()
+
+  # Start and stop a program:
   client.programs.start(1)
-
-  # Stop program 1:
   client.programs.stop(1)
 
-  # Get information on all zones:
-  zone_info = client.zones.all()
+  # Get the device name:
+  name = await client.provisioning.device_name
 
-  # Turn on zone 3 for 5 minutes:
-  client.zones.start(3, 300)
+  # Get all provisioning settings:
+  settings = await client.provisioning.settings()
 
-💧 More Information
-===================
+  # Get all networking info related to the device:
+  wifi = await client.provisioning.wifi()
 
-Full documentation for Regenmaschine can be found here: http://bachya.github.io/regenmaschine
+  # Get various types of active watering restrictions:
+  current = await client.restrictions.current()
+  universal = await client.restrictions.universal()
+  hourly = await client.restrictions.hourly():
+  raindelay = await client.restrictions.raindelay()
+
+  # Get watering stats:
+  today = await client.stats.on_date(date=datetime.date.today())
+  upcoming_days = client.stats.upcoming(details=True):
+
+  # Get info on various watering activities not already covered:
+  log_2_day = client.watering.log(date=datetime.date.today(), 2):
+  queue = await client.watering.queue()
+  runs = await client.watering.runs(date=datetime.date.today())
+
+  # Stop all watering activities:
+  await client.watering.stop_all()
+
+Check out `example.py`, the tests, and the source files themselves for method
+signatures and more examples.
 
 💧 Contributing
 ===============
