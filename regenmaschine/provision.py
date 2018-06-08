@@ -1,26 +1,24 @@
-"""
-File: provision.py
-Author: Aaron Bach
-Email: bachya1208@gmail.com
-Github: https://github.com/bachya/regenmaschine
-"""
-
-# -*- coding: utf-8 -*-
-
-import regenmaschine.api as api
+"""Define an object to interact with provisioning info."""
+from typing import Awaitable, Callable
 
 
-class Provision(api.BaseAPI):  # pylint: disable=too-few-public-methods
-    """ An object to return device information """
+class Provision(object):
+    """Define a provisioning object."""
 
-    def device_name(self):
-        """ Returns the device name """
-        return self.get('provision/name').object.json()
+    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
+        """Initialize."""
+        self._request = request
 
-    def settings(self):
-        """ Returns all device settings """
-        return self.get('provision').object.json()
+    @property
+    async def device_name(self) -> str:
+        """Get the name of the device."""
+        data = await self._request('get', 'provision/name')
+        return data['name']
 
-    def wifi(self):
-        """ Returns all device settings """
-        return self.get('provision/wifi').object.json()
+    async def settings(self) -> dict:
+        """Get a multitude of settings info."""
+        return await self._request('get', 'provision')
+
+    async def wifi(self) -> dict:
+        """Get wifi info from the device."""
+        return await self._request('get', 'provision/wifi')

@@ -1,18 +1,15 @@
-"""
-File: parser.py
-Author: Aaron Bach
-Email: bachya1208@gmail.com
-Github: https://github.com/bachya/regenmaschine
-"""
-
-# -*- coding: utf-8 -*-
-
-import regenmaschine.api as api
+"""Define an object to interact with RainMachine weather parsers."""
+from typing import Awaitable, Callable
 
 
-class Parsers(api.BaseAPI):  # pylint: disable=too-few-public-methods
-    """ An object to return information on weather parsers """
+class Parser(object):  # pylint: disable=too-few-public-methods
+    """Define a parser object."""
 
-    def current(self):
-        """ Returns all current parsers """
-        return self.get('parser').object.json()
+    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
+        """Initialize."""
+        self._request = request
+
+    async def current(self) -> dict:
+        """Get current diagnostics."""
+        data = await self._request('get', 'parser')
+        return data['parsers']

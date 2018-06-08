@@ -1,45 +1,47 @@
-"""
-File: parser.py
-Author: Aaron Bach
-Email: bachya1208@gmail.com
-Github: https://github.com/bachya/regenmaschine
-"""
-
-# -*- coding: utf-8 -*-
-
-import maya
-
-import regenmaschine.api as api
+"""Define an object to interact with generic watering data/actions."""
+import datetime
+from typing import Awaitable, Callable
 
 
-class Watering(api.BaseAPI):
-    """ An alternate object to deal with any watering-related activities """
+class Watering(object):
+    """Define a watering object."""
 
-    def log(self, date=None, num_of_days=None, details=False):
-        """ Returns the current watering log """
+    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
+        """Initialize."""
+        self._request = request
+
+    async def log(self,
+                  date: datetime.date = None,
+                  days: int = None,
+                  details: bool = False) -> list:
+        """Get watering information for X days from Y date."""
+        endpoint = 'watering/log'
         if details:
-            api_route = 'watering/log/details'
-        else:
-            api_route = 'watering/log'
+            endpoint += '/details'
 
-        if date and num_of_days:
-            parser = maya.when(date)
-            date = parser.datetime().strftime('%Y-%m-%d')
-            api_route = '{}/{}/{}'.format(api_route, date, num_of_days)
+        if date and days:
+            endpoint = '{0}/{1}/{2}'.format(endpoint,
+                                            date.strftime('%Y-%m-%d'), days)
 
-        return self.get(api_route).object.json()
+        data = await self._request('get', endpoint)
+        return data['waterLog']['days']
 
-    def queue(self):
-        """ Returns the queue of active watering activities """
-        return self.get('watering/queue').object.json()
+    async def queue(self) -> list:
+        """Return the queue of active watering activities."""
+        data = await self._request('get', 'watering/queue')
+        return data['queue']
 
-    def runs(self, date, num_of_days):
-        """ Similar to log, but returns et0 and qpf info, as well """
-        parser = maya.when(date)
-        date = parser.datetime().strftime('%Y-%m-%d')
-        return self.get(
-            'watering/past/{}/{}'.format(date, num_of_days)).object.json()
+    async def runs(self, date: datetime.date = None, days: int = None) -> list:
+        """Return all program runs for X days from Y date."""
+        endpoint = 'watering/past'
 
-    def stop_all(self):
-        """ Stops all programs and zones from running """
-        return self.post('watering/stopall').object.json()
+        if date and days:
+            endpoint = '{0}/{1}/{2}'.format(endpoint,
+                                            date.strftime('%Y-%m-%d'), days)
+
+        data = await self._request('get', endpoint)
+        return data['pastValues']
+
+    async def stop_all(self) -> dict:
+        """Stop all programs and zones from running."""
+        return await self._request('post', 'watering/stopall')

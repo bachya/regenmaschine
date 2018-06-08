@@ -1,22 +1,19 @@
-"""
-File: diagnostics.py
-Author: Aaron Bach
-Email: bachya1208@gmail.com
-Github: https://github.com/bachya/regenmaschine
-"""
-
-# -*- coding: utf-8 -*-
-
-import regenmaschine.api as api
+"""Define an object to interact with RainMachine diagnostics."""
+from typing import Awaitable, Callable
 
 
-class Diagnostics(api.BaseAPI):
-    """ An object to return device diagnostic information """
+class Diagnostics(object):
+    """Define a diagnostics object."""
 
-    def current(self):
-        """ Returns all current/up-to-date diagnostic information """
-        return self.get('diag').object.json()
+    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
+        """Initialize."""
+        self._request = request
 
-    def log(self):
-        """ Returns the entire device log """
-        return self.get('diag/log').object.json()
+    async def current(self) -> dict:
+        """Get current diagnostics."""
+        return await self._request('get', 'diag')
+
+    async def log(self) -> dict:
+        """Get the device log."""
+        data = await self._request('get', 'diag/log')
+        return data['log']

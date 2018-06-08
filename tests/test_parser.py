@@ -1,37 +1,49 @@
-"""
-file: test_parser.py
-Author: Aaron Bach
-Email: bachya1208@gmail.com
-Github: https://github.com/bachya/regenmaschine
-"""
-
-# -*- coding: utf-8 -*-
-# pylint: disable=redefined-outer-name,wildcard-import,unused-wildcard-import
-# pylint: disable=invalid-name,too-many-arguments
+"""Define tests for parser endpoints."""
+# pylint: disable=redefined-outer-name
 
 import json
 
-import requests_mock
+import aiohttp
+import pytest
 
-import regenmaschine as rm
-from tests.fixtures.auth import *
-from tests.fixtures.misc import *
-from tests.fixtures.parser import *
+from regenmaschine import Client
+
+from .const import TEST_HOST, TEST_PORT
 
 
-def test_all_operations(local_cookies, local_url, local_auth_response_200,
-                        parser_current_response_200):
-    """ Tests getting the program list """
-    with requests_mock.Mocker() as mock:
-        mock.post(
-            '{}/auth/login'.format(local_url),
-            text=json.dumps(local_auth_response_200),
-            cookies=local_cookies)
-        mock.get(
-            '{}/parser'.format(local_url),
-            text=json.dumps(parser_current_response_200),
-            cookies=local_cookies)
+@pytest.fixture(scope='module')
+def fixture_current():
+    """Return a /parser response."""
+    return {
+        "parsers": [{
+            "lastRun": "2018-04-30 11:52:33",
+            "lastKnownError": "",
+            "hasForecast": True,
+            "uid": 11,
+            "hasHistorical": False,
+            "description": "North America weather forecast",
+            "enabled": True,
+            "custom": False,
+            "isRunning": False,
+            "name": "NOAA Parser"
+        }]
+    }
 
-        auth = rm.Authenticator.create_local('192.168.1.100', '12345')
-        client = rm.Client(auth).parsers
-        assert client.current() == parser_current_response_200
+
+@pytest.mark.asyncio
+async def test_endpoints(aresponses, fixture_current, event_loop):
+    """Test all endpoints."""
+    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/parser',
+                   'get',
+                   aresponses.Response(
+                       text=json.dumps(fixture_current), status=200))
+
+    # pylint: disable=protected-access
+    async with aiohttp.ClientSession(loop=event_loop) as websession:
+        client = Client(TEST_HOST, websession, port=TEST_PORT, ssl=False)
+        client._authenticated = True
+        client._access_token = '12345'
+
+        data = await client.parsers.current()
+        assert len(data) == 1
+        assert data[0]['name'] == 'NOAA Parser'

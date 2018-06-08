@@ -1,43 +1,69 @@
-"""
-file: test_diagnostics.py
-Author: Aaron Bach
-Email: bachya1208@gmail.com
-Github: https://github.com/bachya/regenmaschine
-"""
-
-# -*- coding: utf-8 -*-
-# pylint: disable=no-self-use,too-few-public-methods,redefined-outer-name
-# pylint: disable=wildcard-import,unused-wildcard-import,invalid-name
+"""Define tests for diagnostics endpoints."""
+# pylint: disable=redefined-outer-name
 
 import json
 
-import requests_mock
+import aiohttp
+import pytest
 
-import regenmaschine as rm
-from tests.fixtures.auth import *
-from tests.fixtures.diagnostics import *
-from tests.fixtures.misc import *
+from regenmaschine import Client
+
+from .const import TEST_HOST, TEST_PORT
 
 
-def test_all_operations(diagnostics_current_response_200,
-                        diagnostics_log_response_200, local_cookies, local_url,
-                        local_auth_response_200):
-    """ Tests getting the program list """
-    with requests_mock.Mocker() as mock:
-        mock.post(
-            '{}/auth/login'.format(local_url),
-            text=json.dumps(local_auth_response_200),
-            cookies=local_cookies)
-        mock.get(
-            '{}/diag'.format(local_url),
-            text=json.dumps(diagnostics_current_response_200),
-            cookies=local_cookies)
-        mock.get(
-            '{}/diag/log'.format(local_url),
-            text=json.dumps(diagnostics_log_response_200),
-            cookies=local_cookies)
+@pytest.fixture(scope='module')
+def fixture_diag():
+    """Return a /diag response."""
+    return {
+        "hasWifi": True,
+        "uptime": "14 days, 8:45:19",
+        "uptimeSeconds": 1241119,
+        "memUsage": 18220,
+        "networkStatus": True,
+        "bootCompleted": True,
+        "lastCheckTimestamp": 1527997722,
+        "wizardHasRun": True,
+        "standaloneMode": False,
+        "cpuUsage": 0.0,
+        "lastCheck": "2018-06-02 21:48:42",
+        "softwareVersion": "4.0.925",
+        "internetStatus": True,
+        "locationStatus": True,
+        "timeStatus": True,
+        "wifiMode": None,
+        "gatewayAddress": "192.168.1.1",
+        "cloudStatus": 0,
+        "weatherStatus": True
+    }
 
-        auth = rm.Authenticator.create_local('192.168.1.100', '12345')
-        client = rm.Client(auth).diagnostics
-        assert client.current() == diagnostics_current_response_200
-        assert client.log() == diagnostics_log_response_200
+
+@pytest.fixture(scope='module')
+def fixture_diag_log():
+    """Return a /diag/log response."""
+    return {"log": "----"}
+
+
+@pytest.mark.asyncio
+async def test_endpoints(aresponses, fixture_diag, fixture_diag_log,
+                         event_loop):
+    """Test all endpoints."""
+    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/diag',
+                   'get',
+                   aresponses.Response(
+                       text=json.dumps(fixture_diag), status=200))
+    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/diag/log',
+                   'get',
+                   aresponses.Response(
+                       text=json.dumps(fixture_diag_log), status=200))
+
+    # pylint: disable=protected-access
+    async with aiohttp.ClientSession(loop=event_loop) as websession:
+        client = Client(TEST_HOST, websession, port=TEST_PORT, ssl=False)
+        client._authenticated = True
+        client._access_token = '12345'
+
+        data = await client.diagnostics.current()
+        assert data['memUsage'] == 18220
+
+        data = await client.diagnostics.log()
+        assert data == '----'
