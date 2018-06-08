@@ -10,3 +10,4 @@ coverage.xml
 dist
 .mypy_cache
 .pytest_cache
+.DS_Store
