@@ -26,15 +26,17 @@
 Regenmaschine (German for "rain machine") is a simple, clean, well-tested Python
 library for interacting with `RainMachine™ smart sprinkler controllers
 <http://www.rainmachine.com/>`_. It gives developers an easy API to manage their
-controllers over a LAN or via RainMachine™'s cloud.
+controllers over their local LAN.
 
 💧 PLEASE READ: 1.0.0 and Beyond
 ================================
 
 Version 1.0.0 of Regenmaschine makes several breaking, but necessary changes:
 
-* Moves the underlying library from Requests to aiohttp
-* Changes the entire library to use `asyncio`
+* Moves the underlying library from
+  `Requests <http://docs.python-requests.org/en/master/>`_ to
+  `aiohttp <https://aiohttp.readthedocs.io/en/stable/>`_
+* Changes the entire library to use :code:`asyncio`
 * Makes 3.6 the minimum version of Python required
 
 If you wish to continue using the previous, synchronous version of
@@ -50,7 +52,8 @@ Regenmaschine, make sure to pin version 0.4.2.
 💧 Example
 ==========
 
-Every utilization of Regenmaschine starts within an aiohttp ClientSession:
+Regenmaschine starts within an
+`aiohttp <https://aiohttp.readthedocs.io/en/stable/>`_ :code:`ClientSession`:
 
 .. code-block:: python
 
@@ -73,7 +76,7 @@ Every utilization of Regenmaschine starts within an aiohttp ClientSession:
 
   asyncio.get_event_loop().run_until_complete(main())
 
-Clients can be created manually:
+A Regenmaschine :code:`Client` can be created manually:
 
 .. code-block:: python
 
@@ -83,10 +86,10 @@ Clients can be created manually:
 
 .. code-block:: python
 
-  from regenmaschine import DiscoveryFailedError
+  from regenmaschine import DiscoveryFailedError, scan
 
   try:
-    client = Client('192.168.1.100', websession, port=9999)
+    client = scan(websession)
   except DiscoveryFailedError:
     print("Couldn't find a valid RainMachine unit via discovery")
 
