@@ -46,7 +46,7 @@ def fixture_diag_log():
 @pytest.mark.asyncio
 async def test_endpoints(aresponses, fixture_diag, fixture_diag_log,
                          event_loop):
-    """Test retrieving current diagnostics."""
+    """Test all endpoints."""
     aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/diag',
                    'get',
                    aresponses.Response(

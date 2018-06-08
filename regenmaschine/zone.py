@@ -27,10 +27,6 @@ class Zone(object):
             endpoint += '/properties'
         return await self._request('get', endpoint)
 
-    async def simulate(self, zone_data: dict) -> dict:
-        """Simulate a zone activity (based on advanced zone properties)."""
-        return await self._request('post', 'zone/simulate', json=zone_data)
-
     async def start(self, zone_id: int, time: int) -> dict:
         """Start a program."""
         return await self._request(

@@ -142,11 +142,11 @@ async def run(websession):
     """Run."""
     try:
         # Create a client manually:
-        # client = Client('192.168.1.140', websession)
+        client = Client('localhost', websession, port=9999)
 
         # Or attempt to discover it on the local network:
-        print('Attempting to discover a RainMachine unit...\n')
-        client = await scan(websession)
+        # print('Attempting to discover a RainMachine unit...\n')
+        # client = await scan(websession)
 
         # Authenticate the client by providing the device password:
         await client.authenticate('yvV880VFQFs*X6IHh[YWoKnVU')

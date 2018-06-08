@@ -124,7 +124,7 @@ def fixture_wifi():
 @pytest.mark.asyncio
 async def test_endpoints(aresponses, fixture_device_name, fixture_settings,
                          fixture_wifi, event_loop):
-    """Test retrieving all programs."""
+    """Test all endpoints."""
     aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
                    '/api/4/provision', 'get',
                    aresponses.Response(

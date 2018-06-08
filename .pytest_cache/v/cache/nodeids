@@ -9,5 +9,9 @@
   "tests/test_diagnostics.py::test_endpoints",
   "tests/test_parser.py::test_endpoints",
   "tests/test_program.py::test_endpoints",
-  "tests/test_provisioning.py::test_endpoints"
+  "tests/test_provisioning.py::test_endpoints",
+  "tests/test_restriction.py::test_endpoints",
+  "tests/test_stats.py::test_endpoints",
+  "tests/test_watering.py::test_endpoints",
+  "tests/test_zone.py::test_endpoints"
 ]

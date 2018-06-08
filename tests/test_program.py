@@ -305,7 +305,7 @@ def fixture_start_stop():
 async def test_endpoints(aresponses, fixture_all, fixture_get,
                          fixture_next_runs, fixture_running,
                          fixture_start_stop, event_loop):
-    """Test retrieving all programs."""
+    """Test all endpoints."""
     aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program',
                    'get',
                    aresponses.Response(

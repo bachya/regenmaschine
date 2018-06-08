@@ -17,6 +17,7 @@ pytest-mock = "*"
 sphinx = "*"
 tox = "*"
 twine = "*"
+pydocstyle = "*"
 
 
 [packages]
