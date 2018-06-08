@@ -9,3 +9,4 @@ build
 coverage.xml
 dist
 .mypy_cache
+.pytest_cache
