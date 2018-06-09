@@ -131,8 +131,8 @@ You can now get some properties with your authenticated client:
   programs = await client.programs.running()
 
   # Start and stop a program:
-  client.programs.start(1)
-  client.programs.stop(1)
+  await client.programs.start(1)
+  await client.programs.stop(1)
 
   # Get the device name:
   name = await client.provisioning.device_name
@@ -151,10 +151,10 @@ You can now get some properties with your authenticated client:
 
   # Get watering stats:
   today = await client.stats.on_date(date=datetime.date.today())
-  upcoming_days = client.stats.upcoming(details=True):
+  upcoming_days = await client.stats.upcoming(details=True):
 
   # Get info on various watering activities not already covered:
-  log_2_day = client.watering.log(date=datetime.date.today(), 2):
+  log_2_day = await client.watering.log(date=datetime.date.today(), 2):
   queue = await client.watering.queue()
   runs = await client.watering.runs(date=datetime.date.today())
 
