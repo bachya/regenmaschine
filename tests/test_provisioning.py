@@ -22,66 +22,101 @@ def fixture_settings():
     """Return a /provision response."""
     return {
         "system": {
-            "httpEnabled": True,
-            "rainSensorSnoozeDuration": 0,
-            "uiUnitsMetric": False,
-            "programZonesShowInactive": False,
-            "programSingleSchedule": False,
-            "standaloneMode": False,
-            "masterValveAfter": 0,
-            "touchSleepTimeout": 10,
-            "selfTest": False,
-            "useSoftwareRainSensor": False,
-            "defaultZoneWateringDuration": 300,
-            "maxLEDBrightness": 40,
-            "simulatorHistorySize": 0,
-            "vibration": False,
-            "masterValveBefore": 0,
-            "touchProgramToRun": None,
-            "useRainSensor": False,
-            "wizardHasRun": True,
-            "waterLogHistorySize": 365,
-            "netName": "Home",
-            "softwareRainSensorMinQPF": 5,
-            "touchAdvanced": False,
-            "useBonjourService": True,
-            "hardwareVersion": 3,
-            "touchLongPressTimeout": 3,
-            "showRestrictionsOnLed": False,
-            "parserDataSizeInDays": 6,
-            "programListShowInactive": True,
-            "parserHistorySize": 365,
-            "allowAlexaDiscovery": False,
-            "automaticUpdates": True,
-            "minLEDBrightness": 0,
-            "minWateringDurationThreshold": 0,
-            "localValveCount": 12,
-            "touchAuthAPSeconds": 60,
-            "useCommandLineArguments": False,
-            "databasePath": "/rainmachine-app/DB/Default",
-            "touchCyclePrograms": True,
-            "zoneListShowInactive": True,
-            "rainSensorRainStart": None,
+            "httpEnabled":
+                True,
+            "rainSensorSnoozeDuration":
+                0,
+            "uiUnitsMetric":
+                False,
+            "programZonesShowInactive":
+                False,
+            "programSingleSchedule":
+                False,
+            "standaloneMode":
+                False,
+            "masterValveAfter":
+                0,
+            "touchSleepTimeout":
+                10,
+            "selfTest":
+                False,
+            "useSoftwareRainSensor":
+                False,
+            "defaultZoneWateringDuration":
+                300,
+            "maxLEDBrightness":
+                40,
+            "simulatorHistorySize":
+                0,
+            "vibration":
+                False,
+            "masterValveBefore":
+                0,
+            "touchProgramToRun":
+                None,
+            "useRainSensor":
+                False,
+            "wizardHasRun":
+                True,
+            "waterLogHistorySize":
+                365,
+            "netName":
+                "Home",
+            "softwareRainSensorMinQPF":
+                5,
+            "touchAdvanced":
+                False,
+            "useBonjourService":
+                True,
+            "hardwareVersion":
+                3,
+            "touchLongPressTimeout":
+                3,
+            "showRestrictionsOnLed":
+                False,
+            "parserDataSizeInDays":
+                6,
+            "programListShowInactive":
+                True,
+            "parserHistorySize":
+                365,
+            "allowAlexaDiscovery":
+                False,
+            "automaticUpdates":
+                True,
+            "minLEDBrightness":
+                0,
+            "minWateringDurationThreshold":
+                0,
+            "localValveCount":
+                12,
+            "touchAuthAPSeconds":
+                60,
+            "useCommandLineArguments":
+                False,
+            "databasePath":
+                "/rainmachine-app/DB/Default",
+            "touchCyclePrograms":
+                True,
+            "zoneListShowInactive":
+                True,
+            "rainSensorRainStart":
+                None,
             "zoneDuration": [
-                300,
-                300,
-                300,
-                300,
-                300,
-                300,
-                300,
-                300,
-                300,
-                300,
-                300,
-                300
+                300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300
             ],
-            "rainSensorIsNormallyClosed": True,
-            "useCorrectionForPast": True,
-            "useMasterValve": False,
-            "runParsersBeforePrograms": True,
-            "maxWateringCoef": 2,
-            "mixerHistorySize": 365
+            "rainSensorIsNormallyClosed":
+                True,
+            "useCorrectionForPast":
+                True,
+            "useMasterValve":
+                False,
+            "runParsersBeforePrograms":
+                True,
+            "maxWateringCoef":
+                2,
+            "mixerHistorySize":
+                365
         },
         "location": {
             "elevation": 1593.4514160199999,
@@ -122,21 +157,19 @@ def fixture_wifi():
 
 
 @pytest.mark.asyncio
-async def test_endpoints(aresponses, fixture_device_name, fixture_settings,
-                         fixture_wifi, event_loop):
+async def test_endpoints(
+        aresponses, fixture_device_name, fixture_settings, fixture_wifi,
+        event_loop):
     """Test all endpoints."""
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/provision', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_settings), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/provision/name', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_device_name), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/provision/wifi', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_wifi), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision', 'get',
+        aresponses.Response(text=json.dumps(fixture_settings), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision/name', 'get',
+        aresponses.Response(text=json.dumps(fixture_device_name), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision/wifi', 'get',
+        aresponses.Response(text=json.dumps(fixture_wifi), status=200))
 
     # pylint: disable=protected-access
     async with aiohttp.ClientSession(loop=event_loop) as websession:

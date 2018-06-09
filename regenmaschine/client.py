@@ -19,14 +19,15 @@ API_URL_SCAFFOLD = 'https://{0}:{1}/api/4'
 class Client(object):  # pylint: disable=too-many-instance-attributes
     """Define the client."""
 
-    def __init__(self,
-                 host: str,
-                 websession: ClientSession,
-                 *,
-                 mac: str = None,
-                 name: str = None,
-                 port: int = 8080,
-                 ssl: bool = True) -> None:
+    def __init__(
+            self,
+            host: str,
+            websession: ClientSession,
+            *,
+            mac: str = None,
+            name: str = None,
+            port: int = 8080,
+            ssl: bool = True) -> None:
         """Initialize."""
         self._access_token = None
         self._access_token_expiration = None  # type: datetime.datetime
@@ -62,14 +63,15 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
             self.mac = wifi_data['macAddress']
             self.name = await self.provisioning.device_name
 
-    async def request(self,
-                      method: str,
-                      endpoint: str,
-                      *,
-                      headers: dict = None,
-                      params: dict = None,
-                      json: dict = None,
-                      auth: bool = True) -> dict:
+    async def request(
+            self,
+            method: str,
+            endpoint: str,
+            *,
+            headers: dict = None,
+            params: dict = None,
+            json: dict = None,
+            auth: bool = True) -> dict:
         """Make a request against the RainMachine device."""
         if auth and not self._authenticated:
             raise UnauthenticatedError('You must authenticate first!')
@@ -85,18 +87,14 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
             params.update({'access_token': self._access_token})
 
         try:
-            async with self.websession.request(
-                    method,
-                    '{0}/{1}'.format(
-                        API_URL_SCAFFOLD.format(self.host, self.port),
-                        endpoint),
-                    headers=headers,
-                    params=params,
-                    json=json,
-                    ssl=self.ssl) as resp:
+            async with self.websession.request(method, '{0}/{1}'.format(
+                    API_URL_SCAFFOLD.format(self.host, self.port),
+                    endpoint), headers=headers, params=params, json=json,
+                                               ssl=self.ssl) as resp:
                 resp.raise_for_status()
                 data = await resp.json(content_type=None)
                 return data
         except client_exceptions.ClientError as err:
-            raise RequestError('Error requesting data from {}: {}'.format(
-                self.host, err)) from None
+            raise RequestError(
+                'Error requesting data from {}: {}'.format(self.host,
+                                                           err)) from None

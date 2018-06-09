@@ -23,15 +23,14 @@ async def main():
 
 __all__ = ['open_local_endpoint', 'open_remote_endpoint']
 
-
 # Imports
 
 import asyncio
 import socket
 import warnings
 
-
 # Datagram protocol
+
 
 class DatagramEndpointProtocol(asyncio.DatagramProtocol):
     """Datagram protocol for the endpoint high-level interface."""
@@ -64,6 +63,7 @@ class DatagramEndpointProtocol(asyncio.DatagramProtocol):
 
 
 # Enpoint classes
+
 
 class Endpoint:
     """High-level interface for UDP enpoints.
@@ -169,6 +169,7 @@ class RemoteEndpoint(Endpoint):
 
 # High-level coroutines
 
+
 async def open_datagram_endpoint(
         host, port, *, endpoint_factory=Endpoint, remote=False, **kwargs):
     """Open and return a datagram endpoint.
@@ -193,20 +194,23 @@ async def open_local_endpoint(
     Extra keyword arguments are forwarded to `loop.create_datagram_endpoint`.
     """
     return await open_datagram_endpoint(
-        host, port, remote=False,
+        host,
+        port,
+        remote=False,
         endpoint_factory=lambda: LocalEndpoint(queue_size),
         **kwargs)
 
 
-async def open_remote_endpoint(
-        host, port, *, queue_size=None, **kwargs):
+async def open_remote_endpoint(host, port, *, queue_size=None, **kwargs):
     """Open and return a remote datagram endpoint.
 
     An optional queue size arguement can be provided.
     Extra keyword arguments are forwarded to `loop.create_datagram_endpoint`.
     """
     return await open_datagram_endpoint(
-        host, port, remote=True,
+        host,
+        port,
+        remote=True,
         endpoint_factory=lambda: RemoteEndpoint(queue_size),
         **kwargs)
 

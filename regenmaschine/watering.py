@@ -10,18 +10,19 @@ class Watering(object):
         """Initialize."""
         self._request = request
 
-    async def log(self,
-                  date: datetime.date = None,
-                  days: int = None,
-                  details: bool = False) -> list:
+    async def log(
+            self,
+            date: datetime.date = None,
+            days: int = None,
+            details: bool = False) -> list:
         """Get watering information for X days from Y date."""
         endpoint = 'watering/log'
         if details:
             endpoint += '/details'
 
         if date and days:
-            endpoint = '{0}/{1}/{2}'.format(endpoint,
-                                            date.strftime('%Y-%m-%d'), days)
+            endpoint = '{0}/{1}/{2}'.format(
+                endpoint, date.strftime('%Y-%m-%d'), days)
 
         data = await self._request('get', endpoint)
         return data['waterLog']['days']
@@ -36,8 +37,8 @@ class Watering(object):
         endpoint = 'watering/past'
 
         if date and days:
-            endpoint = '{0}/{1}/{2}'.format(endpoint,
-                                            date.strftime('%Y-%m-%d'), days)
+            endpoint = '{0}/{1}/{2}'.format(
+                endpoint, date.strftime('%Y-%m-%d'), days)
 
         data = await self._request('get', endpoint)
         return data['pastValues']

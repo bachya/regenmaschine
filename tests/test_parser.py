@@ -33,10 +33,9 @@ def fixture_current():
 @pytest.mark.asyncio
 async def test_endpoints(aresponses, fixture_current, event_loop):
     """Test all endpoints."""
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/parser',
-                   'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_current), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/parser', 'get',
+        aresponses.Response(text=json.dumps(fixture_current), status=200))
 
     # pylint: disable=protected-access
     async with aiohttp.ClientSession(loop=event_loop) as websession:

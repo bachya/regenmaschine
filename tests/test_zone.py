@@ -106,25 +106,21 @@ def fixture_start_stop():
 
 
 @pytest.mark.asyncio
-async def test_endpoints(aresponses, fixture_all, fixture_get,
-                         fixture_start_stop, event_loop):
+async def test_endpoints(
+        aresponses, fixture_all, fixture_get, fixture_start_stop, event_loop):
     """Test all endpoints."""
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/zone/properties', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_all), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/zone/1/properties', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_get), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/zone/1/start', 'post',
-                   aresponses.Response(
-                       text=json.dumps(fixture_start_stop), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/zone/1/stop', 'post',
-                   aresponses.Response(
-                       text=json.dumps(fixture_start_stop), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/properties',
+        'get', aresponses.Response(text=json.dumps(fixture_all), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/properties',
+        'get', aresponses.Response(text=json.dumps(fixture_get), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/start', 'post',
+        aresponses.Response(text=json.dumps(fixture_start_stop), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/stop', 'post',
+        aresponses.Response(text=json.dumps(fixture_start_stop), status=200))
 
     # pylint: disable=protected-access
     async with aiohttp.ClientSession(loop=event_loop) as websession:

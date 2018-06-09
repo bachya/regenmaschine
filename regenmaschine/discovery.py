@@ -20,8 +20,9 @@ DEFAULT_TIMEOUT = 5
 async def scan(websession: ClientSession) -> Client:
     """Scan the local network for any RainMachine instances."""
     local = await open_local_endpoint('0.0.0.0', DEFAULT_RECEIVE_PORT)
-    local.send(b'RainMachine Discovery',
-               (DEFAULT_BROADCAST_ADDRESS, DEFAULT_BROADCAST_PORT))
+    local.send(
+        b'RainMachine Discovery',
+        (DEFAULT_BROADCAST_ADDRESS, DEFAULT_BROADCAST_PORT))
 
     try:
         data, _ = await asyncio.wait_for(

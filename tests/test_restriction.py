@@ -28,17 +28,13 @@ def fixture_current():
 @pytest.fixture(scope='module')
 def fixture_hourly():
     """Return a /restrictions/hourly response."""
-    return {
-        "hourlyRestrictions": []
-    }
+    return {"hourlyRestrictions": []}
 
 
 @pytest.fixture(scope='module')
 def fixture_raindelay():
     """Return a /restrictions/raindelay response."""
-    return {
-        "delayCounter": -1
-    }
+    return {"delayCounter": -1}
 
 
 @pytest.fixture(scope='module')
@@ -56,25 +52,26 @@ def fixture_universal():
 
 
 @pytest.mark.asyncio
-async def test_endpoints(aresponses, fixture_current, fixture_hourly,
-                         fixture_raindelay, fixture_universal, event_loop):
+async def test_endpoints(
+        aresponses, fixture_current, fixture_hourly, fixture_raindelay,
+        fixture_universal, event_loop):
     """Test all endpoints."""
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/restrictions/currently', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_current), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/restrictions/hourly', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_hourly), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/restrictions/raindelay', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_raindelay), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/restrictions/global', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_universal), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+        '/api/4/restrictions/currently', 'get',
+        aresponses.Response(text=json.dumps(fixture_current), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+        '/api/4/restrictions/hourly', 'get',
+        aresponses.Response(text=json.dumps(fixture_hourly), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+        '/api/4/restrictions/raindelay', 'get',
+        aresponses.Response(text=json.dumps(fixture_raindelay), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/restrictions/global',
+        'get',
+        aresponses.Response(text=json.dumps(fixture_universal), status=200))
 
     # pylint: disable=protected-access
     async with aiohttp.ClientSession(loop=event_loop) as websession:

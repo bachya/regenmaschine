@@ -62,8 +62,8 @@ async def test_discovery_success(event_loop, mocker):
     mock_endpoint_recv = mocker.patch(
         'regenmaschine.udp.LocalEndpoint.receive')
     mock_endpoint_recv.return_value = endpoint_receive_data(
-        '||{0}||{1}||{2}||{3}||{4}||'.format('SPRINKLER', TEST_MAC, TEST_NAME,
-                                             TEST_URL, 1).encode())
+        '||{0}||{1}||{2}||{3}||{4}||'.format(
+            'SPRINKLER', TEST_MAC, TEST_NAME, TEST_URL, 1).encode())
 
     async with aiohttp.ClientSession(loop=event_loop) as websession:
         client = await scan(websession)
@@ -81,8 +81,8 @@ async def test_discovery_failure_type(event_loop, mocker):
     mock_endpoint_recv = mocker.patch(
         'regenmaschine.udp.LocalEndpoint.receive')
     mock_endpoint_recv.return_value = endpoint_receive_data(
-        '||{0}||{1}||{2}||{3}||{4}||'.format('PONY', TEST_MAC, TEST_NAME,
-                                             TEST_URL, 1).encode())
+        '||{0}||{1}||{2}||{3}||{4}||'.format(
+            'PONY', TEST_MAC, TEST_NAME, TEST_URL, 1).encode())
 
     with pytest.raises(DiscoveryFailedError):
         async with aiohttp.ClientSession(loop=event_loop) as websession:
@@ -104,22 +104,20 @@ async def test_discovery_failure_timeout(event_loop, mocker):
 
 
 @pytest.mark.asyncio  # noqa
-async def test_authentication_success(aresponses, authentication_success,
-                                      fixture_device_name, event_loop,
-                                      fixture_wifi):
+async def test_authentication_success(
+        aresponses, authentication_success, fixture_device_name, event_loop,
+        fixture_wifi):
     """Test authenticating the device."""
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/auth/login',
-                   'post',
-                   aresponses.Response(
-                       text=json.dumps(authentication_success), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/provision/name', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_device_name), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/provision/wifi', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_wifi), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/auth/login', 'post',
+        aresponses.Response(
+            text=json.dumps(authentication_success), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision/name', 'get',
+        aresponses.Response(text=json.dumps(fixture_device_name), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision/wifi', 'get',
+        aresponses.Response(text=json.dumps(fixture_wifi), status=200))
 
     # pylint: disable=protected-access
     async with aiohttp.ClientSession(loop=event_loop) as websession:
@@ -131,13 +129,13 @@ async def test_authentication_success(aresponses, authentication_success,
 
 
 @pytest.mark.asyncio
-async def test_authentication_failure(aresponses, authentication_failure,
-                                      event_loop):
+async def test_authentication_failure(
+        aresponses, authentication_failure, event_loop):
     """Test authenticating the device."""
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/auth/login',
-                   'post',
-                   aresponses.Response(
-                       text=json.dumps(authentication_failure), status=401))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/auth/login', 'post',
+        aresponses.Response(
+            text=json.dumps(authentication_failure), status=401))
 
     with pytest.raises(RequestError):
         async with aiohttp.ClientSession(loop=event_loop) as websession:

@@ -30,10 +30,10 @@ class Program(object):
 
     async def start(self, program_id: int) -> dict:
         """Start a program."""
-        return await self._request('post',
-                                   'program/{0}/start'.format(program_id))
+        return await self._request(
+            'post', 'program/{0}/start'.format(program_id))
 
     async def stop(self, program_id: int) -> dict:
         """Stop a program."""
-        return await self._request('post',
-                                   'program/{0}/stop'.format(program_id))
+        return await self._request(
+            'post', 'program/{0}/stop'.format(program_id))
