@@ -18,13 +18,18 @@ def fixture_log():
     return {
         "waterLog": {
             "days": [{
-                "date": "2018-06-01",
-                "dateTimestamp": 1527832800,
+                "date":
+                    "2018-06-01",
+                "dateTimestamp":
+                    1527832800,
                 "programs": [{
-                    "id": 1,
+                    "id":
+                        1,
                     "zones": [{
-                        "uid": 1,
-                        "flag": 0,
+                        "uid":
+                            1,
+                        "flag":
+                            0,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-01 06:00:02",
@@ -34,8 +39,10 @@ def fixture_log():
                             "realDuration": 1243
                         }]
                     }, {
-                        "uid": 2,
-                        "flag": 0,
+                        "uid":
+                            2,
+                        "flag":
+                            0,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-01 06:20:45",
@@ -46,10 +53,13 @@ def fixture_log():
                         }]
                     }]
                 }, {
-                    "id": 2,
+                    "id":
+                        2,
                     "zones": [{
-                        "uid": 1,
-                        "flag": 0,
+                        "uid":
+                            1,
+                        "flag":
+                            0,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-01 22:00:01",
@@ -59,8 +69,10 @@ def fixture_log():
                             "realDuration": 1243
                         }]
                     }, {
-                        "uid": 2,
-                        "flag": 0,
+                        "uid":
+                            2,
+                        "flag":
+                            0,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-01 22:20:44",
@@ -72,13 +84,18 @@ def fixture_log():
                     }]
                 }]
             }, {
-                "date": "2018-06-02",
-                "dateTimestamp": 1527919200,
+                "date":
+                    "2018-06-02",
+                "dateTimestamp":
+                    1527919200,
                 "programs": [{
-                    "id": 1,
+                    "id":
+                        1,
                     "zones": [{
-                        "uid": 1,
-                        "flag": 0,
+                        "uid":
+                            1,
+                        "flag":
+                            0,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-02 06:00:01",
@@ -88,8 +105,10 @@ def fixture_log():
                             "realDuration": 1217
                         }]
                     }, {
-                        "uid": 2,
-                        "flag": 0,
+                        "uid":
+                            2,
+                        "flag":
+                            0,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-02 06:20:18",
@@ -100,10 +119,13 @@ def fixture_log():
                         }]
                     }]
                 }, {
-                    "id": 0,
+                    "id":
+                        0,
                     "zones": [{
-                        "uid": 1,
-                        "flag": 1,
+                        "uid":
+                            1,
+                        "flag":
+                            1,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-02 20:58:54",
@@ -114,10 +136,13 @@ def fixture_log():
                         }]
                     }]
                 }, {
-                    "id": 0,
+                    "id":
+                        0,
                     "zones": [{
-                        "uid": 1,
-                        "flag": 1,
+                        "uid":
+                            1,
+                        "flag":
+                            1,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-02 21:00:40",
@@ -128,10 +153,13 @@ def fixture_log():
                         }]
                     }]
                 }, {
-                    "id": 0,
+                    "id":
+                        0,
                     "zones": [{
-                        "uid": 1,
-                        "flag": 1,
+                        "uid":
+                            1,
+                        "flag":
+                            1,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-02 21:20:03",
@@ -142,10 +170,13 @@ def fixture_log():
                         }]
                     }]
                 }, {
-                    "id": 0,
+                    "id":
+                        0,
                     "zones": [{
-                        "uid": 1,
-                        "flag": 1,
+                        "uid":
+                            1,
+                        "flag":
+                            1,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-02 21:40:41",
@@ -156,10 +187,13 @@ def fixture_log():
                         }]
                     }]
                 }, {
-                    "id": 2,
+                    "id":
+                        2,
                     "zones": [{
-                        "uid": 1,
-                        "flag": 0,
+                        "uid":
+                            1,
+                        "flag":
+                            0,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-02 22:00:02",
@@ -169,8 +203,10 @@ def fixture_log():
                             "realDuration": 1180
                         }]
                     }, {
-                        "uid": 2,
-                        "flag": 0,
+                        "uid":
+                            2,
+                        "flag":
+                            0,
                         "cycles": [{
                             "id": 1,
                             "startTime": "2018-06-02 22:19:42",
@@ -189,9 +225,7 @@ def fixture_log():
 @pytest.fixture(scope='module')
 def fixture_queue():
     """Return a /watering/queue response."""
-    return {
-        "queue": []
-    }
+    return {"queue": []}
 
 
 @pytest.fixture(scope='module')
@@ -265,29 +299,28 @@ def fixture_stop_all():
 
 
 @pytest.mark.asyncio
-async def test_endpoints(aresponses, fixture_log, fixture_queue, fixture_runs,
-                         fixture_stop_all, event_loop):
+async def test_endpoints(
+        aresponses, fixture_log, fixture_queue, fixture_runs, fixture_stop_all,
+        event_loop):
     """Test all endpoints."""
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
 
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/watering/log/details/{0}/{1}'.format(today_str,
-                                                                2), 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_log), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/watering/queue', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_queue), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/watering/past/{0}/{1}'.format(today_str, 2), 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_runs), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/watering/stopall', 'post',
-                   aresponses.Response(
-                       text=json.dumps(fixture_stop_all), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+        '/api/4/watering/log/details/{0}/{1}'.format(today_str, 2), 'get',
+        aresponses.Response(text=json.dumps(fixture_log), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/watering/queue', 'get',
+        aresponses.Response(text=json.dumps(fixture_queue), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+        '/api/4/watering/past/{0}/{1}'.format(today_str, 2), 'get',
+        aresponses.Response(text=json.dumps(fixture_runs), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/watering/stopall',
+        'post',
+        aresponses.Response(text=json.dumps(fixture_stop_all), status=200))
 
     # pylint: disable=protected-access
     async with aiohttp.ClientSession(loop=event_loop) as websession:

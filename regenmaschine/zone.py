@@ -9,10 +9,9 @@ class Zone(object):
         """Initialize."""
         self._request = request
 
-    async def all(self,
-                  *,
-                  details: bool = False,
-                  include_inactive: bool = False) -> list:
+    async def all(
+            self, *, details: bool = False,
+            include_inactive: bool = False) -> list:
         """Return all zones (with optional advanced properties)."""
         endpoint = 'zone'
         if details:

@@ -104,10 +104,9 @@ async def watering(client: Client) -> None:
     print('Current Queue: {0}'.format(queue))
 
     print('Runs:')
-    for watering_run in await client.watering.runs(
-            date=datetime.date.today()):
-        print('{0} ({1})'.format(watering_run['dateTime'],
-                                 watering_run['et0']))
+    for watering_run in await client.watering.runs(date=datetime.date.today()):
+        print(
+            '{0} ({1})'.format(watering_run['dateTime'], watering_run['et0']))
 
     print()
     print('STOPPING ALL WATERING')
@@ -118,14 +117,16 @@ async def zones(client: Client) -> None:
     """Output zone-related information."""
     print('ALL ACTIVE ZONES')
     for zone in await client.zones.all(details=True):
-        print('Zone #{0}: {1} (soil: {2})'.format(
-            zone['uid'], zone['name'], zone['soil']))
+        print(
+            'Zone #{0}: {1} (soil: {2})'.format(
+                zone['uid'], zone['name'], zone['soil']))
 
     print()
     print('ZONE BY ID')
     zone_1 = await client.zones.get(1, details=True)
-    print("Zone 1's Name: {0} (soil: {1})".format(zone_1['name'],
-                                                  zone_1['soil']))
+    print(
+        "Zone 1's Name: {0} (soil: {1})".format(
+            zone_1['name'], zone_1['soil']))
 
     # print()
     # print('STARTING ZONE #1 FOR 3 SECONDS')
@@ -191,5 +192,6 @@ async def run(websession):
         print("Couldn't find a valid RainMachine unit via discovery")
     except RequestError as err:
         print(err)
+
 
 asyncio.get_event_loop().run_until_complete(main())

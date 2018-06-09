@@ -34,33 +34,19 @@ def fixture_upcoming():
     """Return a /dailystats/details response."""
     return {
         "DailyStatsDetails": [{
-            "dayTimestamp": 1528092000,
-            "day": "2018-06-04",
-            "mint": 12.779999999999999,
-            "maxt": 33.329999999999998,
-            "icon": 2,
-            "programs": [{
-                "id": 1,
-                "zones": [{
-                    "id": 1,
-                    "scheduledWateringTime": 1243,
-                    "computedWateringTime": 1243,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }, {
-                    "id": 2,
-                    "scheduledWateringTime": 2680,
-                    "computedWateringTime": 2680,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }]
-            }, {
-                "id":
+            "dayTimestamp":
+                1528092000,
+            "day":
+                "2018-06-04",
+            "mint":
+                12.779999999999999,
+            "maxt":
+                33.329999999999998,
+            "icon":
                 2,
+            "programs": [{
+                "id":
+                    1,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -80,7 +66,115 @@ def fixture_upcoming():
                 }]
             }, {
                 "id":
+                    2,
+                "zones": [{
+                    "id": 1,
+                    "scheduledWateringTime": 1243,
+                    "computedWateringTime": 1243,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
+                }, {
+                    "id": 2,
+                    "scheduledWateringTime": 2680,
+                    "computedWateringTime": 2680,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
+                }]
+            }, {
+                "id":
+                    3,
+                "zones": [{
+                    "id": 1,
+                    "scheduledWateringTime": 1243,
+                    "computedWateringTime": 1243,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
+                }]
+            }, {
+                "id":
+                    4,
+                "zones": [{
+                    "id": 1,
+                    "scheduledWateringTime": 1243,
+                    "computedWateringTime": 1243,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
+                }]
+            }],
+            "simulatedPrograms": [{
+                "id":
+                    1,
+                "zones": [{
+                    "id": 2,
+                    "scheduledWateringTime": 300,
+                    "computedWateringTime": 300,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100
+                }]
+            }]
+        }, {
+            "dayTimestamp":
+                1528178400,
+            "day":
+                "2018-06-05",
+            "mint":
+                13.890000000000001,
+            "maxt":
+                34.439999999999998,
+            "icon":
                 3,
+            "programs": [{
+                "id":
+                    1,
+                "zones": [{
+                    "id": 1,
+                    "scheduledWateringTime": 1243,
+                    "computedWateringTime": 1243,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
+                }, {
+                    "id": 2,
+                    "scheduledWateringTime": 2680,
+                    "computedWateringTime": 2680,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
+                }]
+            }, {
+                "id":
+                    2,
+                "zones": [{
+                    "id": 1,
+                    "scheduledWateringTime": 1243,
+                    "computedWateringTime": 1243,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
+                }, {
+                    "id": 2,
+                    "scheduledWateringTime": 2680,
+                    "computedWateringTime": 2680,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
+                }]
+            }, {
+                "id":
+                    3,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -92,7 +186,7 @@ def fixture_upcoming():
                 }]
             }, {
                 "id":
-                4,
+                    4,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -105,7 +199,7 @@ def fixture_upcoming():
             }],
             "simulatedPrograms": [{
                 "id":
-                1,
+                    1,
                 "zones": [{
                     "id": 2,
                     "scheduledWateringTime": 300,
@@ -117,58 +211,18 @@ def fixture_upcoming():
             }]
         }, {
             "dayTimestamp":
-            1528178400,
+                1528264800,
             "day":
-            "2018-06-05",
+                "2018-06-06",
             "mint":
-            13.890000000000001,
+                14.44,
             "maxt":
-            34.439999999999998,
+                32.780000000000001,
             "icon":
-            3,
-            "programs": [{
-                "id":
-                1,
-                "zones": [{
-                    "id": 1,
-                    "scheduledWateringTime": 1243,
-                    "computedWateringTime": 1243,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }, {
-                    "id": 2,
-                    "scheduledWateringTime": 2680,
-                    "computedWateringTime": 2680,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }]
-            }, {
-                "id":
-                2,
-                "zones": [{
-                    "id": 1,
-                    "scheduledWateringTime": 1243,
-                    "computedWateringTime": 1243,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }, {
-                    "id": 2,
-                    "scheduledWateringTime": 2680,
-                    "computedWateringTime": 2680,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }]
-            }, {
-                "id":
                 3,
+            "programs": [{
+                "id":
+                    1,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -177,14 +231,30 @@ def fixture_upcoming():
                     "coefficient": 1.0,
                     "percentage": 100,
                     "wateringFlag": 0
+                }, {
+                    "id": 2,
+                    "scheduledWateringTime": 2680,
+                    "computedWateringTime": 2680,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
                 }]
             }, {
                 "id":
-                4,
+                    2,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
                     "computedWateringTime": 1243,
+                    "availableWater": 0,
+                    "coefficient": 1.0,
+                    "percentage": 100,
+                    "wateringFlag": 0
+                }, {
+                    "id": 2,
+                    "scheduledWateringTime": 2680,
+                    "computedWateringTime": 2680,
                     "availableWater": 0,
                     "coefficient": 1.0,
                     "percentage": 100,
@@ -193,7 +263,7 @@ def fixture_upcoming():
             }],
             "simulatedPrograms": [{
                 "id":
-                1,
+                    1,
                 "zones": [{
                     "id": 2,
                     "scheduledWateringTime": 300,
@@ -205,18 +275,18 @@ def fixture_upcoming():
             }]
         }, {
             "dayTimestamp":
-            1528264800,
+                1528351200,
             "day":
-            "2018-06-06",
+                "2018-06-07",
             "mint":
-            14.44,
+                13.890000000000001,
             "maxt":
-            32.780000000000001,
+                33.890000000000001,
             "icon":
-            3,
+                3,
             "programs": [{
                 "id":
-                1,
+                    1,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -236,7 +306,7 @@ def fixture_upcoming():
                 }]
             }, {
                 "id":
-                2,
+                    2,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -257,7 +327,7 @@ def fixture_upcoming():
             }],
             "simulatedPrograms": [{
                 "id":
-                1,
+                    1,
                 "zones": [{
                     "id": 2,
                     "scheduledWateringTime": 300,
@@ -269,18 +339,18 @@ def fixture_upcoming():
             }]
         }, {
             "dayTimestamp":
-            1528351200,
+                1528437600,
             "day":
-            "2018-06-07",
+                "2018-06-08",
             "mint":
-            13.890000000000001,
+                13.890000000000001,
             "maxt":
-            33.890000000000001,
+                34.439999999999998,
             "icon":
-            3,
+                3,
             "programs": [{
                 "id":
-                1,
+                    1,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -300,7 +370,7 @@ def fixture_upcoming():
                 }]
             }, {
                 "id":
-                2,
+                    2,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -321,7 +391,7 @@ def fixture_upcoming():
             }],
             "simulatedPrograms": [{
                 "id":
-                1,
+                    1,
                 "zones": [{
                     "id": 2,
                     "scheduledWateringTime": 300,
@@ -333,18 +403,18 @@ def fixture_upcoming():
             }]
         }, {
             "dayTimestamp":
-            1528437600,
+                1528524000,
             "day":
-            "2018-06-08",
+                "2018-06-09",
             "mint":
-            13.890000000000001,
+                14.44,
             "maxt":
-            34.439999999999998,
+                33.890000000000001,
             "icon":
-            3,
+                3,
             "programs": [{
                 "id":
-                1,
+                    1,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -364,7 +434,7 @@ def fixture_upcoming():
                 }]
             }, {
                 "id":
-                2,
+                    2,
                 "zones": [{
                     "id": 1,
                     "scheduledWateringTime": 1243,
@@ -385,69 +455,7 @@ def fixture_upcoming():
             }],
             "simulatedPrograms": [{
                 "id":
-                1,
-                "zones": [{
-                    "id": 2,
-                    "scheduledWateringTime": 300,
-                    "computedWateringTime": 300,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100
-                }]
-            }]
-        }, {
-            "dayTimestamp":
-            1528524000,
-            "day":
-            "2018-06-09",
-            "mint":
-            14.44,
-            "maxt":
-            33.890000000000001,
-            "icon":
-            3,
-            "programs": [{
-                "id":
-                1,
-                "zones": [{
-                    "id": 1,
-                    "scheduledWateringTime": 1243,
-                    "computedWateringTime": 1243,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }, {
-                    "id": 2,
-                    "scheduledWateringTime": 2680,
-                    "computedWateringTime": 2680,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }]
-            }, {
-                "id": 2,
-                "zones": [{
-                    "id": 1,
-                    "scheduledWateringTime": 1243,
-                    "computedWateringTime": 1243,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }, {
-                    "id": 2,
-                    "scheduledWateringTime": 2680,
-                    "computedWateringTime": 2680,
-                    "availableWater": 0,
-                    "coefficient": 1.0,
-                    "percentage": 100,
-                    "wateringFlag": 0
-                }]
-            }],
-            "simulatedPrograms": [{
-                "id": 1,
+                    1,
                 "zones": [{
                     "id": 2,
                     "scheduledWateringTime": 300,
@@ -470,20 +478,20 @@ def fixture_upcoming():
 
 
 @pytest.mark.asyncio
-async def test_endpoints(aresponses, fixture_on_date, fixture_upcoming,
-                         event_loop):
+async def test_endpoints(
+        aresponses, fixture_on_date, fixture_upcoming, event_loop):
     """Test all endpoints."""
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
 
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/dailystats/{0}'.format(today_str), 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_on_date), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/dailystats/details', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_upcoming), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+        '/api/4/dailystats/{0}'.format(today_str), 'get',
+        aresponses.Response(text=json.dumps(fixture_on_date), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/dailystats/details',
+        'get',
+        aresponses.Response(text=json.dumps(fixture_upcoming), status=200))
 
     # pylint: disable=protected-access
     async with aiohttp.ClientSession(loop=event_loop) as websession:

@@ -16,16 +16,26 @@ def fixture_all():
     """Return a /program response."""
     return {
         "programs": [{
-            "uid": 1,
-            "name": "Morning",
-            "active": True,
-            "startTime": "06:00",
-            "cycles": 0,
-            "soak": 0,
-            "cs_on": False,
-            "delay": 0,
-            "delay_on": False,
-            "status": 0,
+            "uid":
+                1,
+            "name":
+                "Morning",
+            "active":
+                True,
+            "startTime":
+                "06:00",
+            "cycles":
+                0,
+            "soak":
+                0,
+            "cs_on":
+                False,
+            "delay":
+                0,
+            "delay_on":
+                False,
+            "status":
+                0,
             "startTimeParams": {
                 "offsetSign": 0,
                 "type": 0,
@@ -35,16 +45,26 @@ def fixture_all():
                 "type": 0,
                 "param": "0"
             },
-            "coef": 0.0,
-            "ignoreInternetWeather": False,
-            "futureField1": 0,
-            "freq_modified": 0,
-            "useWaterSense": False,
-            "nextRun": "2018-06-04",
-            "startDate": "2018-04-28",
-            "endDate": None,
-            "yearlyRecurring": True,
-            "simulationExpired": False,
+            "coef":
+                0.0,
+            "ignoreInternetWeather":
+                False,
+            "futureField1":
+                0,
+            "freq_modified":
+                0,
+            "useWaterSense":
+                False,
+            "nextRun":
+                "2018-06-04",
+            "startDate":
+                "2018-04-28",
+            "endDate":
+                None,
+            "yearlyRecurring":
+                True,
+            "simulationExpired":
+                False,
             "wateringTimes": [{
                 "id": 1,
                 "order": -1,
@@ -150,16 +170,26 @@ def fixture_all():
 def fixture_get():
     """Return a program/<ID> response."""
     return {
-        "uid": 1,
-        "name": "Morning",
-        "active": True,
-        "startTime": "06:00",
-        "cycles": 0,
-        "soak": 0,
-        "cs_on": False,
-        "delay": 0,
-        "delay_on": False,
-        "status": 0,
+        "uid":
+            1,
+        "name":
+            "Morning",
+        "active":
+            True,
+        "startTime":
+            "06:00",
+        "cycles":
+            0,
+        "soak":
+            0,
+        "cs_on":
+            False,
+        "delay":
+            0,
+        "delay_on":
+            False,
+        "status":
+            0,
         "startTimeParams": {
             "offsetSign": 0,
             "type": 0,
@@ -169,15 +199,24 @@ def fixture_get():
             "type": 0,
             "param": "0"
         },
-        "coef": 0.0,
-        "ignoreInternetWeather": False,
-        "futureField1": 0,
-        "freq_modified": 0,
-        "useWaterSense": False,
-        "nextRun": "2018-04-27",
-        "endDate": "1969-12-31",
-        "simulationExpired": False,
-        "yearlyRecurring": True,
+        "coef":
+            0.0,
+        "ignoreInternetWeather":
+            False,
+        "futureField1":
+            0,
+        "freq_modified":
+            0,
+        "useWaterSense":
+            False,
+        "nextRun":
+            "2018-04-27",
+        "endDate":
+            "1969-12-31",
+        "simulationExpired":
+            False,
+        "yearlyRecurring":
+            True,
         "wateringTimes": [{
             "id": 1,
             "name": "Landscaping",
@@ -302,34 +341,32 @@ def fixture_start_stop():
 
 
 @pytest.mark.asyncio
-async def test_endpoints(aresponses, fixture_all, fixture_get,
-                         fixture_next_runs, fixture_running,
-                         fixture_start_stop, event_loop):
+async def test_endpoints(
+        aresponses, fixture_all, fixture_get, fixture_next_runs,
+        fixture_running, fixture_start_stop, event_loop):
     """Test all endpoints."""
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program',
-                   'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_all), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/1',
-                   'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_get), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/program/nextrun', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_next_runs), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/watering/program', 'get',
-                   aresponses.Response(
-                       text=json.dumps(fixture_running), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/program/1/start', 'post',
-                   aresponses.Response(
-                       text=json.dumps(fixture_start_stop), status=200))
-    aresponses.add('{0}:{1}'.format(TEST_HOST, TEST_PORT),
-                   '/api/4/program/1/stop', 'post',
-                   aresponses.Response(
-                       text=json.dumps(fixture_start_stop), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program', 'get',
+        aresponses.Response(text=json.dumps(fixture_all), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/1', 'get',
+        aresponses.Response(text=json.dumps(fixture_get), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/nextrun',
+        'get',
+        aresponses.Response(text=json.dumps(fixture_next_runs), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+        '/api/4/watering/program', 'get',
+        aresponses.Response(text=json.dumps(fixture_running), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/1/start',
+        'post',
+        aresponses.Response(text=json.dumps(fixture_start_stop), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/1/stop',
+        'post',
+        aresponses.Response(text=json.dumps(fixture_start_stop), status=200))
 
     # pylint: disable=protected-access
     async with aiohttp.ClientSession(loop=event_loop) as websession:
