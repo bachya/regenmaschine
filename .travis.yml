@@ -1,12 +1,18 @@
 ---
 sudo: false
 language: python
-python:
-  - "3.5"
-  - "3.6"
+matrix:
+  fast_finish: true
+  include:
+    - python: "3.5.3"
+      env: TOXENV=py35
+    - python: "3.6"
+      env: TOXENV=py36
 install: "make init"
 script: "make ci"
-cache: "pip"
+cache:
+  directories:
+    - $HOME/.cache/pip
 jobs:
   include:
     - stage: "coverage"
