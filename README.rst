@@ -86,7 +86,8 @@ A Regenmaschine :code:`Client` can be created manually:
 
 .. code-block:: python
 
-  from regenmaschine import DiscoveryFailedError, scan
+  from regenmaschine import scan
+  from regenmaschine.errors import DiscoveryFailedError
 
   try:
     client = scan(websession)
