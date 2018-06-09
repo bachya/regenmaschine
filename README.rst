@@ -37,7 +37,7 @@ Version 1.0.0 of Regenmaschine makes several breaking, but necessary changes:
   `Requests <http://docs.python-requests.org/en/master/>`_ to
   `aiohttp <https://aiohttp.readthedocs.io/en/stable/>`_
 * Changes the entire library to use :code:`asyncio`
-* Makes 3.6 the minimum version of Python required
+* Makes 3.5 the minimum version of Python required
 
 If you wish to continue using the previous, synchronous version of
 Regenmaschine, make sure to pin version 0.4.2.
