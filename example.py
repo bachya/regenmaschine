@@ -4,7 +4,8 @@ import datetime
 
 from aiohttp import ClientSession
 
-from regenmaschine import Client, DiscoveryFailedError, RequestError, scan
+from regenmaschine import Client, scan
+from regenmaschine.errors import DiscoveryFailedError, RequestError
 
 
 async def diagnostics(client: Client) -> None:
@@ -128,22 +129,22 @@ async def zones(client: Client) -> None:
         "Zone 1's Name: {0} (soil: {1})".format(
             zone_1['name'], zone_1['soil']))
 
-    # print()
-    # print('STARTING ZONE #1 FOR 3 SECONDS')
-    # print(await client.zones.start(1, 3))
+    print()
+    print('STARTING ZONE #1 FOR 3 SECONDS')
+    print(await client.zones.start(1, 3))
 
-    # await asyncio.sleep(3)
+    await asyncio.sleep(3)
 
-    # print()
-    # print('STOPPING ZONE #1')
-    # print(await client.zones.stop(1))
+    print()
+    print('STOPPING ZONE #1')
+    print(await client.zones.stop(1))
 
 
 async def run(websession):
     """Run."""
     try:
         # Create a client manually:
-        client = Client('localhost', websession, port=9999)
+        client = Client('192.168.2.16', websession)
 
         # Or attempt to discover it on the local network:
         # print('Attempting to discover a RainMachine unit...\n')
