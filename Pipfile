@@ -6,19 +6,18 @@ verify_ssl = true
 
 [dev-packages]
 
-coverage = "*"
 "flake8" = "*"
 aresponses = "*"
 codecov = "*"
+coverage = "*"
 detox = "*"
+pydocstyle = "*"
 pytest-aiohttp = "*"
 pytest-cov = "*"
 pytest-mock = "*"
 sphinx = "*"
 tox = "*"
 twine = "*"
-pydocstyle = "*"
-
 
 [packages]
 
