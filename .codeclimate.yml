@@ -4,15 +4,15 @@ engines:
     enabled: true
     config:
       languages:
-      - python
+        - python
   fixme:
     enabled: true
   radon:
     enabled: true
 ratings:
   paths:
-  - "**.py"
+    - "**.py"
 exclude_paths:
-- dist/
-- docs/
-- tests/
+  - dist/
+  - docs/
+  - tests/
