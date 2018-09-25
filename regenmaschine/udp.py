@@ -1,4 +1,5 @@
 """Provide high-level UDP endpoints for asyncio.
+
 https://gist.github.com/vxgmichel/e47bff34b68adb3cf6bd4845c4bed448
 
 Example:
@@ -20,6 +21,8 @@ async def main():
     # This prints: Got 'Hey Hey, My My' from 127.0.0.1 port 8888
     print(f"Got {data!r} from {address[0]} port {address[1]}")
 """
+
+# pylint: skip-file
 
 __all__ = ['open_local_endpoint', 'open_remote_endpoint']
 
@@ -108,8 +111,7 @@ class Endpoint:
         self._transport.sendto(data, addr)
 
     async def receive(self):
-        """Wait for an incoming datagram and return it with
-        the corresponding address.
+        """Wait for an incoming datagram and return the corresponding address.
 
         This method is a coroutine.
         """
@@ -131,20 +133,21 @@ class Endpoint:
 
     @property
     def address(self):
-        """The endpoint address as a (host, port) tuple."""
+        """Define the endpoint address as a (host, port) tuple."""
         return self._transport._sock.getsockname()
 
     @property
     def closed(self):
-        """Indicates whether the endpoint is closed or not."""
+        """Indicate whether the endpoint is closed or not."""
         return self._closed
 
 
 class LocalEndpoint(Endpoint):
-    """High-level interface for UDP local enpoints.
+    """Define the high-level interface for UDP local enpoints.
 
     It is initialized with an optional queue size for the incoming datagrams.
     """
+
     pass
 
 
@@ -159,7 +162,7 @@ class RemoteEndpoint(Endpoint):
         super().send(data, None)
 
     async def receive(self):
-        """ Wait for an incoming datagram from the remote host.
+        """Wait for an incoming datagram from the remote host.
 
         This method is a coroutine.
         """

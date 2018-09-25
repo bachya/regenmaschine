@@ -2,7 +2,7 @@
 from typing import Awaitable, Callable
 
 
-class Provision(object):
+class Provision:
     """Define a provisioning object."""
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:

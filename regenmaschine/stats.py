@@ -3,7 +3,7 @@ import datetime
 from typing import Awaitable, Callable
 
 
-class Stats(object):
+class Stats:
     """Define a statistics object."""
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
@@ -16,7 +16,7 @@ class Stats(object):
             'get', 'dailystats/{0}'.format(date.strftime('%Y-%m-%d')))
 
     async def upcoming(self, details: bool = False) -> list:
-        """Returns watering statistics for the next 6 days."""
+        """Return watering statistics for the next 6 days."""
         endpoint = 'dailystats'
         key = 'DailyStats'
         if details:

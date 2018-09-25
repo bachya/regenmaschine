@@ -1,5 +1,7 @@
 """Define a client to interact with a RainMachine hub."""
-import datetime
+# pylint: disable=import-error, unused-import
+from datetime import datetime, timedelta
+from typing import Union  # noqa
 
 from aiohttp import ClientSession, client_exceptions
 
@@ -16,7 +18,7 @@ from .zone import Zone
 API_URL_SCAFFOLD = 'https://{0}:{1}/api/4'
 
 
-class Client(object):  # pylint: disable=too-many-instance-attributes
+class Client:  # pylint: disable=too-many-instance-attributes
     """Define the client."""
 
     def __init__(
@@ -30,7 +32,7 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
             ssl: bool = True) -> None:
         """Initialize."""
         self._access_token = None
-        self._access_token_expiration = None  # type: datetime.datetime
+        self._access_token_expiration = None  # type: Union[None, datetime]
         self._authenticated = False
         self.host = host
         self.mac = mac
@@ -55,8 +57,8 @@ class Client(object):  # pylint: disable=too-many-instance-attributes
         self._authenticated = True
         self._access_token = data['access_token']
         self._access_token_expiration = (
-            datetime.datetime.now() +
-            datetime.timedelta(seconds=data['expires_in']))
+            datetime.now() +
+            timedelta(seconds=data['expires_in']))
 
         if not (self.name or self.mac):
             wifi_data = await self.provisioning.wifi()

@@ -2,7 +2,7 @@
 from typing import Awaitable, Callable
 
 
-class Parser(object):  # pylint: disable=too-few-public-methods
+class Parser:  # pylint: disable=too-few-public-methods
     """Define a parser object."""
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:

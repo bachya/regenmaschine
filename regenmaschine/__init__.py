@@ -1,3 +1,3 @@
 """Initialize."""
-from .client import Client
-from .discovery import scan
+from .client import Client  # noqa
+from .discovery import scan  # noqa

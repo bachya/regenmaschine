@@ -2,7 +2,7 @@
 from typing import Awaitable, Callable
 
 
-class Program(object):
+class Program:
     """Define a program object."""
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:

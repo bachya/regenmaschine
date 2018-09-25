@@ -1,6 +1,9 @@
 """Define the ability to discover RainMachine devices on the network."""
+# pylint: disable=import-error, unused-import
+
 import asyncio
 import logging
+from typing import List, Tuple  # noqa
 from urllib.parse import urlparse
 
 from aiohttp import ClientSession
@@ -29,15 +32,16 @@ async def scan(websession: ClientSession) -> Client:
             local.receive(), timeout=DEFAULT_TIMEOUT)
         local.close()
 
-        data_parts = list(filter(None, data.decode().split('|')))
+        data_parts = list(
+            filter(None, data.decode().split('|')))  # type: List[Tuple]
 
         kind, mac, name, url, _ = data_parts
         if kind != 'SPRINKLER':
             raise DiscoveryFailedError('No valid RainMachine units found')
 
-        scheme, netloc, _, _, _, _ = urlparse(url)
+        scheme, netloc, _, _, _, _ = urlparse(url)  # type: ignore
         host, port = netloc.split(':')
-        return Client(
+        return Client(  # type: ignore
             host,
             websession,
             mac=mac,

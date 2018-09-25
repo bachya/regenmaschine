@@ -2,7 +2,7 @@
 from typing import Awaitable, Callable
 
 
-class Zone(object):
+class Zone:
     """Define a zone object."""
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:

@@ -2,7 +2,7 @@
 from typing import Awaitable, Callable
 
 
-class Restriction(object):
+class Restriction:
     """Define a restriction object."""
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:

@@ -2,7 +2,7 @@
 from typing import Awaitable, Callable
 
 
-class Diagnostics(object):
+class Diagnostics:
     """Define a diagnostics object."""
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:

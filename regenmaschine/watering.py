@@ -3,7 +3,7 @@ import datetime
 from typing import Awaitable, Callable
 
 
-class Watering(object):
+class Watering:
     """Define a watering object."""
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
