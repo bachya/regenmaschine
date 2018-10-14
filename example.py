@@ -4,8 +4,8 @@ import datetime
 
 from aiohttp import ClientSession
 
-from regenmaschine import Client, scan
-from regenmaschine.errors import DiscoveryFailedError, RequestError
+from regenmaschine import Client
+from regenmaschine.errors import RainMachineError
 
 
 async def diagnostics(client: Client) -> None:
@@ -189,9 +189,7 @@ async def run(websession):
         # Work with zones:
         print()
         await zones(client)
-    except DiscoveryFailedError:
-        print("Couldn't find a valid RainMachine unit via discovery")
-    except RequestError as err:
+    except RainMachineError as err:
         print(err)
 
 
