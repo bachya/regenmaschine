@@ -55,7 +55,7 @@ async def main() -> None:
 asyncio.get_event_loop().run_until_complete(main())
 ```
 
-A `regenmaschine` `Client` can be created manually:
+To create a  `regenmaschine` `Client` :
 
 ```python
 import asyncio
@@ -69,30 +69,6 @@ async def main() -> None:
     """Create the aiohttp session and run the example."""
     async with ClientSession() as websession:
       client = Client('192.168.1.100', websession, port=9999)
-
-
-asyncio.get_event_loop().run_until_complete(main())
-```
-
-...or you can attempt to discover one on your local network:
-
-```python
-import asyncio
-
-from aiohttp import ClientSession
-
-from regenmaschine import Client, scan
-from regenmaschine.errors import DiscoveryFailedError
-
-
-async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-
-      try:
-        client = scan(websession)
-      except DiscoveryFailedError:
-        print("Couldn't find a valid RainMachine unit via discovery")
 
 
 asyncio.get_event_loop().run_until_complete(main())
