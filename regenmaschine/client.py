@@ -1,9 +1,10 @@
 """Define a client to interact with a RainMachine hub."""
 # pylint: disable=import-error, unused-import
 from datetime import datetime, timedelta
-from typing import Union  # noqa
+from typing import Optional, Union  # noqa
 
-from aiohttp import ClientSession, client_exceptions
+from aiohttp import ClientSession
+from aiohttp.client_exceptions import ClientError
 
 from .errors import RequestError, UnauthenticatedError
 from .diagnostics import Diagnostics
@@ -31,9 +32,11 @@ class Client:  # pylint: disable=too-many-instance-attributes
             port: int = 8080,
             ssl: bool = True) -> None:
         """Initialize."""
-        self._access_token = None
         self._access_token_expiration = None  # type: Union[None, datetime]
+        self._actively_authenticating = False
         self._authenticated = False
+        self._password = None  # type: Union[None, str]
+        self.access_token = None
         self.host = host
         self.mac = mac
         self.name = name
@@ -50,20 +53,24 @@ class Client:  # pylint: disable=too-many-instance-attributes
         self.watering = Watering(self.request)
         self.zones = Zone(self.request)
 
-    async def authenticate(self, passwd: str) -> None:
+    async def authenticate(self, password: Optional[str]) -> None:
         """Authenticate against the RainMachine device."""
-        json = {'pwd': passwd, 'remember': 1}
+        if password != self._password:
+            self._password = password
+
+        json = {'pwd': password, 'remember': 1}
         data = await self.request('post', 'auth/login', json=json, auth=False)
         self._authenticated = True
-        self._access_token = data['access_token']
+        self.access_token = data['access_token']
         self._access_token_expiration = (
-            datetime.now() +
-            timedelta(seconds=data['expires_in']))
+            datetime.now() + timedelta(seconds=data['expires_in']))
 
         if not (self.name or self.mac):
             wifi_data = await self.provisioning.wifi()
             self.mac = wifi_data['macAddress']
             self.name = await self.provisioning.device_name
+
+        self._actively_authenticating = False
 
     async def request(
             self,
@@ -78,6 +85,12 @@ class Client:  # pylint: disable=too-many-instance-attributes
         if auth and not self._authenticated:
             raise UnauthenticatedError('You must authenticate first!')
 
+        if (self._access_token_expiration
+                and datetime.now() >= self._access_token_expiration
+                and not self._actively_authenticating):
+            self._actively_authenticating = True
+            await self.authenticate(self._password)
+
         if not headers:
             headers = {}
         headers.update({'Content-Type': 'application/json'})
@@ -86,7 +99,7 @@ class Client:  # pylint: disable=too-many-instance-attributes
             params = {}
 
         if auth:
-            params.update({'access_token': self._access_token})
+            params.update({'access_token': self.access_token})
 
         try:
             async with self.websession.request(method, '{0}/{1}'.format(
@@ -96,7 +109,6 @@ class Client:  # pylint: disable=too-many-instance-attributes
                 resp.raise_for_status()
                 data = await resp.json(content_type=None)
                 return data
-        except client_exceptions.ClientError as err:
+        except ClientError as err:
             raise RequestError(
-                'Error requesting data from {}: {}'.format(self.host,
-                                                           err)) from None
+                'Error requesting data from {}: {}'.format(self.host, err))

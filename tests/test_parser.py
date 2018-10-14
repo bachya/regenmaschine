@@ -41,7 +41,7 @@ async def test_endpoints(aresponses, fixture_current, event_loop):
     async with aiohttp.ClientSession(loop=event_loop) as websession:
         client = Client(TEST_HOST, websession, port=TEST_PORT, ssl=False)
         client._authenticated = True
-        client._access_token = '12345'
+        client.access_token = '12345'
 
         data = await client.parsers.current()
         assert len(data) == 1
