@@ -1,8 +1,7 @@
 """Define tests for the client object."""
 # pylint: disable=redefined-outer-name,unused-import
-
-import asyncio
 import json
+from datetime import datetime, timedelta
 
 import aiohttp
 import pytest
@@ -10,8 +9,7 @@ import pytest
 from regenmaschine import Client
 from regenmaschine.errors import RequestError, UnauthenticatedError
 
-from .const import (
-    TEST_HOST, TEST_MAC, TEST_NAME, TEST_PASSWORD, TEST_PORT, TEST_URL)
+from .const import TEST_HOST, TEST_MAC, TEST_NAME, TEST_PASSWORD, TEST_PORT
 from .test_provisioning import fixture_device_name, fixture_wifi  # noqa
 
 
@@ -62,7 +60,7 @@ async def test_authentication_success(
     async with aiohttp.ClientSession(loop=event_loop) as websession:
         client = Client(TEST_HOST, websession, port=TEST_PORT, ssl=False)
         await client.authenticate(TEST_PASSWORD)
-        assert client._access_token == '12345'
+        assert client.access_token == '12345'
         assert client.name == TEST_NAME
         assert client.mac == TEST_MAC
 
@@ -80,6 +78,40 @@ async def test_authentication_failure(
         async with aiohttp.ClientSession(loop=event_loop) as websession:
             client = Client(TEST_HOST, websession, port=TEST_PORT, ssl=False)
             await client.authenticate(TEST_PASSWORD)
+
+
+# pylint: disable=protected-access
+@pytest.mark.asyncio
+async def test_automatic_token_refresh(
+        aresponses, authentication_success, event_loop, fixture_device_name,
+        fixture_wifi):
+    """Test that a refresh token is used correctly."""
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/auth/login', 'post',
+        aresponses.Response(
+            text=json.dumps(authentication_success), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision/name', 'get',
+        aresponses.Response(text=json.dumps(fixture_device_name), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision/wifi', 'get',
+        aresponses.Response(text=json.dumps(fixture_wifi), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/auth/login', 'post',
+        aresponses.Response(
+            text=json.dumps(authentication_success), status=200))
+    aresponses.add(
+        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/test', 'get',
+        aresponses.Response(
+            text='', status=200))
+
+    async with aiohttp.ClientSession(loop=event_loop) as websession:
+        client = Client(TEST_HOST, websession, port=TEST_PORT, ssl=False)
+        await client.authenticate(TEST_PASSWORD)
+        client._authenticated = True
+        client._access_token_expiration = datetime.now() - timedelta(
+            hours=1)
+        await client.request('get', 'test')
 
 
 @pytest.mark.asyncio

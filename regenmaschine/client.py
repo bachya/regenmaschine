@@ -1,7 +1,7 @@
 """Define a client to interact with a RainMachine hub."""
 # pylint: disable=import-error, unused-import
 from datetime import datetime, timedelta
-from typing import Union  # noqa
+from typing import Optional, Union  # noqa
 
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
@@ -34,9 +34,9 @@ class Client:  # pylint: disable=too-many-instance-attributes
         """Initialize."""
         self._access_token_expiration = None  # type: Union[None, datetime]
         self._actively_authenticating = False
-        self._password = None
+        self._authenticated = False
+        self._password = None  # type: Union[None, str]
         self.access_token = None
-        self.authenticated = False
         self.host = host
         self.mac = mac
         self.name = name
@@ -53,14 +53,14 @@ class Client:  # pylint: disable=too-many-instance-attributes
         self.watering = Watering(self.request)
         self.zones = Zone(self.request)
 
-    async def authenticate(self, password: str) -> None:
-        """authenticate against the RainMachine device."""
+    async def authenticate(self, password: Optional[str]) -> None:
+        """Authenticate against the RainMachine device."""
         if password != self._password:
             self._password = password
 
         json = {'pwd': password, 'remember': 1}
         data = await self.request('post', 'auth/login', json=json, auth=False)
-        self.authenticated = True
+        self._authenticated = True
         self.access_token = data['access_token']
         self._access_token_expiration = (
             datetime.now() + timedelta(seconds=data['expires_in']))
@@ -82,7 +82,7 @@ class Client:  # pylint: disable=too-many-instance-attributes
             json: dict = None,
             auth: bool = True) -> dict:
         """Make a request against the RainMachine device."""
-        if auth and not self.authenticated:
+        if auth and not self._authenticated:
             raise UnauthenticatedError('You must authenticate first!')
 
         if (self._access_token_expiration
