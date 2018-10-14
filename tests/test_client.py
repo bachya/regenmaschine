@@ -7,10 +7,8 @@ import json
 import aiohttp
 import pytest
 
-from regenmaschine import Client, scan
-from regenmaschine.discovery import DEFAULT_TIMEOUT
-from regenmaschine.errors import (
-    DiscoveryFailedError, RequestError, UnauthenticatedError)
+from regenmaschine import Client
+from regenmaschine.errors import RequestError, UnauthenticatedError
 
 from .const import (
     TEST_HOST, TEST_MAC, TEST_NAME, TEST_PASSWORD, TEST_PORT, TEST_URL)
@@ -35,16 +33,6 @@ def authentication_success():
     }
 
 
-async def endpoint_receive_data(data):
-    """Stub a simple return from UDP discovery."""
-    return data, (TEST_HOST, TEST_PORT)
-
-
-async def endpoint_timeout():
-    """Stub a simple return from UDP discovery."""
-    return await asyncio.sleep(DEFAULT_TIMEOUT + 1)
-
-
 async def test_create():
     """Test the manual creation of a client."""
     async with aiohttp.ClientSession() as websession:
@@ -55,55 +43,6 @@ async def test_create():
 
 
 @pytest.mark.asyncio
-async def test_discovery_success(event_loop, mocker):
-    """Test the creation of a client via discovery."""
-    mock_endpoint_send = mocker.patch('regenmaschine.udp.LocalEndpoint.send')
-    mock_endpoint_send.return_value = None
-    mock_endpoint_recv = mocker.patch(
-        'regenmaschine.udp.LocalEndpoint.receive')
-    mock_endpoint_recv.return_value = endpoint_receive_data(
-        '||{0}||{1}||{2}||{3}||{4}||'.format(
-            'SPRINKLER', TEST_MAC, TEST_NAME, TEST_URL, 1).encode())
-
-    async with aiohttp.ClientSession(loop=event_loop) as websession:
-        client = await scan(websession)
-        assert client.host == TEST_HOST
-        assert client.mac == TEST_MAC
-        assert client.name == TEST_NAME
-        assert client.port == TEST_PORT
-
-
-@pytest.mark.asyncio
-async def test_discovery_failure_type(event_loop, mocker):
-    """Test discovery failing to find a valid sprinkler (amid others)."""
-    mock_endpoint_send = mocker.patch('regenmaschine.udp.LocalEndpoint.send')
-    mock_endpoint_send.return_value = None
-    mock_endpoint_recv = mocker.patch(
-        'regenmaschine.udp.LocalEndpoint.receive')
-    mock_endpoint_recv.return_value = endpoint_receive_data(
-        '||{0}||{1}||{2}||{3}||{4}||'.format(
-            'PONY', TEST_MAC, TEST_NAME, TEST_URL, 1).encode())
-
-    with pytest.raises(DiscoveryFailedError):
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
-            await scan(websession)
-
-
-@pytest.mark.asyncio
-async def test_discovery_failure_timeout(event_loop, mocker):
-    """Test discovery timing out."""
-    mock_endpoint_send = mocker.patch('regenmaschine.udp.LocalEndpoint.send')
-    mock_endpoint_send.return_value = None
-    mock_endpoint_recv = mocker.patch(
-        'regenmaschine.udp.LocalEndpoint.receive')
-    mock_endpoint_recv.return_value = endpoint_timeout()
-
-    with pytest.raises(DiscoveryFailedError):
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
-            await scan(websession)
-
-
-@pytest.mark.asyncio  # noqa
 async def test_authentication_success(
         aresponses, authentication_success, fixture_device_name, event_loop,
         fixture_wifi):
