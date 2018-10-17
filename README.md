@@ -68,14 +68,14 @@ from regenmaschine import Client
 async def main() -> None:
     """Create the aiohttp session and run the example."""
     async with ClientSession() as websession:
-      client = Client('192.168.1.100', websession, port=9999)
+      client = await Client.authenticate_via_password(
+        '192.168.1.100', '<PASSWORD'>, websession, port=8080, ssl=True)
 
 
 asyncio.get_event_loop().run_until_complete(main())
 ```
 
-Once you have a client, authenticate it by using your RainMachine password and
-get to work:
+Once you have a client, get to work:
 
 ```python
 import asyncio
@@ -88,10 +88,8 @@ from regenmaschine import Client
 async def main() -> None:
     """Create the aiohttp session and run the example."""
     async with ClientSession() as websession:
-      client = Client('192.168.1.100', websession, port=9999)
-
-      # Authenticate using your password:
-      await client.authenticate('my_password_123')
+      client = await Client.authenticate_via_password(
+        '192.168.1.100', '<PASSWORD'>, websession, port=8080, ssl=True)
 
       # Print some client properties:
       print('Name: {0}'.format(client.name))
