@@ -1,41 +1,22 @@
-"""Define tests for program endpoints."""
-# pylint: disable=redefined-outer-name,too-many-arguments
-
-import json
-
-import aiohttp
+"""Define fixtures related to the "program" endpoint."""
 import pytest
 
-from regenmaschine import Client
 
-from .const import TEST_HOST, TEST_PORT
-
-
-@pytest.fixture(scope='module')
-def fixture_all():
+@pytest.fixture()
+def program_json():
     """Return a /program response."""
     return {
         "programs": [{
-            "uid":
-                1,
-            "name":
-                "Morning",
-            "active":
-                True,
-            "startTime":
-                "06:00",
-            "cycles":
-                0,
-            "soak":
-                0,
-            "cs_on":
-                False,
-            "delay":
-                0,
-            "delay_on":
-                False,
-            "status":
-                0,
+            "uid": 1,
+            "name": "Morning",
+            "active": True,
+            "startTime": "06:00",
+            "cycles": 0,
+            "soak": 0,
+            "cs_on": False,
+            "delay": 0,
+            "delay_on": False,
+            "status": 0,
             "startTimeParams": {
                 "offsetSign": 0,
                 "type": 0,
@@ -45,26 +26,16 @@ def fixture_all():
                 "type": 0,
                 "param": "0"
             },
-            "coef":
-                0.0,
-            "ignoreInternetWeather":
-                False,
-            "futureField1":
-                0,
-            "freq_modified":
-                0,
-            "useWaterSense":
-                False,
-            "nextRun":
-                "2018-06-04",
-            "startDate":
-                "2018-04-28",
-            "endDate":
-                None,
-            "yearlyRecurring":
-                True,
-            "simulationExpired":
-                False,
+            "coef": 0.0,
+            "ignoreInternetWeather": False,
+            "futureField1": 0,
+            "freq_modified": 0,
+            "useWaterSense": False,
+            "nextRun": "2018-06-04",
+            "startDate": "2018-04-28",
+            "endDate": None,
+            "yearlyRecurring": True,
+            "simulationExpired": False,
             "wateringTimes": [{
                 "id": 1,
                 "order": -1,
@@ -166,30 +137,20 @@ def fixture_all():
     }
 
 
-@pytest.fixture(scope='module')
-def fixture_get():
+@pytest.fixture()
+def program_id_json():
     """Return a program/<ID> response."""
     return {
-        "uid":
-            1,
-        "name":
-            "Morning",
-        "active":
-            True,
-        "startTime":
-            "06:00",
-        "cycles":
-            0,
-        "soak":
-            0,
-        "cs_on":
-            False,
-        "delay":
-            0,
-        "delay_on":
-            False,
-        "status":
-            0,
+        "uid": 1,
+        "name": "Morning",
+        "active": True,
+        "startTime": "06:00",
+        "cycles": 0,
+        "soak": 0,
+        "cs_on": False,
+        "delay": 0,
+        "delay_on": False,
+        "status": 0,
         "startTimeParams": {
             "offsetSign": 0,
             "type": 0,
@@ -199,24 +160,15 @@ def fixture_get():
             "type": 0,
             "param": "0"
         },
-        "coef":
-            0.0,
-        "ignoreInternetWeather":
-            False,
-        "futureField1":
-            0,
-        "freq_modified":
-            0,
-        "useWaterSense":
-            False,
-        "nextRun":
-            "2018-04-27",
-        "endDate":
-            "1969-12-31",
-        "simulationExpired":
-            False,
-        "yearlyRecurring":
-            True,
+        "coef": 0.0,
+        "ignoreInternetWeather": False,
+        "futureField1": 0,
+        "freq_modified": 0,
+        "useWaterSense": False,
+        "nextRun": "2018-04-27",
+        "endDate": "1969-12-31",
+        "simulationExpired": False,
+        "yearlyRecurring": True,
         "wateringTimes": [{
             "id": 1,
             "name": "Landscaping",
@@ -305,8 +257,8 @@ def fixture_get():
     }
 
 
-@pytest.fixture(scope='module')
-def fixture_next_runs():
+@pytest.fixture()
+def program_nextrun_json():
     """Return a /program/nextrun response."""
     return {
         "nextRuns": [{
@@ -319,8 +271,14 @@ def fixture_next_runs():
     }
 
 
-@pytest.fixture(scope='module')
-def fixture_running():
+@pytest.fixture()
+def program_start_stop_json():
+    """Return a response for /program/<ID>/start and /program/<ID>/stop."""
+    return {"statusCode": 0, "message": "OK"}
+
+
+@pytest.fixture()
+def watering_program_json():
     """Return a /watering/program response."""
     return {
         "programs": [{
@@ -332,64 +290,3 @@ def fixture_running():
             "status": 1
         }]
     }
-
-
-@pytest.fixture(scope='module')
-def fixture_start_stop():
-    """Return a response for /program/<ID>/start and /program/<ID>/stop."""
-    return {"statusCode": 0, "message": "OK"}
-
-
-@pytest.mark.asyncio
-async def test_endpoints(
-        aresponses, fixture_all, fixture_get, fixture_next_runs,
-        fixture_running, fixture_start_stop, event_loop):
-    """Test all endpoints."""
-    aresponses.add(
-        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program', 'get',
-        aresponses.Response(text=json.dumps(fixture_all), status=200))
-    aresponses.add(
-        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/1', 'get',
-        aresponses.Response(text=json.dumps(fixture_get), status=200))
-    aresponses.add(
-        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/nextrun',
-        'get',
-        aresponses.Response(text=json.dumps(fixture_next_runs), status=200))
-    aresponses.add(
-        '{0}:{1}'.format(TEST_HOST, TEST_PORT),
-        '/api/4/watering/program', 'get',
-        aresponses.Response(text=json.dumps(fixture_running), status=200))
-    aresponses.add(
-        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/1/start',
-        'post',
-        aresponses.Response(text=json.dumps(fixture_start_stop), status=200))
-    aresponses.add(
-        '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/1/stop',
-        'post',
-        aresponses.Response(text=json.dumps(fixture_start_stop), status=200))
-
-    # pylint: disable=protected-access
-    async with aiohttp.ClientSession(loop=event_loop) as websession:
-        client = Client(TEST_HOST, websession, port=TEST_PORT, ssl=False)
-        client._authenticated = True
-        client._access_token = '12345'
-
-        data = await client.programs.all()
-        assert len(data) == 1
-        assert data[0]['name'] == 'Morning'
-
-        data = await client.programs.get(1)
-        assert data['name'] == 'Morning'
-
-        data = await client.programs.next()
-        assert len(data) == 2
-
-        data = await client.programs.running()
-        assert len(data) == 1
-        assert data[0]['name'] == 'Evening'
-
-        data = await client.programs.start(1)
-        assert data['message'] == 'OK'
-
-        data = await client.programs.stop(1)
-        assert data['message'] == 'OK'

@@ -1,0 +1,43 @@
+"""Define tests for diagnostics endpoints."""
+# pylint: disable=redefined-outer-name
+
+import json
+
+import aiohttp
+import aresponses
+import pytest
+
+from regenmaschine import Client
+
+from .const import TEST_HOST, TEST_PASSWORD, TEST_PORT
+from .fixtures import authenticated_client, auth_login_json
+from .fixtures.diagnostics import *
+from .fixtures.provision import provision_name_json, provision_wifi_json
+
+
+@pytest.mark.asyncio
+async def test_endpoints(
+        aresponses, authenticated_client, diag_json, diag_log_json,
+        event_loop):
+    """Test all endpoints."""
+    async with authenticated_client:
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/diag', 'get',
+            aresponses.Response(text=json.dumps(diag_json), status=200))
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/diag/log', 'get',
+            aresponses.Response(text=json.dumps(diag_log_json), status=200))
+
+        async with aiohttp.ClientSession(loop=event_loop) as websession:
+            client = await Client.authenticate_via_password(
+                TEST_HOST,
+                TEST_PASSWORD,
+                websession,
+                port=TEST_PORT,
+                ssl=False)
+
+            data = await client.diagnostics.current()
+            assert data['memUsage'] == 18220
+
+            data = await client.diagnostics.log()
+            assert data == '----'

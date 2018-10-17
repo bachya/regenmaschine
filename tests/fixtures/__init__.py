@@ -5,13 +5,13 @@ import aresponses
 import pytest
 
 from ..const import TEST_ACCESS_TOKEN, TEST_HOST, TEST_PORT, TEST_TOTP_CODE
-from .provisioning import provisioning_name_json, provisioning_wifi_json
+from .provision import provision_name_json, provision_wifi_json
 
 
 @pytest.fixture()
 def authenticated_client(
-        auth_login_json, event_loop, provisioning_name_json,
-        provisioning_wifi_json):
+        auth_login_json, event_loop, provision_name_json,
+        provision_wifi_json):
     """Return an aresponses server relating to an authenticated client."""
     client = aresponses.ResponsesMockServer(loop=event_loop)
     client.add(
@@ -20,11 +20,11 @@ def authenticated_client(
     client.add(
         '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision/name', 'get',
         aresponses.Response(
-            text=json.dumps(provisioning_name_json), status=200))
+            text=json.dumps(provision_name_json), status=200))
     client.add(
         '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision/wifi', 'get',
         aresponses.Response(
-            text=json.dumps(provisioning_wifi_json), status=200))
+            text=json.dumps(provision_wifi_json), status=200))
 
     return client
 

@@ -3,7 +3,7 @@ import pytest
 
 
 @pytest.fixture()
-def provisioning_json():
+def provision_json():
     """Return a /provision response."""
     return {
         "system": {
@@ -81,13 +81,13 @@ def provisioning_json():
 
 
 @pytest.fixture()
-def provisioning_name_json():
+def provision_name_json():
     """Return a /provision/name response."""
     return {"name": "My House"}
 
 
 @pytest.fixture()
-def provisioning_wifi_json():
+def provision_wifi_json():
     """Return a /provision/wifi response."""
     return {
         "macAddress": "ab:cd:ef:12:34:56",

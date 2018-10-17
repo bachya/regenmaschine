@@ -13,10 +13,8 @@ from .const import (
     TEST_ACCESS_TOKEN, TEST_HOST, TEST_MAC, TEST_NAME, TEST_PASSWORD,
     TEST_PORT)
 from .fixtures import (
-    authenticated_client, auth_login_json, auth_totp_json,
-    unauthenticated_json)
-from .fixtures.provisioning import (
-    provisioning_name_json, provisioning_wifi_json)
+    authenticated_client, auth_login_json, unauthenticated_json)
+from .fixtures.provision import provision_name_json, provision_wifi_json
 
 
 @pytest.mark.asyncio
