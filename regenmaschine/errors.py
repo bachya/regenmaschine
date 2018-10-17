@@ -13,7 +13,7 @@ class RequestError(RainMachineError):
     pass
 
 
-class UnauthenticatedError(RainMachineError):
-    """Define an error for unauthenticated requests."""
+class TokenExpiredError(RainMachineError):
+    """Define an error for expired access tokens that can't be refreshed."""
 
     pass
