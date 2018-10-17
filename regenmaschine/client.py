@@ -1,11 +1,11 @@
-"""Define a client to interact with a RainMachine hub."""
+"""Define a client to interact with a RainMachine unit."""
 # pylint: disable=import-error, unused-import
 from datetime import datetime, timedelta
-from typing import Union  # noqa
+from typing import Type, TypeVar, Union  # noqa
 
 from aiohttp import ClientSession, client_exceptions
 
-from .errors import RequestError, UnauthenticatedError
+from .errors import RequestError, TokenExpiredError
 from .diagnostics import Diagnostics
 from .parser import Parser
 from .program import Program
@@ -17,27 +17,24 @@ from .zone import Zone
 
 API_URL_SCAFFOLD = 'https://{0}:{1}/api/4'
 
+ClientType = TypeVar('ClientType', bound='Client')
+
 
 class Client:  # pylint: disable=too-many-instance-attributes
     """Define the client."""
 
     def __init__(
-            self,
-            host: str,
-            websession: ClientSession,
-            *,
-            mac: str = None,
-            name: str = None,
-            port: int = 8080,
-            ssl: bool = True) -> None:
+            self, host: str, websession: ClientSession, port: int,
+            ssl: bool) -> None:
         """Initialize."""
-        self._access_token = None
-        self._access_token_expiration = None  # type: Union[None, datetime]
-        self._authenticated = False
+        self.access_token = None
+        self.access_token_expiration = None  # type: Union[None, datetime]
+        self.authenticated = False
         self.host = host
-        self.mac = mac
-        self.name = name
+        self.mac = None
+        self.name = None  # type: Union[None, str]
         self.port = port
+        self.refresh_token = None
         self.ssl = ssl
         self.websession = websession
 
@@ -50,20 +47,34 @@ class Client:  # pylint: disable=too-many-instance-attributes
         self.watering = Watering(self.request)
         self.zones = Zone(self.request)
 
-    async def authenticate(self, passwd: str) -> None:
-        """Authenticate against the RainMachine device."""
-        json = {'pwd': passwd, 'remember': 1}
-        data = await self.request('post', 'auth/login', json=json, auth=False)
-        self._authenticated = True
-        self._access_token = data['access_token']
-        self._access_token_expiration = (
-            datetime.now() +
-            timedelta(seconds=data['expires_in']))
+    @classmethod
+    async def authenticate_via_password(
+            cls: Type[ClientType],
+            host: str,
+            password: str,
+            websession: ClientSession,
+            *,
+            port: int = 8080,
+            ssl: bool = True):
+        """Instantiate a client with a password."""
+        klass = cls(host, websession, port, ssl)
+        data = await klass.request(
+            'post', 'auth/login', json={
+                'pwd': password,
+                'remember': 1
+            })
 
-        if not (self.name or self.mac):
-            wifi_data = await self.provisioning.wifi()
-            self.mac = wifi_data['macAddress']
-            self.name = await self.provisioning.device_name
+        klass.authenticated = True
+        klass.access_token = data['access_token']
+        klass.access_token_expiration = (
+            datetime.now() + timedelta(seconds=int(data['expires_in']) - 10))
+
+        if not (klass.name or klass.mac):
+            wifi_data = await klass.provisioning.wifi()
+            klass.mac = wifi_data['macAddress']
+            klass.name = await klass.provisioning.device_name
+
+        return klass
 
     async def request(
             self,
@@ -72,11 +83,11 @@ class Client:  # pylint: disable=too-many-instance-attributes
             *,
             headers: dict = None,
             params: dict = None,
-            json: dict = None,
-            auth: bool = True) -> dict:
+            json: dict = None) -> dict:
         """Make a request against the RainMachine device."""
-        if auth and not self._authenticated:
-            raise UnauthenticatedError('You must authenticate first!')
+        if (self.access_token_expiration
+                and datetime.now() >= self.access_token_expiration):
+            raise TokenExpiredError('Long-lived access token has expired')
 
         if not headers:
             headers = {}
@@ -85,8 +96,8 @@ class Client:  # pylint: disable=too-many-instance-attributes
         if not params:
             params = {}
 
-        if auth:
-            params.update({'access_token': self._access_token})
+        if self.access_token:
+            params.update({'access_token': self.access_token})
 
         try:
             async with self.websession.request(method, '{0}/{1}'.format(
@@ -98,5 +109,4 @@ class Client:  # pylint: disable=too-many-instance-attributes
                 return data
         except client_exceptions.ClientError as err:
             raise RequestError(
-                'Error requesting data from {}: {}'.format(self.host,
-                                                           err)) from None
+                'Error requesting data from {}: {}'.format(self.host, err))

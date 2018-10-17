@@ -144,14 +144,8 @@ async def run(websession):
     """Run."""
     try:
         # Create a client manually:
-        client = Client('192.168.2.16', websession)
-
-        # Or attempt to discover it on the local network:
-        # print('Attempting to discover a RainMachine unit...\n')
-        # client = await scan(websession)
-
-        # Authenticate the client by providing the device password:
-        await client.authenticate('yvV880VFQFs*X6IHh[YWoKnVU')
+        client = await Client.authenticate_via_password(
+            'rainmachine.phil.iot', 'yvV880VFQFs*X6IHh[YWoKnVU', websession)
 
         print('CLIENT INFORMATION')
         print('Name: {0}'.format(client.name))

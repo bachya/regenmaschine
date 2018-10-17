@@ -13,6 +13,6 @@ publish:
 	pipenv run twine upload dist/*
 	rm -rf dist/ build/ .egg regenmaschine.egg-info/
 test:
-	pipenv run py.test
+	pipenv run py.test tests
 typing:
 	pipenv run mypy --ignore-missing-imports regenmaschine
