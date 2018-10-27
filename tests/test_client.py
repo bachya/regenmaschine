@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import aiohttp
 import pytest
 
-from regenmaschine import Client
+from regenmaschine import login
 from regenmaschine.errors import RequestError, TokenExpiredError
 
 from .const import (
@@ -22,14 +22,14 @@ async def test_authentication_success(authenticated_client, event_loop):
     """Test successfully retrieving a long-lived access token."""
     async with authenticated_client:
         async with aiohttp.ClientSession(loop=event_loop) as websession:
-            client = await Client.authenticate_via_password(
+            client = await login(
                 TEST_HOST,
                 TEST_PASSWORD,
                 websession,
                 port=TEST_PORT,
                 ssl=False)
 
-            assert client.access_token == TEST_ACCESS_TOKEN
+            assert client._access_token == TEST_ACCESS_TOKEN
             assert client.name == TEST_NAME
             assert client.mac == TEST_MAC
 
@@ -44,7 +44,7 @@ async def test_authentication_failure(
 
     with pytest.raises(RequestError):
         async with aiohttp.ClientSession(loop=event_loop) as websession:
-            await Client.authenticate_via_password(
+            await login(
                 TEST_HOST,
                 TEST_PASSWORD,
                 websession,
@@ -58,13 +58,13 @@ async def test_token_expired_exception(authenticated_client, event_loop):
     async with authenticated_client:
         with pytest.raises(TokenExpiredError):
             async with aiohttp.ClientSession(loop=event_loop) as websession:
-                client = await Client.authenticate_via_password(
+                client = await login(
                     TEST_HOST,
                     TEST_PASSWORD,
                     websession,
                     port=TEST_PORT,
                     ssl=False)
 
-                client.access_token_expiration = datetime.now() - timedelta(
+                client._access_token_expiration = datetime.now() - timedelta(
                     hours=1)
-                await client.request('get', 'random/endpoint')
+                await client._request('get', 'random/endpoint')

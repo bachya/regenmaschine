@@ -1,2 +1,2 @@
 """Initialize."""
-from .client import Client  # noqa
+from .client import login  # noqa

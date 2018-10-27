@@ -7,7 +7,7 @@ import aiohttp
 import aresponses
 import pytest
 
-from regenmaschine import Client
+from regenmaschine import login
 
 from .const import TEST_HOST, TEST_PASSWORD, TEST_PORT
 from .fixtures import authenticated_client, auth_login_json
@@ -29,7 +29,7 @@ async def test_endpoints(
             aresponses.Response(text=json.dumps(diag_log_json), status=200))
 
         async with aiohttp.ClientSession(loop=event_loop) as websession:
-            client = await Client.authenticate_via_password(
+            client = await login(
                 TEST_HOST,
                 TEST_PASSWORD,
                 websession,

@@ -1,9 +1,11 @@
 """Define a client to interact with a RainMachine unit."""
-# pylint: disable=import-error, unused-import
+# pylint: disable=import-error,too-few-public-methods
+# pylint: disable=too-many-instance-attributes,unused-import
 from datetime import datetime, timedelta
-from typing import Type, TypeVar, Union  # noqa
+from typing import Union  # noqa
 
-from aiohttp import ClientSession, client_exceptions
+from aiohttp import ClientSession
+from aiohttp.client_exceptions import ClientError
 
 from .errors import RequestError, TokenExpiredError
 from .diagnostics import Diagnostics
@@ -17,10 +19,7 @@ from .zone import Zone
 
 API_URL_SCAFFOLD = 'https://{0}:{1}/api/4'
 
-ClientType = TypeVar('ClientType', bound='Client')
 
-
-# pylint: disable=too-few-public-methods,too-many-instance-attributes
 class Client:
     """Define the client."""
 
@@ -45,22 +44,6 @@ class Client:
         self.stats = Stats(self._request)
         self.watering = Watering(self._request)
         self.zones = Zone(self._request)
-
-    async def _authenticate(self, password: str):
-        """Instantiate a client with a password."""
-        data = await self._request(
-            'post', 'auth/login', json={
-                'pwd': password,
-                'remember': 1
-            })
-
-        self._access_token = data['access_token']
-        self._access_token_expiration = (
-            datetime.now() + timedelta(seconds=int(data['expires_in']) - 10))
-
-        wifi_data = await self.provisioning.wifi()
-        self.mac = wifi_data['macAddress']
-        self.name = await self.provisioning.device_name
 
     async def _request(
             self,
@@ -93,10 +76,35 @@ class Client:
                 resp.raise_for_status()
                 data = await resp.json(content_type=None)
                 return data
-        except client_exceptions.ClientError as err:
+        except ClientError as err:
             raise RequestError(
                 'Error requesting data from {}: {}'.format(self._host, err))
 
+    async def authenticate(self, password: str):
+        """Instantiate a client with a password."""
+        data = await self._request(
+            'post', 'auth/login', json={
+                'pwd': password,
+                'remember': 1
+            })
 
-async def login(username: str, password: str) -> Client:
+        self._access_token = data['access_token']
+        self._access_token_expiration = (
+            datetime.now() + timedelta(seconds=int(data['expires_in']) - 10))
+
+        wifi_data = await self.provisioning.wifi()
+        self.mac = wifi_data['macAddress']
+        self.name = await self.provisioning.device_name
+
+
+async def login(
+        host: str,
+        password: str,
+        websession: ClientSession,
+        *,
+        port: int = 8080,
+        ssl: bool = True) -> Client:
     """Authenticate against a RainMachine device."""
+    client = Client(host, websession, port, ssl)
+    await client.authenticate(password)
+    return client
