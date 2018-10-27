@@ -5,7 +5,7 @@ import json
 import aiohttp
 import pytest
 
-from regenmaschine import Client
+from regenmaschine import login
 
 from .const import TEST_HOST, TEST_PORT, TEST_PASSWORD
 from .fixtures import authenticated_client, auth_login_json
@@ -49,7 +49,7 @@ async def test_endpoints(
 
         # pylint: disable=protected-access
         async with aiohttp.ClientSession(loop=event_loop) as websession:
-            client = await Client.authenticate_via_password(
+            client = await login(
                 TEST_HOST,
                 TEST_PASSWORD,
                 websession,
