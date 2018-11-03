@@ -8,11 +8,11 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/bachya/regenmaschine/maintainability)
 [![Say Thanks](https://img.shields.io/badge/SayThanks-!-1EAEDB.svg)](https://saythanks.io/to/bachya)
 
-`regenmaschine` (German for "rain machine") is a simple, clean, well-tested Python
-library for interacting with
+`regenmaschine` (German for "rain machine") is a simple, clean, well-tested
+Python library for interacting with
 [RainMachine™ smart sprinkler controllers](http://www.rainmachine.com/).
-It gives developers an easy API to manage their
-controllers over their local LAN.
+It gives developers an easy API to manage their controllers over their local
+LAN.
 
 # PLEASE READ: Version 1.0.0 and Beyond
 
@@ -26,6 +26,17 @@ Version 1.0.0 of `regenmaschine` makes several breaking, but necessary changes:
 
 If you wish to continue using the previous, synchronous version of
 `regenmaschine`, make sure to pin version 0.4.2.
+
+# Python Versions
+
+`regenmaschine` is currently supported on:
+
+* Python 3.5
+* Python 3.6
+* Python 3.7
+
+However, running the test suite currently requires Python 3.6 or higher; tests
+run on Python 3.5 will fail.
 
 # Installation
 
