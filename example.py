@@ -14,7 +14,7 @@ async def main():
     async with ClientSession() as websession:
         try:
             # Create a client manually:
-            client = await login('rainmachine.phil.iot', 'yvV880VFQFs*X6IHh[YWoKnVU', websession)
+            client = await login('<IP ADDRESS>', '<PASSWORD>', websession)
 
             print('CLIENT INFORMATION')
             print('Name: {0}'.format(client.name))
