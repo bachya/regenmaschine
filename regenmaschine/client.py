@@ -29,10 +29,10 @@ class Client:
         """Initialize."""
         self._access_token = None
         self._access_token_expiration = None  # type: Union[None, datetime]
-        self._host = host
         self._port = port
         self._ssl = ssl
         self._websession = websession
+        self.host = host
         self.mac = None
         self.name = None  # type: Union[None, str]
 
@@ -70,7 +70,7 @@ class Client:
 
         try:
             async with self._websession.request(method, '{0}/{1}'.format(
-                    API_URL_SCAFFOLD.format(self._host, self._port),
+                    API_URL_SCAFFOLD.format(self.host, self._port),
                     endpoint), headers=headers, params=params, json=json,
                                                 ssl=self._ssl) as resp:
                 resp.raise_for_status()
@@ -78,7 +78,7 @@ class Client:
                 return data
         except ClientError as err:
             raise RequestError(
-                'Error requesting data from {}: {}'.format(self._host, err))
+                'Error requesting data from {}: {}'.format(self.host, err))
 
     async def authenticate(self, password: str):
         """Instantiate a client with a password."""
