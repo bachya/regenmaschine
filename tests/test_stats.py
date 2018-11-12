@@ -10,6 +10,7 @@ from regenmaschine import login
 
 from .const import TEST_HOST, TEST_PASSWORD, TEST_PORT
 from .fixtures import authenticated_client, auth_login_json
+from .fixtures.api import apiver_json
 from .fixtures.provision import provision_name_json, provision_wifi_json
 from .fixtures.stats import *
 

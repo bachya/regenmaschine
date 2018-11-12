@@ -1,27 +1,28 @@
-"""Define tests for parser endpoints."""
+"""Define tests for api endpoints."""
 # pylint: disable=redefined-outer-name
+
 import json
 
 import aiohttp
+import aresponses
 import pytest
 
 from regenmaschine import login
 
-from .const import TEST_ACCESS_TOKEN, TEST_HOST, TEST_PASSWORD, TEST_PORT
+from .const import TEST_HOST, TEST_PASSWORD, TEST_PORT
 from .fixtures import authenticated_client, auth_login_json
 from .fixtures.api import apiver_json
-from .fixtures.parser import *
 from .fixtures.provision import provision_name_json, provision_wifi_json
 
 
 @pytest.mark.asyncio
 async def test_endpoints(
-        aresponses, authenticated_client, event_loop, parser_json):
+        apiver_json, aresponses, authenticated_client, event_loop):
     """Test all endpoints."""
     async with authenticated_client:
         authenticated_client.add(
-            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/parser', 'get',
-            aresponses.Response(text=json.dumps(parser_json), status=200))
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/apiVer', 'get',
+            aresponses.Response(text=json.dumps(apiver_json), status=200))
 
         async with aiohttp.ClientSession(loop=event_loop) as websession:
             client = await login(
@@ -31,6 +32,7 @@ async def test_endpoints(
                 port=TEST_PORT,
                 ssl=False)
 
-            data = await client.parsers.current()
-            assert len(data) == 1
-            assert data[0]['name'] == 'NOAA Parser'
+            data = await client.api.versions()
+            assert data['apiVer'] == '4.5.0'
+            assert data['hwVer'] == 3
+            assert data['swVer'] == '4.0.925'

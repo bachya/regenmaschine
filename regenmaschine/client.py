@@ -7,6 +7,7 @@ from typing import Union  # noqa
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
 
+from .api import API
 from .errors import RequestError, TokenExpiredError
 from .diagnostics import Diagnostics
 from .parser import Parser
@@ -32,10 +33,14 @@ class Client:
         self._port = port
         self._ssl = ssl
         self._websession = websession
+        self.api_version = None  # type: Union[None, str]
+        self.hardware_version = None  # type: Union[None, int]
         self.host = host
         self.mac = None
         self.name = None  # type: Union[None, str]
+        self.software_version = None  # type: Union[None, str]
 
+        self.api = API(self._request)
         self.diagnostics = Diagnostics(self._request)
         self.parsers = Parser(self._request)
         self.programs = Program(self._request)
@@ -95,6 +100,11 @@ class Client:
         wifi_data = await self.provisioning.wifi()
         self.mac = wifi_data['macAddress']
         self.name = await self.provisioning.device_name
+
+        version_data = await self.api.versions()
+        self.api_version = version_data['apiVer']
+        self.hardware_version = version_data['hwVer']
+        self.software_version = version_data['swVer']
 
 
 async def login(
