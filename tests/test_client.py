@@ -10,10 +10,11 @@ from regenmaschine import login
 from regenmaschine.errors import RequestError, TokenExpiredError
 
 from .const import (
-    TEST_ACCESS_TOKEN, TEST_HOST, TEST_MAC, TEST_NAME, TEST_PASSWORD,
-    TEST_PORT)
+    TEST_ACCESS_TOKEN, TEST_API_VERSION, TEST_HOST, TEST_HW_VERSION, TEST_MAC,
+    TEST_NAME, TEST_PASSWORD, TEST_PORT, TEST_SW_VERSION)
 from .fixtures import (
     authenticated_client, auth_login_json, unauthenticated_json)
+from .fixtures.api import apiver_json
 from .fixtures.provision import provision_name_json, provision_wifi_json
 
 
@@ -30,8 +31,11 @@ async def test_authentication_success(authenticated_client, event_loop):
                 ssl=False)
 
             assert client._access_token == TEST_ACCESS_TOKEN
-            assert client.name == TEST_NAME
+            assert client.api_version == TEST_API_VERSION
+            assert client.hardware_version == TEST_HW_VERSION
             assert client.mac == TEST_MAC
+            assert client.name == TEST_NAME
+            assert client.software_version == TEST_SW_VERSION
 
 
 @pytest.mark.asyncio

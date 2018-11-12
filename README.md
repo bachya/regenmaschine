@@ -106,6 +106,9 @@ async def main() -> None:
       print('Name: {0}'.format(client.name))
       print('Host: {0}'.format(client.host))
       print('MAC Address: {0}'.format(client.mac))
+      print('API Version: {0}'.format(client.api_version))
+      print('Software Version: {0}'.format(client.software_version))
+      print('Hardware Version: {0}'.format(client.hardware_version))
 
       # Get all diagnostic information:
       diagnostics = await client.diagnostics.current()
