@@ -1,9 +1,11 @@
 """Define tests for the client object."""
 # pylint: disable=redefined-outer-name,unused-import
+import asyncio
 import json
 from datetime import datetime, timedelta
 
 import aiohttp
+import asynctest
 import pytest
 
 from regenmaschine import login
@@ -72,3 +74,28 @@ async def test_token_expired_exception(authenticated_client, event_loop):
                 client._access_token_expiration = datetime.now() - timedelta(
                     hours=1)
                 await client._request('get', 'random/endpoint')
+
+
+@pytest.mark.asyncio
+async def test_request_timeout(authenticated_client, event_loop, mocker):
+    """Test authenticating the device."""
+
+    async def long_running_login(*args, **kwargs):
+        """Define a method that takes 20 seconds to execute."""
+        await asyncio.sleep(0.5)
+
+    mock_login = mocker.patch('regenmaschine.login')
+    mock_login.return_value = long_running_login
+
+    with asynctest.mock.patch.object(aiohttp.ClientResponse,
+                                     'json', long_running_login):
+        async with authenticated_client:
+            async with aiohttp.ClientSession(loop=event_loop) as websession:
+                with pytest.raises(RequestError):
+                    await login(
+                        TEST_HOST,
+                        TEST_PASSWORD,
+                        websession,
+                        port=TEST_PORT,
+                        ssl=False,
+                        request_timeout=0.1)

@@ -5,6 +5,7 @@ verify_ssl = true
 [dev-packages]
 "flake8" = "*"
 aresponses = "*"
+asynctest = "*"
 detox = "*"
 mypy = "*"
 pydocstyle = "*"
@@ -18,4 +19,3 @@ twine = "*"
 [packages]
 aiodns = "*"
 aiohttp = "*"
-async-timeout = "*"
