@@ -1,9 +1,11 @@
 """Define a client to interact with a RainMachine unit."""
 # pylint: disable=import-error,too-few-public-methods
 # pylint: disable=too-many-instance-attributes,unused-import
+import asyncio
 from datetime import datetime, timedelta
 from typing import Union  # noqa
 
+import async_timeout
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
 
@@ -19,18 +21,20 @@ from .watering import Watering
 from .zone import Zone
 
 API_URL_SCAFFOLD = 'https://{0}:{1}/api/4'
+DEFAULT_TIMEOUT = 10
 
 
 class Client:
     """Define the client."""
 
-    def __init__(
-            self, host: str, websession: ClientSession, port: int,
-            ssl: bool) -> None:
+    def __init__(  # pylint: disable=too-many-arguments
+            self, host: str, websession: ClientSession, port: int, ssl: bool,
+            request_timeout: int) -> None:
         """Initialize."""
         self._access_token = None
         self._access_token_expiration = None  # type: Union[None, datetime]
         self._port = port
+        self._request_timeout = request_timeout
         self._ssl = ssl
         self._websession = websession
         self.api_version = None  # type: Union[None, str]
@@ -74,16 +78,19 @@ class Client:
             params.update({'access_token': self._access_token})
 
         try:
-            async with self._websession.request(method, '{0}/{1}'.format(
-                    API_URL_SCAFFOLD.format(self.host, self._port),
-                    endpoint), headers=headers, params=params, json=json,
-                                                ssl=self._ssl) as resp:
-                resp.raise_for_status()
-                data = await resp.json(content_type=None)
-                return data
+            async with async_timeout.timeout(self._request_timeout):
+                async with self._websession.request(method, '{0}/{1}'.format(
+                        API_URL_SCAFFOLD.format(self.host, self._port),
+                        endpoint), headers=headers, params=params, json=json,
+                                                    ssl=self._ssl) as resp:
+                    resp.raise_for_status()
+                    data = await resp.json(content_type=None)
+                    return data
         except ClientError as err:
             raise RequestError(
-                'Error requesting data from {}: {}'.format(self.host, err))
+                'Error requesting data from {0}: {1}'.format(self.host, err))
+        except asyncio.TimeoutError:
+            raise RequestError('Timeout during request: {0}'.format(endpoint))
 
     async def authenticate(self, password: str):
         """Instantiate a client with a password."""
@@ -113,8 +120,9 @@ async def login(
         websession: ClientSession,
         *,
         port: int = 8080,
-        ssl: bool = True) -> Client:
+        ssl: bool = True,
+        request_timeout: int = DEFAULT_TIMEOUT) -> Client:
     """Authenticate against a RainMachine device."""
-    client = Client(host, websession, port, ssl)
+    client = Client(host, websession, port, ssl, request_timeout)
     await client.authenticate(password)
     return client
