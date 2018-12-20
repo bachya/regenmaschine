@@ -85,12 +85,13 @@ class Client:
                                                     ssl=self._ssl) as resp:
                     resp.raise_for_status()
                     data = await resp.json(content_type=None)
-                    return data
         except ClientError as err:
             raise RequestError(
                 'Error requesting data from {0}: {1}'.format(self.host, err))
         except asyncio.TimeoutError:
             raise RequestError('Timeout during request: {0}'.format(endpoint))
+
+        return data
 
     async def authenticate(self, password: str):
         """Instantiate a client with a password."""
