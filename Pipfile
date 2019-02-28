@@ -7,7 +7,7 @@ verify_ssl = true
 aresponses = "*"
 asynctest = "*"
 detox = "*"
-mypy = "==0.660"
+mypy = "*"
 pydocstyle = "*"
 pylint = "*"
 pytest-aiohttp = "*"
