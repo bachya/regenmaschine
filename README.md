@@ -156,6 +156,12 @@ async def main() -> None:
       queue = await client.watering.queue()
       runs = await client.watering.runs(date=datetime.date.today())
 
+      # Pause all watering activities for 30 seconds:
+      await client.watering.pause_all(30)
+
+      # Unpause all watering activities:
+      await client.watering.unpause_all()
+
       # Stop all watering activities:
       await client.watering.stop_all()
 
