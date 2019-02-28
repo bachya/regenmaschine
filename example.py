@@ -128,6 +128,16 @@ async def main():
                         watering_run['dateTime'], watering_run['et0']))
 
             print()
+            print('PAUSING ALL WATERING FOR 30 SECONDS')
+            print(await client.watering.pause_all(30))
+
+            await asyncio.sleep(3)
+
+            print()
+            print('UNPAUSING WATERING')
+            print(await client.watering.unpause_all())
+
+            print()
             print('STOPPING ALL WATERING')
             print(await client.watering.stop_all())
 

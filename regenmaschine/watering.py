@@ -27,6 +27,11 @@ class Watering:
         data = await self._request('get', endpoint)
         return data['waterLog']['days']
 
+    async def pause_all(self, seconds: int) -> dict:
+        """Pause all watering for a specified number of seconds."""
+        return await self._request(
+            'post', 'watering/pauseall', json={'duration': seconds})
+
     async def queue(self) -> list:
         """Return the queue of active watering activities."""
         data = await self._request('get', 'watering/queue')
@@ -46,3 +51,7 @@ class Watering:
     async def stop_all(self) -> dict:
         """Stop all programs and zones from running."""
         return await self._request('post', 'watering/stopall')
+
+    async def unpause_all(self) -> dict:
+        """Unpause all paused watering."""
+        return await self.pause_all(0)
