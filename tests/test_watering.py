@@ -19,7 +19,8 @@ from .fixtures.watering import *
 @pytest.mark.asyncio
 async def test_endpoints(
         aresponses, authenticated_client, event_loop, watering_log_json,
-        watering_past_json, watering_queue_json, watering_stopall_json):
+        watering_past_json, watering_pause_json, watering_queue_json,
+        watering_stopall_json):
     """Test all endpoints."""
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
@@ -30,6 +31,16 @@ async def test_endpoints(
             '/api/4/watering/log/details/{0}/{1}'.format(today_str, 2), 'get',
             aresponses.Response(
                 text=json.dumps(watering_log_json), status=200))
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/watering/pauseall',
+            'post',
+            aresponses.Response(
+                text=json.dumps(watering_pause_json), status=200))
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/watering/pauseall',
+            'post',
+            aresponses.Response(
+                text=json.dumps(watering_pause_json), status=200))
         authenticated_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/watering/queue',
             'get',
@@ -57,6 +68,12 @@ async def test_endpoints(
 
             data = await client.watering.log(today, 2, details=True)
             assert len(data) == 2
+
+            data = await client.watering.pause_all(30)
+            assert data['message'] == 'OK'
+
+            data = await client.watering.unpause_all()
+            assert data['message'] == 'OK'
 
             data = await client.watering.queue()
             assert not data

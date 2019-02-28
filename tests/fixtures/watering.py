@@ -241,6 +241,12 @@ def watering_past_json():
 
 
 @pytest.fixture()
+def watering_pause_json():
+    """Return a /watering/pauseall response."""
+    return {"statusCode": 0, "message": "OK"}
+
+
+@pytest.fixture()
 def watering_queue_json():
     """Return a /watering/queue response."""
     return {"queue": []}
