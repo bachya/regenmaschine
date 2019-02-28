@@ -16,9 +16,9 @@ from .fixtures.provision import provision_name_json, provision_wifi_json
 
 
 @pytest.mark.asyncio
-async def test_endpoints(
+async def test_api_versions(
         apiver_json, aresponses, authenticated_client, event_loop):
-    """Test all endpoints."""
+    """Test getting API, hardware, and software versions."""
     async with authenticated_client:
         authenticated_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/apiVer', 'get',

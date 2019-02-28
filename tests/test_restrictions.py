@@ -15,34 +15,17 @@ from .fixtures.restrictions import *
 
 
 @pytest.mark.asyncio
-async def test_endpoints(
+async def test_restrictions_current(
         aresponses, authenticated_client, event_loop,
-        restrictions_currently_json, restrictions_global_json,
-        restrictions_hourly_json, restrictions_raindelay_json):
-    """Test all endpoints."""
+        restrictions_currently_json):
+    """Test getting any current restrictions."""
     async with authenticated_client:
         authenticated_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT),
             '/api/4/restrictions/currently', 'get',
             aresponses.Response(
                 text=json.dumps(restrictions_currently_json), status=200))
-        authenticated_client.add(
-            '{0}:{1}'.format(TEST_HOST, TEST_PORT),
-            '/api/4/restrictions/global', 'get',
-            aresponses.Response(
-                text=json.dumps(restrictions_global_json), status=200))
-        authenticated_client.add(
-            '{0}:{1}'.format(TEST_HOST, TEST_PORT),
-            '/api/4/restrictions/hourly', 'get',
-            aresponses.Response(
-                text=json.dumps(restrictions_hourly_json), status=200))
-        authenticated_client.add(
-            '{0}:{1}'.format(TEST_HOST, TEST_PORT),
-            '/api/4/restrictions/raindelay', 'get',
-            aresponses.Response(
-                text=json.dumps(restrictions_raindelay_json), status=200))
 
-        # pylint: disable=protected-access
         async with aiohttp.ClientSession(loop=event_loop) as websession:
             client = await login(
                 TEST_HOST,
@@ -54,11 +37,74 @@ async def test_endpoints(
             data = await client.restrictions.current()
             assert data['hourly'] is False
 
-            data = await client.restrictions.hourly()
-            assert not data
 
-            data = await client.restrictions.raindelay()
-            assert data['delayCounter'] == -1
+@pytest.mark.asyncio
+async def test_restrictions_global(
+        aresponses, authenticated_client, event_loop,
+        restrictions_global_json):
+    """Test getting any global restrictions."""
+    async with authenticated_client:
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+            '/api/4/restrictions/global', 'get',
+            aresponses.Response(
+                text=json.dumps(restrictions_global_json), status=200))
+
+        async with aiohttp.ClientSession(loop=event_loop) as websession:
+            client = await login(
+                TEST_HOST,
+                TEST_PASSWORD,
+                websession,
+                port=TEST_PORT,
+                ssl=False)
 
             data = await client.restrictions.universal()
             assert data['freezeProtectTemp'] == 2
+
+
+@pytest.mark.asyncio
+async def test_restrictions_hourly(
+        aresponses, authenticated_client, event_loop,
+        restrictions_hourly_json):
+    """Test getting any hourly restrictions."""
+    async with authenticated_client:
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+            '/api/4/restrictions/hourly', 'get',
+            aresponses.Response(
+                text=json.dumps(restrictions_hourly_json), status=200))
+
+        async with aiohttp.ClientSession(loop=event_loop) as websession:
+            client = await login(
+                TEST_HOST,
+                TEST_PASSWORD,
+                websession,
+                port=TEST_PORT,
+                ssl=False)
+
+            data = await client.restrictions.hourly()
+            assert not data
+
+
+@pytest.mark.asyncio
+async def test_restrictions_raindelay(
+        aresponses, authenticated_client, event_loop,
+        restrictions_raindelay_json):
+    """Test getting any rain delay-related restrictions."""
+    async with authenticated_client:
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT),
+            '/api/4/restrictions/raindelay', 'get',
+            aresponses.Response(
+                text=json.dumps(restrictions_raindelay_json), status=200))
+
+        async with aiohttp.ClientSession(loop=event_loop) as websession:
+            client = await login(
+                TEST_HOST,
+                TEST_PASSWORD,
+                websession,
+                port=TEST_PORT,
+                ssl=False)
+
+            data = await client.restrictions.raindelay()
+            assert data['delayCounter'] == -1

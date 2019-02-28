@@ -15,9 +15,9 @@ from .fixtures.provision import provision_name_json, provision_wifi_json
 
 
 @pytest.mark.asyncio
-async def test_endpoints(
+async def test_parsers_current(
         aresponses, authenticated_client, event_loop, parser_json):
-    """Test all endpoints."""
+    """Test getting all current parsers."""
     async with authenticated_client:
         authenticated_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/parser', 'get',

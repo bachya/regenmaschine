@@ -16,10 +16,10 @@ from .fixtures.stats import *
 
 
 @pytest.mark.asyncio
-async def test_endpoints(
+async def test_stats(
         aresponses, authenticated_client, dailystats_date_json,
         dailystats_details_json, event_loop):
-    """Test all endpoints."""
+    """Test getting states (with or without details)."""
     today = date.today()
     today_str = today.strftime('%Y-%m-%d')
 
@@ -35,7 +35,6 @@ async def test_endpoints(
             aresponses.Response(
                 text=json.dumps(dailystats_details_json), status=200))
 
-        # pylint: disable=protected-access
         async with aiohttp.ClientSession(loop=event_loop) as websession:
             client = await login(
                 TEST_HOST,

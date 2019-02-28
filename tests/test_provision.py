@@ -17,7 +17,7 @@ from .fixtures.provision import *
 async def test_endpoints(
         aresponses, authenticated_client, event_loop, provision_json,
         provision_name_json, provision_wifi_json):
-    """Test all endpoints."""
+    """Test getting all provisioning data."""
     async with authenticated_client:
         authenticated_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/provision', 'get',
@@ -33,7 +33,6 @@ async def test_endpoints(
             aresponses.Response(
                 text=json.dumps(provision_wifi_json), status=200))
 
-        # pylint: disable=protected-access
         async with aiohttp.ClientSession(loop=event_loop) as websession:
             client = await login(
                 TEST_HOST,
