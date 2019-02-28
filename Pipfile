@@ -17,5 +17,4 @@ tox = "*"
 twine = "*"
 
 [packages]
-aiodns = "*"
 aiohttp = "*"
