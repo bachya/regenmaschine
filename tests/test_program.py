@@ -15,6 +15,35 @@ from .fixtures.provision import provision_name_json, provision_wifi_json
 
 
 @pytest.mark.asyncio
+async def test_program_enable_disable(
+        aresponses, authenticated_client, event_loop, program_post_json):
+    """Test enabling a program."""
+    async with authenticated_client:
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/1', 'post',
+            aresponses.Response(
+                text=json.dumps(program_post_json), status=200))
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/program/1', 'post',
+            aresponses.Response(
+                text=json.dumps(program_post_json), status=200))
+
+        async with aiohttp.ClientSession(loop=event_loop) as websession:
+            client = await login(
+                TEST_HOST,
+                TEST_PASSWORD,
+                websession,
+                port=TEST_PORT,
+                ssl=False)
+
+            resp = await client.programs.enable(1)
+            assert resp['message'] == 'OK'
+
+            resp = await client.programs.disable(1)
+            assert resp['message'] == 'OK'
+
+
+@pytest.mark.asyncio
 async def test_program_get(
         aresponses, authenticated_client, event_loop, program_json):
     """Test getting all programs."""
