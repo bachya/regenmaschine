@@ -136,6 +136,31 @@ async def main() -> None:
       await client.programs.start(1)
       await client.programs.stop(1)
 
+      # Get basic details about all zones:
+      zones = await client.zones.all():
+
+      # Get advanced details about all zones:
+      zones = await client.zones.all(details=True):
+
+      # Include inactive zones:
+      zones = await client.zones.all(include_inactive=True):
+
+      # Get basic details about a specific zone:
+      zone_1 = await client.zones.get(1)
+
+      # Get advanced details about a specific zone:
+      zone_1 = await client.zones.get(1, details=True)
+
+      # Enable or disable a specific zone:
+      await client.zones.enable(1)
+      await client.zones.disable(1)
+
+      # Start a zone for 60 seconds:
+      await client.zones.start(1, 60)
+
+      # ...and stop it:
+      await client.zones.stop(1)
+
       # Get the device name:
       name = await client.provisioning.device_name
 
