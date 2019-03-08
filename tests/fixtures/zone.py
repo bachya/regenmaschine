@@ -46,6 +46,15 @@ def zone_id_properties_json():
 
 
 @pytest.fixture()
+def zone_post_json():
+    """Return a /zone (POST) response."""
+    return {
+        "statusCode": 0,
+        "message": "OK"
+    }
+
+
+@pytest.fixture()
 def zone_properties_json():
     """Return a /zone/properties response."""
     return {

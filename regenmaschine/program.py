@@ -10,7 +10,7 @@ class Program:
         self._request = request
 
     async def _post(self, program_id: int = None, json: dict = None) -> dict:
-        """Set whether a program is active or not."""
+        """Post data to a (non)existing program."""
         return await self._request(
             'post', 'program/{0}'.format(program_id), json=json)
 

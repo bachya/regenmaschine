@@ -9,6 +9,11 @@ class Zone:
         """Initialize."""
         self._request = request
 
+    async def _post(self, zone_id: int = None, json: dict = None) -> dict:
+        """Post data to a (non)existing zone."""
+        return await self._request(
+            'post', 'zone/{0}'.format(zone_id), json=json)
+
     async def all(
             self, *, details: bool = False,
             include_inactive: bool = False) -> list:
@@ -18,6 +23,14 @@ class Zone:
             endpoint += '/properties'
         data = await self._request('get', endpoint)
         return [z for z in data['zones'] if include_inactive or z['active']]
+
+    async def disable(self, zone_id: int) -> dict:
+        """Disable a zone."""
+        return await self._post(zone_id, {'active': False})
+
+    async def enable(self, zone_id: int) -> dict:
+        """Enable a zone."""
+        return await self._post(zone_id, {'active': True})
 
     async def get(self, zone_id: int, *, details: bool = False) -> dict:
         """Return a specific zone."""
