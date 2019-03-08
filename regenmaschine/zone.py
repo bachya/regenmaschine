@@ -12,7 +12,7 @@ class Zone:
     async def _post(self, zone_id: int = None, json: dict = None) -> dict:
         """Post data to a (non)existing zone."""
         return await self._request(
-            'post', 'zone/{0}'.format(zone_id), json=json)
+            'post', 'zone/{0}/properties'.format(zone_id), json=json)
 
     async def all(
             self, *, details: bool = False,
