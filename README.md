@@ -122,6 +122,10 @@ async def main() -> None:
       # Get a specific program:
       program_1 = await client.programs.get(1)
 
+      # Enable or disable a specific program:
+      await client.programs.enable(1)
+      await client.programs.disable(1)
+
       # Get the next run time for all programs:
       runs = await client.programs.next()
 

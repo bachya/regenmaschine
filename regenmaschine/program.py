@@ -9,10 +9,23 @@ class Program:
         """Initialize."""
         self._request = request
 
+    async def _post(self, program_id: int = None, json: dict = None) -> dict:
+        """Set whether a program is active or not."""
+        return await self._request(
+            'post', 'program/{0}'.format(program_id), json=json)
+
     async def all(self) -> list:
         """Return all programs."""
         data = await self._request('get', 'program')
         return data['programs']
+
+    async def disable(self, program_id: int) -> dict:
+        """Disable a program."""
+        return await self._post(program_id, {'active': False})
+
+    async def enable(self, program_id: int) -> dict:
+        """Enable a program."""
+        return await self._post(program_id, {'active': True})
 
     async def get(self, program_id: int) -> dict:
         """Return a specific program."""

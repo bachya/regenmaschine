@@ -138,6 +138,15 @@ def program_json():
 
 
 @pytest.fixture()
+def program_post_json():
+    """Return a /program (POST) response."""
+    return {
+        "statusCode": 0,
+        "message": "OK"
+    }
+
+
+@pytest.fixture()
 def program_id_json():
     """Return a program/<ID> response."""
     return {
