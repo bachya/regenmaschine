@@ -16,6 +16,35 @@ from .fixtures.zone import *
 
 
 @pytest.mark.asyncio
+async def test_zone_enable_disable(
+        aresponses, authenticated_client, event_loop, zone_post_json):
+    """Test enabling a zone."""
+    async with authenticated_client:
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1', 'post',
+            aresponses.Response(
+                text=json.dumps(zone_post_json), status=200))
+        authenticated_client.add(
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1', 'post',
+            aresponses.Response(
+                text=json.dumps(zone_post_json), status=200))
+
+        async with aiohttp.ClientSession(loop=event_loop) as websession:
+            client = await login(
+                TEST_HOST,
+                TEST_PASSWORD,
+                websession,
+                port=TEST_PORT,
+                ssl=False)
+
+            resp = await client.zones.enable(1)
+            assert resp['message'] == 'OK'
+
+            resp = await client.zones.disable(1)
+            assert resp['message'] == 'OK'
+
+
+@pytest.mark.asyncio
 async def test_zone_get_all(
         aresponses, authenticated_client, event_loop, zone_properties_json):
     """Test getting info on all zones."""
