@@ -21,13 +21,13 @@ async def test_zone_enable_disable(
     """Test enabling a zone."""
     async with authenticated_client:
         authenticated_client.add(
-            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1', 'post',
-            aresponses.Response(
-                text=json.dumps(zone_post_json), status=200))
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/properties',
+            'post',
+            aresponses.Response(text=json.dumps(zone_post_json), status=200))
         authenticated_client.add(
-            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1', 'post',
-            aresponses.Response(
-                text=json.dumps(zone_post_json), status=200))
+            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/properties',
+            'post',
+            aresponses.Response(text=json.dumps(zone_post_json), status=200))
 
         async with aiohttp.ClientSession(loop=event_loop) as websession:
             client = await login(
