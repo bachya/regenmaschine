@@ -119,6 +119,9 @@ async def main() -> None:
       # Get all programs:
       programs = await client.programs.all():
 
+      # Include inactive programs:
+      programs = await client.programs.all(include_inactive=True):
+
       # Get a specific program:
       program_1 = await client.programs.get(1)
 
