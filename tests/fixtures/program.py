@@ -133,7 +133,135 @@ def program_json():
                 "userPercentage": 1.0,
                 "minRuntimeCoef": 1
             }]
-        }]
+        },
+	{
+            "uid": 1,
+            "name": "Morning",
+            "active": False,
+            "startTime": "06:00",
+            "cycles": 0,
+            "soak": 0,
+            "cs_on": False,
+            "delay": 0,
+            "delay_on": False,
+            "status": 0,
+            "startTimeParams": {
+                "offsetSign": 0,
+                "type": 0,
+                "offsetMinutes": 0
+            },
+            "frequency": {
+                "type": 0,
+                "param": "0"
+            },
+            "coef": 0.0,
+            "ignoreInternetWeather": False,
+            "futureField1": 0,
+            "freq_modified": 0,
+            "useWaterSense": False,
+            "nextRun": "2018-06-04",
+            "startDate": "2018-04-28",
+            "endDate": None,
+            "yearlyRecurring": True,
+            "simulationExpired": False,
+            "wateringTimes": [{
+                "id": 1,
+                "order": -1,
+                "name": "Landscaping",
+                "duration": 0,
+                "active": True,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 2,
+                "order": -1,
+                "name": "Flower Box",
+                "duration": 0,
+                "active": True,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 3,
+                "order": -1,
+                "name": "TEST",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 4,
+                "order": -1,
+                "name": "Zone 4",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 5,
+                "order": -1,
+                "name": "Zone 5",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 6,
+                "order": -1,
+                "name": "Zone 6",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 7,
+                "order": -1,
+                "name": "Zone 7",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 8,
+                "order": -1,
+                "name": "Zone 8",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 9,
+                "order": -1,
+                "name": "Zone 9",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 10,
+                "order": -1,
+                "name": "Zone 10",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 11,
+                "order": -1,
+                "name": "Zone 11",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }, {
+                "id": 12,
+                "order": -1,
+                "name": "Zone 12",
+                "duration": 0,
+                "active": False,
+                "userPercentage": 1.0,
+                "minRuntimeCoef": 1
+            }]
+	}]
     }
 
 

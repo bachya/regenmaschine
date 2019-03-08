@@ -14,10 +14,10 @@ class Program:
         return await self._request(
             'post', 'program/{0}'.format(program_id), json=json)
 
-    async def all(self) -> list:
+    async def all(self, include_inactive: bool = False) -> list:
         """Return all programs."""
         data = await self._request('get', 'program')
-        return data['programs']
+        return [p for p in data['programs'] if include_inactive or p['active']]
 
     async def disable(self, program_id: int) -> dict:
         """Disable a program."""
