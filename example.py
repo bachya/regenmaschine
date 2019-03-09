@@ -5,7 +5,7 @@ import datetime
 
 from aiohttp import ClientSession
 
-from regenmaschine import login
+import regenmaschine
 from regenmaschine.errors import RainMachineError
 
 
@@ -14,7 +14,8 @@ async def main():
     async with ClientSession() as websession:
         try:
             # Create a client manually:
-            client = await login('<IP ADDRESS>', '<PASSWORD>', websession)
+            client = await regenmaschine.login(
+                '<IP ADDRESS>', '<PASSWORD>', websession)
 
             print('CLIENT INFORMATION')
             print('Name: {0}'.format(client.name))
@@ -40,7 +41,7 @@ async def main():
             # Work with programs:
             print()
             print('ALL PROGRAMS')
-            for program in await client.programs.all():
+            for program in await client.programs.all(include_inactive=True):
                 print(
                     'Program #{0}: {1}'.format(
                         program['uid'], program['name']))

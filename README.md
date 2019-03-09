@@ -93,13 +93,13 @@ import asyncio
 
 from aiohttp import ClientSession
 
-from regenmaschine import Client
+import regenmaschine
 
 
 async def main() -> None:
     """Create the aiohttp session and run the example."""
     async with ClientSession() as websession:
-      client = await Client.authenticate_via_password(
+      client = await regenmaschine.login(
         '192.168.1.100', '<PASSWORD'>, websession, port=8080, ssl=True)
 
       # Print some client properties:
