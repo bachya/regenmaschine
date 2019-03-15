@@ -81,7 +81,7 @@ async def test_request_timeout(authenticated_client, event_loop, mocker):
     """Test whether the client properly raises an error on timeout."""
 
     async def long_running_login(*args, **kwargs):
-        """Define a method that takes 20 seconds to execute."""
+        """Define a method that takes 0.5 seconds to execute."""
         await asyncio.sleep(0.5)
 
     mock_login = mocker.patch('regenmaschine.login')
