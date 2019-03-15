@@ -78,7 +78,7 @@ async def test_token_expired_exception(authenticated_client, event_loop):
 
 @pytest.mark.asyncio
 async def test_request_timeout(authenticated_client, event_loop, mocker):
-    """Test authenticating the device."""
+    """Test whether the client properly raises an error on timeout."""
 
     async def long_running_login(*args, **kwargs):
         """Define a method that takes 20 seconds to execute."""
