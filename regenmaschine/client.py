@@ -7,8 +7,10 @@ import async_timeout
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
 
-from regenmaschine.controller import Controller, LocalController
-from regenmaschine.errors import RequestError, TokenExpiredError
+from regenmaschine.controller import (
+    Controller, LocalController, RemoteController)
+from regenmaschine.errors import (
+    RequestError, TokenExpiredError, raise_remote_error)
 
 DEFAULT_LOCAL_PORT = 8080
 DEFAULT_TIMEOUT = 10
@@ -31,12 +33,67 @@ class Client:  # pylint: disable=too-few-public-methods
             host: str,
             password: str,
             port: int = DEFAULT_LOCAL_PORT,
-            ssl: bool = True) -> None:
+            ssl: bool = True,
+            skip_existing: bool = True) -> None:
         """Create a local client."""
         controller = LocalController(
             self._request, host, port, ssl, self._websession)
         await controller.login(password)
+
+        wifi_data = await controller.provisioning.wifi()
+        if skip_existing and wifi_data['macAddress'] in self.controllers:
+            return
+
+        version_data = await controller.api.versions()
+        controller.api_version = version_data['apiVer']
+        controller.hardware_version = version_data['hwVer']
+        controller.mac = wifi_data['macAddress']
+        controller.name = await controller.provisioning.device_name
+        controller.software_version = version_data['swVer']
+
         self.controllers[controller.mac] = controller  # type: ignore
+
+    async def load_remote(
+            self, email: str, password: str,
+            skip_existing: bool = True) -> None:
+        """Create a local client."""
+        auth_resp = await self._request(
+            'post',
+            'https://my.rainmachine.com/login/auth',
+            json={'user': {
+                'email': email,
+                'pwd': password,
+                'remember': 1
+            }})
+
+        access_token = auth_resp['access_token']
+
+        sprinklers_resp = await self._request(
+            'post',
+            'https://my.rainmachine.com/devices/get-sprinklers',
+            access_token=access_token,
+            json={'user': {
+                'email': email,
+                'pwd': password,
+                'remember': 1
+            }})
+
+        for sprinkler in sprinklers_resp['sprinklers']:
+            if skip_existing and sprinkler['mac'] in self.controllers:
+                continue
+
+            controller = RemoteController(self._request, self._websession)
+            await controller.login(
+                access_token, sprinkler['sprinklerId'], password)
+
+            version_data = await controller.api.versions()
+            controller.api_version = version_data['apiVer']
+            controller.hardware_version = version_data['hwVer']
+            controller.mac = sprinkler['mac']
+            controller.name = sprinkler['name']
+            controller.software_version = version_data['swVer']
+
+            self.controllers[sprinkler['mac']] = controller
 
     async def _request(
             self,
@@ -70,6 +127,8 @@ class Client:  # pylint: disable=too-few-public-methods
                         ssl=ssl) as resp:
                     resp.raise_for_status()
                     data = await resp.json(content_type=None)
+                    if data.get('errorType') or data.get('error'):
+                        _raise_for_remote_status(url, data)
         except ClientError as err:
             raise RequestError(
                 'Error requesting data from {0}: {1}'.format(url, err))
@@ -77,6 +136,19 @@ class Client:  # pylint: disable=too-few-public-methods
             raise RequestError('Timeout during request: {0}'.format(url))
 
         return data
+
+
+def _raise_for_remote_status(url: str, data: dict) -> None:
+    """Raise an error from the remote API if necessary."""
+    if data.get('errorType') and data['errorType'] <= 0:
+        return
+
+    if data.get('statusCode') and data['statusCode'] != 200:
+        raise RequestError(
+            'Error requesting data from {0}: {1} {2}'.format(
+                url, data['statusCode'], data['message']))
+
+    raise_remote_error(data['errorType'])
 
 
 async def login(

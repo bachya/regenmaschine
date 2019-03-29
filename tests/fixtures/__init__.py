@@ -4,7 +4,9 @@ import json
 import aresponses
 import pytest
 
-from ..const import TEST_ACCESS_TOKEN, TEST_HOST, TEST_PORT, TEST_TOTP_CODE
+from ..const import (
+    TEST_ACCESS_TOKEN, TEST_HOST, TEST_MAC, TEST_NAME, TEST_PORT,
+    TEST_SPRINKLER_ID, TEST_TOTP_CODE)
 from .api import apiver_json
 from .provision import provision_name_json, provision_wifi_json
 
@@ -47,6 +49,43 @@ def auth_login_json():
 def auth_totp_json():
     """Return a /auth/totp response."""
     return {"totp": TEST_TOTP_CODE}
+
+
+@pytest.fixture()
+def remote_auth_login_1_json():
+    """Return a /login/auth (remote) response."""
+    return {
+        "access_token": TEST_ACCESS_TOKEN,
+        "errorType": -1,
+    }
+
+
+@pytest.fixture()
+def remote_auth_login_2_json():
+    """Return a /devices/login-sprinkler (remote) response."""
+    return {
+        "access_token": TEST_ACCESS_TOKEN,
+        "errorType": 0,
+        "sprinklerId": TEST_SPRINKLER_ID,
+    }
+
+
+@pytest.fixture()
+def remote_sprinlers_json():
+    """Return a /devices/get-sprinklers (remote) response."""
+    return {
+        "errorType":
+            0,
+        "sprinklers": [{
+            "sprinklerId": TEST_SPRINKLER_ID,
+            "sprinklerUrl":
+                "https://api.rainmachine.com/{0}/".format(TEST_SPRINKLER_ID),
+            "mac": TEST_MAC,
+            "name": TEST_NAME,
+            "type": "SPK3",
+            "swVer": "4.0.974"
+        }]
+    }
 
 
 @pytest.fixture()

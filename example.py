@@ -19,7 +19,6 @@ async def main():
 
             print('CLIENT INFORMATION')
             print('Name: {0}'.format(client.name))
-            print('Host: {0}'.format(client.host))
             print('MAC Address: {0}'.format(client.mac))
             print('API Version: {0}'.format(client.api_version))
             print('Software Version: {0}'.format(client.software_version))
