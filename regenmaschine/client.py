@@ -1,9 +1,9 @@
 """Define a client to interact with a RainMachine unit."""
-# pylint: disable=import-error,too-few-public-methods
-# pylint: disable=too-many-instance-attributes,unused-import
+# pylint: disable=protected-access,too-few-public-methods
+# pylint: disable=too-many-instance-attributes
 import asyncio
 from datetime import datetime, timedelta
-from typing import Union  # noqa
+from typing import Optional
 
 import async_timeout
 from aiohttp import ClientSession
@@ -20,29 +20,26 @@ from .stats import Stats
 from .watering import Watering
 from .zone import Zone
 
-API_URL_SCAFFOLD = 'https://{0}:{1}/api/4'
 DEFAULT_TIMEOUT = 10
 
 
 class Client:
     """Define the client."""
 
-    def __init__(  # pylint: disable=too-many-arguments
-            self, host: str, websession: ClientSession, port: int, ssl: bool,
-            request_timeout: int) -> None:
+    def __init__(
+            self, websession: ClientSession, request_timeout: int) -> None:
         """Initialize."""
         self._access_token = None
-        self._access_token_expiration = None  # type: Union[None, datetime]
-        self._port = port
+        self._access_token_expiration = None  # type: Optional[datetime]
         self._request_timeout = request_timeout
-        self._ssl = ssl
+        self._ssl = True
+        self._url_base = None  # type: Optional[str]
         self._websession = websession
-        self.api_version = None  # type: Union[None, str]
-        self.hardware_version = None  # type: Union[None, int]
-        self.host = host
+        self.api_version = None  # type: Optional[str]
+        self.hardware_version = None  # type: Optional[int]
         self.mac = None
-        self.name = None  # type: Union[None, str]
-        self.software_version = None  # type: Union[None, str]
+        self.name = None  # type: Optional[str]
+        self.software_version = None  # type: Optional[str]
 
         self.api = API(self._request)
         self.diagnostics = Diagnostics(self._request)
@@ -53,6 +50,36 @@ class Client:
         self.stats = Stats(self._request)
         self.watering = Watering(self._request)
         self.zones = Zone(self._request)
+
+    @classmethod
+    async def create_local(  # pylint: disable=too-many-arguments
+            cls, host: str, password: str, websession: ClientSession, port,
+            ssl, request_timeout) -> 'Client':
+        """Create a local client."""
+        klass = cls(websession, request_timeout)
+        klass._url_base = 'https://{0}:{1}/api/4'.format(host, port)
+        klass._ssl = ssl
+
+        auth_resp = await klass._request(
+            'post', 'auth/login', json={
+                'pwd': password,
+                'remember': 1
+            })
+        klass._access_token = auth_resp['access_token']
+        klass._access_token_expiration = (
+            datetime.now() +
+            timedelta(seconds=int(auth_resp['expires_in']) - 10))
+
+        wifi_data = await klass.provisioning.wifi()
+        klass.mac = wifi_data['macAddress']
+        klass.name = await klass.provisioning.device_name
+
+        version_data = await klass.api.versions()
+        klass.api_version = version_data['apiVer']
+        klass.hardware_version = version_data['hwVer']
+        klass.software_version = version_data['swVer']
+
+        return klass
 
     async def _request(
             self,
@@ -73,46 +100,25 @@ class Client:
 
         if not params:
             params = {}
-
         if self._access_token:
             params.update({'access_token': self._access_token})
 
+        url = '{0}/{1}'.format(self._url_base, endpoint)
+
         try:
             async with async_timeout.timeout(self._request_timeout):
-                async with self._websession.request(method, '{0}/{1}'.format(
-                        API_URL_SCAFFOLD.format(self.host, self._port),
-                        endpoint), headers=headers, params=params, json=json,
-                                                    ssl=self._ssl) as resp:
+                async with self._websession.request(
+                        method, url, headers=headers, params=params, json=json,
+                        ssl=self._ssl) as resp:
                     resp.raise_for_status()
                     data = await resp.json(content_type=None)
         except ClientError as err:
             raise RequestError(
-                'Error requesting data from {0}: {1}'.format(self.host, err))
+                'Error requesting data from {0}: {1}'.format(url, err))
         except asyncio.TimeoutError:
-            raise RequestError('Timeout during request: {0}'.format(endpoint))
+            raise RequestError('Timeout during request: {0}'.format(url))
 
         return data
-
-    async def authenticate(self, password: str):
-        """Instantiate a client with a password."""
-        data = await self._request(
-            'post', 'auth/login', json={
-                'pwd': password,
-                'remember': 1
-            })
-
-        self._access_token = data['access_token']
-        self._access_token_expiration = (
-            datetime.now() + timedelta(seconds=int(data['expires_in']) - 10))
-
-        wifi_data = await self.provisioning.wifi()
-        self.mac = wifi_data['macAddress']
-        self.name = await self.provisioning.device_name
-
-        version_data = await self.api.versions()
-        self.api_version = version_data['apiVer']
-        self.hardware_version = version_data['hwVer']
-        self.software_version = version_data['swVer']
 
 
 async def login(
@@ -124,6 +130,7 @@ async def login(
         ssl: bool = True,
         request_timeout: int = DEFAULT_TIMEOUT) -> Client:
     """Authenticate against a RainMachine device."""
-    client = Client(host, websession, port, ssl, request_timeout)
-    await client.authenticate(password)
+    print('regenmaschine.client.login() is deprecated; see documentation!')
+    client = await Client.create_local(
+        host, password, websession, port, ssl, request_timeout)
     return client
