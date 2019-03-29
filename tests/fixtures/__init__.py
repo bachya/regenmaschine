@@ -12,10 +12,10 @@ from .provision import provision_name_json, provision_wifi_json
 
 
 @pytest.fixture()
-def authenticated_client(
+def authenticated_local_client(
         apiver_json, auth_login_json, event_loop, provision_name_json,
         provision_wifi_json):
-    """Return an aresponses server relating to an authenticated client."""
+    """Return an aresponses server for an authenticated local client."""
     client = aresponses.ResponsesMockServer(loop=event_loop)
     client.add(
         '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/auth/login', 'post',
@@ -29,6 +29,31 @@ def authenticated_client(
     client.add(
         '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/apiVer', 'get',
         aresponses.Response(text=json.dumps(apiver_json), status=200))
+
+    return client
+
+
+@pytest.fixture()
+def authenticated_remote_client(
+        apiver_json, event_loop, remote_auth_login_1_json,
+        remote_auth_login_2_json, remote_sprinklers_json):
+    """Return an aresponses server for an authenticated remote client."""
+    client = aresponses.ResponsesMockServer(loop=event_loop)
+    client.add(
+        'my.rainmachine.com', '/login/auth', 'post',
+        aresponses.Response(
+            text=json.dumps(remote_auth_login_1_json), status=200))
+    client.add(
+        'my.rainmachine.com', '/devices/get-sprinklers', 'post',
+        aresponses.Response(
+            text=json.dumps(remote_sprinklers_json), status=200))
+    client.add(
+        'my.rainmachine.com', '/devices/login-sprinkler', 'post',
+        aresponses.Response(
+            text=json.dumps(remote_auth_login_2_json), status=200))
+    client.add(
+        'api.rainmachine.com', '/{0}/api/4/apiVer'.format(TEST_SPRINKLER_ID),
+        'get', aresponses.Response(text=json.dumps(apiver_json), status=200))
 
     return client
 
@@ -71,7 +96,29 @@ def remote_auth_login_2_json():
 
 
 @pytest.fixture()
-def remote_sprinlers_json():
+def remote_error_known():
+    """Return a remote "error" code."""
+    return {"errorType": 1}
+
+
+@pytest.fixture()
+def remote_error_http_body():
+    """Return a remote "error" code."""
+    return {
+        "statusCode": 400,
+        "error": 400,
+        "message": "Bad Request"
+    }
+
+
+@pytest.fixture()
+def remote_error_unknown():
+    """Return a remote "error" code."""
+    return {"errorType": 999}
+
+
+@pytest.fixture()
+def remote_sprinklers_json():
     """Return a /devices/get-sprinklers (remote) response."""
     return {
         "errorType":

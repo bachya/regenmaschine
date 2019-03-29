@@ -127,8 +127,7 @@ class Client:  # pylint: disable=too-few-public-methods
                         ssl=ssl) as resp:
                     resp.raise_for_status()
                     data = await resp.json(content_type=None)
-                    if data.get('errorType') or data.get('error'):
-                        _raise_for_remote_status(url, data)
+                    _raise_for_remote_status(url, data)
         except ClientError as err:
             raise RequestError(
                 'Error requesting data from {0}: {1}'.format(url, err))
@@ -140,15 +139,13 @@ class Client:  # pylint: disable=too-few-public-methods
 
 def _raise_for_remote_status(url: str, data: dict) -> None:
     """Raise an error from the remote API if necessary."""
-    if data.get('errorType') and data['errorType'] <= 0:
-        return
+    if data.get('errorType') and data['errorType'] > 0:
+        raise_remote_error(data['errorType'])
 
     if data.get('statusCode') and data['statusCode'] != 200:
         raise RequestError(
             'Error requesting data from {0}: {1} {2}'.format(
                 url, data['statusCode'], data['message']))
-
-    raise_remote_error(data['errorType'])
 
 
 async def login(

@@ -8,7 +8,7 @@ import pytest
 from regenmaschine import login
 
 from tests.const import TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import authenticated_client, auth_login_json
+from tests.fixtures import authenticated_local_client, auth_login_json
 from tests.fixtures.api import apiver_json
 from tests.fixtures.provision import provision_name_json, provision_wifi_json
 from tests.fixtures.restrictions import *
@@ -16,11 +16,11 @@ from tests.fixtures.restrictions import *
 
 @pytest.mark.asyncio
 async def test_restrictions_current(
-        aresponses, authenticated_client, event_loop,
+        aresponses, authenticated_local_client, event_loop,
         restrictions_currently_json):
     """Test getting any current restrictions."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT),
             '/api/4/restrictions/currently', 'get',
             aresponses.Response(
@@ -40,11 +40,11 @@ async def test_restrictions_current(
 
 @pytest.mark.asyncio
 async def test_restrictions_global(
-        aresponses, authenticated_client, event_loop,
+        aresponses, authenticated_local_client, event_loop,
         restrictions_global_json):
     """Test getting any global restrictions."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT),
             '/api/4/restrictions/global', 'get',
             aresponses.Response(
@@ -64,11 +64,11 @@ async def test_restrictions_global(
 
 @pytest.mark.asyncio
 async def test_restrictions_hourly(
-        aresponses, authenticated_client, event_loop,
+        aresponses, authenticated_local_client, event_loop,
         restrictions_hourly_json):
     """Test getting any hourly restrictions."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT),
             '/api/4/restrictions/hourly', 'get',
             aresponses.Response(
@@ -88,11 +88,11 @@ async def test_restrictions_hourly(
 
 @pytest.mark.asyncio
 async def test_restrictions_raindelay(
-        aresponses, authenticated_client, event_loop,
+        aresponses, authenticated_local_client, event_loop,
         restrictions_raindelay_json):
     """Test getting any rain delay-related restrictions."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT),
             '/api/4/restrictions/raindelay', 'get',
             aresponses.Response(

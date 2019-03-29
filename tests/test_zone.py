@@ -9,7 +9,7 @@ import pytest
 from regenmaschine import login
 
 from tests.const import TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import authenticated_client, auth_login_json
+from tests.fixtures import authenticated_local_client, auth_login_json
 from tests.fixtures.api import apiver_json
 from tests.fixtures.provision import provision_name_json, provision_wifi_json
 from tests.fixtures.zone import *
@@ -17,14 +17,14 @@ from tests.fixtures.zone import *
 
 @pytest.mark.asyncio
 async def test_zone_enable_disable(
-        aresponses, authenticated_client, event_loop, zone_post_json):
+        aresponses, authenticated_local_client, event_loop, zone_post_json):
     """Test enabling a zone."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/properties',
             'post',
             aresponses.Response(text=json.dumps(zone_post_json), status=200))
-        authenticated_client.add(
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/properties',
             'post',
             aresponses.Response(text=json.dumps(zone_post_json), status=200))
@@ -46,10 +46,10 @@ async def test_zone_enable_disable(
 
 @pytest.mark.asyncio
 async def test_zone_get(
-        aresponses, authenticated_client, event_loop, zone_properties_json):
+        aresponses, authenticated_local_client, event_loop, zone_properties_json):
     """Test getting info on all zones."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/properties',
             'get',
             aresponses.Response(
@@ -70,10 +70,10 @@ async def test_zone_get(
 
 @pytest.mark.asyncio
 async def test_zone_get_active(
-        aresponses, authenticated_client, event_loop, zone_properties_json):
+        aresponses, authenticated_local_client, event_loop, zone_properties_json):
     """Test getting info on active zones."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/properties',
             'get',
             aresponses.Response(
@@ -94,10 +94,10 @@ async def test_zone_get_active(
 
 @pytest.mark.asyncio
 async def test_zone_get_by_id(
-        aresponses, authenticated_client, event_loop, zone_id_properties_json):
+        aresponses, authenticated_local_client, event_loop, zone_id_properties_json):
     """Test getting properties on a specific zone by ID."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/properties',
             'get',
             aresponses.Response(
@@ -117,15 +117,15 @@ async def test_zone_get_by_id(
 
 @pytest.mark.asyncio
 async def test_zone_start_stop(
-        aresponses, authenticated_client, event_loop, zone_start_stop_json):
+        aresponses, authenticated_local_client, event_loop, zone_start_stop_json):
     """Test starting and stopping a zone."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/start',
             'post',
             aresponses.Response(
                 text=json.dumps(zone_start_stop_json), status=200))
-        authenticated_client.add(
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/zone/1/stop',
             'post',
             aresponses.Response(
