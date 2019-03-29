@@ -11,13 +11,13 @@ import pytest
 from regenmaschine import login
 from regenmaschine.errors import RequestError, TokenExpiredError
 
-from .const import (
+from tests.const import (
     TEST_ACCESS_TOKEN, TEST_API_VERSION, TEST_HOST, TEST_HW_VERSION, TEST_MAC,
     TEST_NAME, TEST_PASSWORD, TEST_PORT, TEST_SW_VERSION)
-from .fixtures import (
+from tests.fixtures import (
     authenticated_client, auth_login_json, unauthenticated_json)
-from .fixtures.api import apiver_json
-from .fixtures.provision import provision_name_json, provision_wifi_json
+from tests.fixtures.api import apiver_json
+from tests.fixtures.provision import provision_name_json, provision_wifi_json
 
 
 @pytest.mark.asyncio

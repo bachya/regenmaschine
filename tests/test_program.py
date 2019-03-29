@@ -7,11 +7,11 @@ import pytest
 
 from regenmaschine import login
 
-from .const import TEST_HOST, TEST_PORT, TEST_PASSWORD
-from .fixtures import authenticated_client, auth_login_json
-from .fixtures.api import apiver_json
-from .fixtures.program import *
-from .fixtures.provision import provision_name_json, provision_wifi_json
+from tests.const import TEST_HOST, TEST_PORT, TEST_PASSWORD
+from tests.fixtures import authenticated_client, auth_login_json
+from tests.fixtures.api import apiver_json
+from tests.fixtures.program import *
+from tests.fixtures.provision import provision_name_json, provision_wifi_json
 
 
 @pytest.mark.asyncio

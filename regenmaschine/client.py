@@ -9,16 +9,16 @@ import async_timeout
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
 
-from .api import API
-from .errors import RequestError, TokenExpiredError
-from .diagnostics import Diagnostics
-from .parser import Parser
-from .program import Program
-from .provision import Provision
-from .restriction import Restriction
-from .stats import Stats
-from .watering import Watering
-from .zone import Zone
+from regenmaschine.api import API
+from regenmaschine.errors import RequestError, TokenExpiredError
+from regenmaschine.diagnostics import Diagnostics
+from regenmaschine.parser import Parser
+from regenmaschine.program import Program
+from regenmaschine.provision import Provision
+from regenmaschine.restriction import Restriction
+from regenmaschine.stats import Stats
+from regenmaschine.watering import Watering
+from regenmaschine.zone import Zone
 
 DEFAULT_LOCAL_PORT = 8080
 DEFAULT_TIMEOUT = 10
