@@ -8,7 +8,7 @@ import pytest
 from regenmaschine import login
 
 from tests.const import TEST_ACCESS_TOKEN, TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import authenticated_client, auth_login_json
+from tests.fixtures import authenticated_local_client, auth_login_json
 from tests.fixtures.api import apiver_json
 from tests.fixtures.parser import *
 from tests.fixtures.provision import provision_name_json, provision_wifi_json
@@ -16,10 +16,10 @@ from tests.fixtures.provision import provision_name_json, provision_wifi_json
 
 @pytest.mark.asyncio
 async def test_parsers_current(
-        aresponses, authenticated_client, event_loop, parser_json):
+        aresponses, authenticated_local_client, event_loop, parser_json):
     """Test getting all current parsers."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/parser', 'get',
             aresponses.Response(text=json.dumps(parser_json), status=200))
 

@@ -10,7 +10,7 @@ import pytest
 from regenmaschine import login
 
 from tests.const import TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import authenticated_client, auth_login_json
+from tests.fixtures import authenticated_local_client, auth_login_json
 from tests.fixtures.api import apiver_json
 from tests.fixtures.diagnostics import *
 from tests.fixtures.provision import provision_name_json, provision_wifi_json
@@ -18,10 +18,10 @@ from tests.fixtures.provision import provision_name_json, provision_wifi_json
 
 @pytest.mark.asyncio
 async def test_diagnostics_current(
-        aresponses, authenticated_client, diag_json, event_loop):
+        aresponses, authenticated_local_client, diag_json, event_loop):
     """Test retrieving current diagnostics."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/diag', 'get',
             aresponses.Response(text=json.dumps(diag_json), status=200))
 
@@ -39,10 +39,10 @@ async def test_diagnostics_current(
 
 @pytest.mark.asyncio
 async def test_diagnostics_log(
-        aresponses, authenticated_client, diag_log_json, event_loop):
+        aresponses, authenticated_local_client, diag_log_json, event_loop):
     """Test retrieving the entire diagnostics log."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/diag/log', 'get',
             aresponses.Response(text=json.dumps(diag_log_json), status=200))
 

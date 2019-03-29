@@ -9,7 +9,7 @@ import pytest
 from regenmaschine import login
 
 from tests.const import TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import authenticated_client, auth_login_json
+from tests.fixtures import authenticated_local_client, auth_login_json
 from tests.fixtures.api import apiver_json
 from tests.fixtures.provision import provision_name_json, provision_wifi_json
 from tests.fixtures.stats import *
@@ -17,19 +17,19 @@ from tests.fixtures.stats import *
 
 @pytest.mark.asyncio
 async def test_stats(
-        aresponses, authenticated_client, dailystats_date_json,
+        aresponses, authenticated_local_client, dailystats_date_json,
         dailystats_details_json, event_loop):
     """Test getting states (with or without details)."""
     today = date.today()
     today_str = today.strftime('%Y-%m-%d')
 
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT),
             '/api/4/dailystats/{0}'.format(today_str), 'get',
             aresponses.Response(
                 text=json.dumps(dailystats_date_json), status=200))
-        authenticated_client.add(
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT),
             '/api/4/dailystats/details', 'get',
             aresponses.Response(

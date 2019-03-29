@@ -10,7 +10,7 @@ import pytest
 from regenmaschine import login
 
 from tests.const import TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import authenticated_client, auth_login_json
+from tests.fixtures import authenticated_local_client, auth_login_json
 from tests.fixtures.api import apiver_json
 from tests.fixtures.provision import provision_name_json, provision_wifi_json
 from tests.fixtures.watering import *
@@ -18,13 +18,13 @@ from tests.fixtures.watering import *
 
 @pytest.mark.asyncio
 async def test_watering_log_details(
-        aresponses, authenticated_client, event_loop, watering_log_json):
+        aresponses, authenticated_local_client, event_loop, watering_log_json):
     """Test getting watering log details."""
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
 
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT),
             '/api/4/watering/log/details/{0}/{1}'.format(today_str, 2), 'get',
             aresponses.Response(
@@ -44,15 +44,15 @@ async def test_watering_log_details(
 
 @pytest.mark.asyncio
 async def test_watering_pause(
-        aresponses, authenticated_client, event_loop, watering_pause_json):
+        aresponses, authenticated_local_client, event_loop, watering_pause_json):
     """Test pausing and unpausing watering."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/watering/pauseall',
             'post',
             aresponses.Response(
                 text=json.dumps(watering_pause_json), status=200))
-        authenticated_client.add(
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/watering/pauseall',
             'post',
             aresponses.Response(
@@ -75,10 +75,10 @@ async def test_watering_pause(
 
 @pytest.mark.asyncio
 async def test_watering_queue(
-        aresponses, authenticated_client, event_loop, watering_queue_json):
+        aresponses, authenticated_local_client, event_loop, watering_queue_json):
     """Test getting the watering queue."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/watering/queue',
             'get',
             aresponses.Response(
@@ -98,13 +98,13 @@ async def test_watering_queue(
 
 @pytest.mark.asyncio
 async def test_watering_past(
-        aresponses, authenticated_client, event_loop, watering_past_json):
+        aresponses, authenticated_local_client, event_loop, watering_past_json):
     """Test gettinng info on past watering runs."""
     today = datetime.date.today()
     today_str = today.strftime('%Y-%m-%d')
 
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT),
             '/api/4/watering/past/{0}/{1}'.format(today_str, 2), 'get',
             aresponses.Response(
@@ -124,10 +124,10 @@ async def test_watering_past(
 
 @pytest.mark.asyncio
 async def test_watering_stop(
-        aresponses, authenticated_client, event_loop, watering_stopall_json):
+        aresponses, authenticated_local_client, event_loop, watering_stopall_json):
     """Test stopping all watering activities."""
-    async with authenticated_client:
-        authenticated_client.add(
+    async with authenticated_local_client:
+        authenticated_local_client.add(
             '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/watering/stopall',
             'post',
             aresponses.Response(
