@@ -1,6 +1,5 @@
 """Define a RainMachine controller class."""
 # pylint: disable=too-few-public-methods,too-many-instance-attributes
-# pylint: disable=unused-import
 from datetime import datetime, timedelta
 from typing import Awaitable, Callable, Optional
 
