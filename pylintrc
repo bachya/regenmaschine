@@ -1,8 +1,10 @@
 [MESSAGES CONTROL]
 # Reasons disabled:
 # unnecessary-pass - This can hurt readability
+# unused-import - Typing imports often get caught
 disable=
-  unnecessary-pass
+  unnecessary-pass,
+  unused-import
 
 [REPORTS]
 reports=no
