@@ -47,13 +47,13 @@ from regenmaschine import Client
 async def main() -> None:
     """Create the aiohttp session and run the example."""
     async with ClientSession() as websession:
-      # YOUR CODE HERE
+        # YOUR CODE HERE...
 
 
 asyncio.get_event_loop().run_until_complete(main())
 ```
 
-To create a  `regenmaschine` `Client` :
+Creating a `regenmaschine` `Client` might be the easiest thing you do all day:
 
 ```python
 import asyncio
@@ -66,7 +66,7 @@ from regenmaschine import Client
 async def main() -> None:
     """Create the aiohttp session and run the example."""
     async with ClientSession() as websession:
-      client = Client(websession)
+        client = Client(websession)
 
 
 asyncio.get_event_loop().run_until_complete(main())
@@ -155,99 +155,99 @@ async def main() -> None:
         # will pass through the RainMachine™ cloud:
         for mac_address, controller in client.controllers:
             # Print some client properties:
-            print('Name: {0}'.format(client.name))
-            print('Host: {0}'.format(client.host))
-            print('MAC Address: {0}'.format(client.mac))
-            print('API Version: {0}'.format(client.api_version))
-            print('Software Version: {0}'.format(client.software_version))
-            print('Hardware Version: {0}'.format(client.hardware_version))
+            print('Name: {0}'.format(controller.name))
+            print('Host: {0}'.format(controller.host))
+            print('MAC Address: {0}'.format(controller.mac))
+            print('API Version: {0}'.format(controller.api_version))
+            print('Software Version: {0}'.format(controller.software_version))
+            print('Hardware Version: {0}'.format(controller.hardware_version))
 
             # Get all diagnostic information:
-            diagnostics = await client.diagnostics.current()
+            diagnostics = await controller.diagnostics.current()
 
             # Get all weather parsers:
-            parsers = await client.parsers.current():
+            parsers = await controller.parsers.current():
 
             # Get all programs:
-            programs = await client.programs.all():
+            programs = await controller.programs.all():
 
             # Include inactive programs:
-            programs = await client.programs.all(include_inactive=True):
+            programs = await controller.programs.all(include_inactive=True):
 
             # Get a specific program:
-            program_1 = await client.programs.get(1)
+            program_1 = await controller.programs.get(1)
 
             # Enable or disable a specific program:
-            await client.programs.enable(1)
-            await client.programs.disable(1)
+            await controller.programs.enable(1)
+            await controller.programs.disable(1)
 
             # Get the next run time for all programs:
-            runs = await client.programs.next()
+            runs = await controller.programs.next()
 
             # Get all running programs:
-            programs = await client.programs.running()
+            programs = await controller.programs.running()
 
             # Start and stop a program:
-            await client.programs.start(1)
-            await client.programs.stop(1)
+            await controller.programs.start(1)
+            await controller.programs.stop(1)
 
             # Get basic details about all zones:
-            zones = await client.zones.all():
+            zones = await controller.zones.all():
 
             # Get advanced details about all zones:
-            zones = await client.zones.all(details=True):
+            zones = await controller.zones.all(details=True):
 
             # Include inactive zones:
-            zones = await client.zones.all(include_inactive=True):
+            zones = await controller.zones.all(include_inactive=True):
 
             # Get basic details about a specific zone:
-            zone_1 = await client.zones.get(1)
+            zone_1 = await controller.zones.get(1)
 
             # Get advanced details about a specific zone:
-            zone_1 = await client.zones.get(1, details=True)
+            zone_1 = await controller.zones.get(1, details=True)
 
             # Enable or disable a specific zone:
-            await client.zones.enable(1)
-            await client.zones.disable(1)
+            await controller.zones.enable(1)
+            await controller.zones.disable(1)
 
             # Start a zone for 60 seconds:
-            await client.zones.start(1, 60)
+            await controller.zones.start(1, 60)
 
             # ...and stop it:
-            await client.zones.stop(1)
+            await controller.zones.stop(1)
 
             # Get the device name:
-            name = await client.provisioning.device_name
+            name = await controller.provisioning.device_name
 
             # Get all provisioning settings:
-            settings = await client.provisioning.settings()
+            settings = await controller.provisioning.settings()
 
             # Get all networking info related to the device:
-            wifi = await client.provisioning.wifi()
+            wifi = await controller.provisioning.wifi()
 
             # Get various types of active watering restrictions:
-            current = await client.restrictions.current()
-            universal = await client.restrictions.universal()
-            hourly = await client.restrictions.hourly():
-            raindelay = await client.restrictions.raindelay()
+            current = await controller.restrictions.current()
+            universal = await controller.restrictions.universal()
+            hourly = await controller.restrictions.hourly():
+            raindelay = await controller.restrictions.raindelay()
 
             # Get watering stats:
-            today = await client.stats.on_date(date=datetime.date.today())
-            upcoming_days = await client.stats.upcoming(details=True):
+            today = await controller.stats.on_date(date=datetime.date.today())
+            upcoming_days = await controller.stats.upcoming(details=True):
 
             # Get info on various watering activities not already covered:
-            log = await client.watering.log(date=datetime.date.today(), 2):
-            queue = await client.watering.queue()
-            runs = await client.watering.runs(date=datetime.date.today())
+            log = await controller.watering.log(date=datetime.date.today(), 2):
+            queue = await controller.watering.queue()
+            runs = await controller.watering.runs(date=datetime.date.today())
 
             # Pause all watering activities for 30 seconds:
-            await client.watering.pause_all(30)
+            await controller.watering.pause_all(30)
 
             # Unpause all watering activities:
-            await client.watering.unpause_all()
+            await controller.watering.unpause_all()
 
             # Stop all watering activities:
-            await client.watering.stop_all()
+            await controller.watering.stop_all()
 
 
 asyncio.get_event_loop().run_until_complete(main())
