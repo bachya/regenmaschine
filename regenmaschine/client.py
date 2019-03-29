@@ -3,7 +3,7 @@
 # pylint: disable=too-many-instance-attributes
 import asyncio
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional  # pylint: disable=unused-import
 
 import async_timeout
 from aiohttp import ClientSession
