@@ -130,8 +130,8 @@ asyncio.get_event_loop().run_until_complete(main())
 Bonus tip: `client.load_remote` will load _all_ controllers owned by that email
 address.
 
-Regardless of what type of controller you have (local or remote), the same
-properties and methods are available to each:
+Regardless of the type of controller you have loaded (local or remote), the
+same properties and methods are available to each:
 
 
 ```python
@@ -261,8 +261,8 @@ signatures and more examples.
 
 # Loading Controllers Multiple Times
 
-It is technically possible to attempt to load a controller multiple times.
-Let's pretend for a moment that:
+It is technically possible to load a controller multiple times. Let's pretend
+for a moment that:
 
 * We have a local controller named `Home` (available at `192.168.1.101`).
 * We have a remote controller named `Grandma's House`.
