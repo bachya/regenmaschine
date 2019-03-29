@@ -3,7 +3,7 @@ from typing import Awaitable, Callable
 
 
 class API:  # pylint: disable=too-few-public-methods
-    """Define a provisioning object."""
+    """Define an API object."""
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
