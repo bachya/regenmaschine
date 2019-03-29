@@ -12,20 +12,7 @@
 Python library for interacting with
 [RainMachine™ smart sprinkler controllers](http://www.rainmachine.com/).
 It gives developers an easy API to manage their controllers over their local
-LAN.
-
-# PLEASE READ: Version 1.0.0 and Beyond
-
-Version 1.0.0 of `regenmaschine` makes several breaking, but necessary changes:
-
-* Moves the underlying library from
-  [Requests](http://docs.python-requests.org/en/master/) to
-  [aiohttp](https://aiohttp.readthedocs.io/en/stable/)
-* Changes the entire library to use `asyncio`
-* Makes 3.6 the minimum version of Python required
-
-If you wish to continue using the previous, synchronous version of
-`regenmaschine`, make sure to pin version 0.4.2.
+LAN or remotely via the RainMachine™ cloud.
 
 # Python Versions
 
@@ -60,13 +47,13 @@ from regenmaschine import Client
 async def main() -> None:
     """Create the aiohttp session and run the example."""
     async with ClientSession() as websession:
-      # YOUR CODE HERE
+        # YOUR CODE HERE...
 
 
 asyncio.get_event_loop().run_until_complete(main())
 ```
 
-To create a  `regenmaschine` `Client` :
+Creating a `regenmaschine` `Client` might be the easiest thing you do all day:
 
 ```python
 import asyncio
@@ -79,14 +66,73 @@ from regenmaschine import Client
 async def main() -> None:
     """Create the aiohttp session and run the example."""
     async with ClientSession() as websession:
-      client = await Client.authenticate_via_password(
-        '192.168.1.100', '<PASSWORD'>, websession, port=8080, ssl=True)
+        client = Client(websession)
 
 
 asyncio.get_event_loop().run_until_complete(main())
 ```
 
-Once you have a client, get to work:
+Once you have a client, you can load a local controller (i.e., one that is
+accessible over the LAN) very easily:
+
+```python
+import asyncio
+
+from aiohttp import ClientSession
+
+from regenmaschine import Client
+
+
+async def main() -> None:
+    """Create the aiohttp session and run the example."""
+    async with ClientSession() as websession:
+        client = Client(websession)
+
+        await client.load_local(
+            '192.168.1.101', 'my_password', port=8080, ssl=True)
+
+        controllers = client.controllers
+        # >>> {'ab:cd:ef:12:34:56': <LocalController>}
+
+
+asyncio.get_event_loop().run_until_complete(main())
+```
+
+If you have 1, 2 or 100 other local controllers, you can load them in the same
+way – `client.controllers` will keep your controllers all organized.
+
+What if you have controllers around the world and can't access them all over
+the same local network? No problem! `regenmaschine` allows you to load remote
+controllers very easily, as well:
+
+```python
+import asyncio
+
+from aiohttp import ClientSession
+
+from regenmaschine import Client
+
+
+async def main() -> None:
+    """Create the aiohttp session and run the example."""
+    async with ClientSession() as websession:
+        client = Client(websession)
+
+        await client.load_remote('rainmachine_email@host.com', 'my_password')
+
+        controllers = client.controllers
+        # >>> {'fe:dc:ba:98:76:54': <RemoteController>, ...}
+
+
+asyncio.get_event_loop().run_until_complete(main())
+```
+
+Bonus tip: `client.load_remote` will load _all_ controllers owned by that email
+address.
+
+Regardless of the type of controller you have loaded (local or remote), the
+same properties and methods are available to each:
+
 
 ```python
 import asyncio
@@ -99,103 +145,112 @@ import regenmaschine
 async def main() -> None:
     """Create the aiohttp session and run the example."""
     async with ClientSession() as websession:
-      client = await regenmaschine.login(
-        '192.168.1.100', '<PASSWORD'>, websession, port=8080, ssl=True)
+        client = Client(websession)
 
-      # Print some client properties:
-      print('Name: {0}'.format(client.name))
-      print('Host: {0}'.format(client.host))
-      print('MAC Address: {0}'.format(client.mac))
-      print('API Version: {0}'.format(client.api_version))
-      print('Software Version: {0}'.format(client.software_version))
-      print('Hardware Version: {0}'.format(client.hardware_version))
+        # Load a local controller:
+        await client.load_local(
+            '192.168.1.101', 'my_password', port=8080, ssl=True)
 
-      # Get all diagnostic information:
-      diagnostics = await client.diagnostics.current()
+        # Load all remote controllers associated with an account:
+        await client.load_remote('rainmachine_email@host.com', 'my_password')
 
-      # Get all weather parsers:
-      parsers = await client.parsers.current():
+        # They all act the same! The only difference is that remote API calls
+        # will pass through the RainMachine™ cloud:
+        for mac_address, controller in client.controllers:
+            # Print some client properties:
+            print('Name: {0}'.format(controller.name))
+            print('Host: {0}'.format(controller.host))
+            print('MAC Address: {0}'.format(controller.mac))
+            print('API Version: {0}'.format(controller.api_version))
+            print('Software Version: {0}'.format(controller.software_version))
+            print('Hardware Version: {0}'.format(controller.hardware_version))
 
-      # Get all programs:
-      programs = await client.programs.all():
+            # Get all diagnostic information:
+            diagnostics = await controller.diagnostics.current()
 
-      # Include inactive programs:
-      programs = await client.programs.all(include_inactive=True):
+            # Get all weather parsers:
+            parsers = await controller.parsers.current():
 
-      # Get a specific program:
-      program_1 = await client.programs.get(1)
+            # Get all programs:
+            programs = await controller.programs.all():
 
-      # Enable or disable a specific program:
-      await client.programs.enable(1)
-      await client.programs.disable(1)
+            # Include inactive programs:
+            programs = await controller.programs.all(include_inactive=True):
 
-      # Get the next run time for all programs:
-      runs = await client.programs.next()
+            # Get a specific program:
+            program_1 = await controller.programs.get(1)
 
-      # Get all running programs:
-      programs = await client.programs.running()
+            # Enable or disable a specific program:
+            await controller.programs.enable(1)
+            await controller.programs.disable(1)
 
-      # Start and stop a program:
-      await client.programs.start(1)
-      await client.programs.stop(1)
+            # Get the next run time for all programs:
+            runs = await controller.programs.next()
 
-      # Get basic details about all zones:
-      zones = await client.zones.all():
+            # Get all running programs:
+            programs = await controller.programs.running()
 
-      # Get advanced details about all zones:
-      zones = await client.zones.all(details=True):
+            # Start and stop a program:
+            await controller.programs.start(1)
+            await controller.programs.stop(1)
 
-      # Include inactive zones:
-      zones = await client.zones.all(include_inactive=True):
+            # Get basic details about all zones:
+            zones = await controller.zones.all():
 
-      # Get basic details about a specific zone:
-      zone_1 = await client.zones.get(1)
+            # Get advanced details about all zones:
+            zones = await controller.zones.all(details=True):
 
-      # Get advanced details about a specific zone:
-      zone_1 = await client.zones.get(1, details=True)
+            # Include inactive zones:
+            zones = await controller.zones.all(include_inactive=True):
 
-      # Enable or disable a specific zone:
-      await client.zones.enable(1)
-      await client.zones.disable(1)
+            # Get basic details about a specific zone:
+            zone_1 = await controller.zones.get(1)
 
-      # Start a zone for 60 seconds:
-      await client.zones.start(1, 60)
+            # Get advanced details about a specific zone:
+            zone_1 = await controller.zones.get(1, details=True)
 
-      # ...and stop it:
-      await client.zones.stop(1)
+            # Enable or disable a specific zone:
+            await controller.zones.enable(1)
+            await controller.zones.disable(1)
 
-      # Get the device name:
-      name = await client.provisioning.device_name
+            # Start a zone for 60 seconds:
+            await controller.zones.start(1, 60)
 
-      # Get all provisioning settings:
-      settings = await client.provisioning.settings()
+            # ...and stop it:
+            await controller.zones.stop(1)
 
-      # Get all networking info related to the device:
-      wifi = await client.provisioning.wifi()
+            # Get the device name:
+            name = await controller.provisioning.device_name
 
-      # Get various types of active watering restrictions:
-      current = await client.restrictions.current()
-      universal = await client.restrictions.universal()
-      hourly = await client.restrictions.hourly():
-      raindelay = await client.restrictions.raindelay()
+            # Get all provisioning settings:
+            settings = await controller.provisioning.settings()
 
-      # Get watering stats:
-      today = await client.stats.on_date(date=datetime.date.today())
-      upcoming_days = await client.stats.upcoming(details=True):
+            # Get all networking info related to the device:
+            wifi = await controller.provisioning.wifi()
 
-      # Get info on various watering activities not already covered:
-      log_2_day = await client.watering.log(date=datetime.date.today(), 2):
-      queue = await client.watering.queue()
-      runs = await client.watering.runs(date=datetime.date.today())
+            # Get various types of active watering restrictions:
+            current = await controller.restrictions.current()
+            universal = await controller.restrictions.universal()
+            hourly = await controller.restrictions.hourly():
+            raindelay = await controller.restrictions.raindelay()
 
-      # Pause all watering activities for 30 seconds:
-      await client.watering.pause_all(30)
+            # Get watering stats:
+            today = await controller.stats.on_date(date=datetime.date.today())
+            upcoming_days = await controller.stats.upcoming(details=True):
 
-      # Unpause all watering activities:
-      await client.watering.unpause_all()
+            # Get info on various watering activities not already covered:
+            log = await controller.watering.log(date=datetime.date.today(), 2):
+            queue = await controller.watering.queue()
+            runs = await controller.watering.runs(date=datetime.date.today())
 
-      # Stop all watering activities:
-      await client.watering.stop_all()
+            # Pause all watering activities for 30 seconds:
+            await controller.watering.pause_all(30)
+
+            # Unpause all watering activities:
+            await controller.watering.unpause_all()
+
+            # Stop all watering activities:
+            await controller.watering.stop_all()
 
 
 asyncio.get_event_loop().run_until_complete(main())
@@ -203,6 +258,77 @@ asyncio.get_event_loop().run_until_complete(main())
 
 Check out `example.py`, the tests, and the source files themselves for method
 signatures and more examples.
+
+# Loading Controllers Multiple Times
+
+It is technically possible to load a controller multiple times. Let's pretend
+for a moment that:
+
+* We have a local controller named `Home` (available at `192.168.1.101`).
+* We have a remote controller named `Grandma's House`.
+* Both controllers live under our email address: `user@host.com`
+
+If we load them thus:
+
+```python
+import asyncio
+
+from aiohttp import ClientSession
+
+from regenmaschine import Client
+
+
+async def main() -> None:
+    """Create the aiohttp session and run the example."""
+    async with ClientSession() as websession:
+        client = Client(websession)
+
+        # Load "Home" locally:
+        await client.load_local('192.168.1.101', 'my_password')
+
+        # Load all of my controllers remotely:
+        await client.load_remote('user@host.com', 'my_password')
+
+
+asyncio.get_event_loop().run_until_complete(main())
+```
+
+...then we will have the following:
+
+1. `Home` will be a `LocalController` and accessible over the LAN.
+2. `Grandma's House` will be a `RemoteController` and accessible only over the
+RainMachine™ cloud.
+
+Notice that `regenmaschine` is smart enough to not overwrite a controller that
+already exists: even though `Home` exists as a remote controller owned by
+`user@host.com`, it had already been loaded locally. By default,
+`regenmaschine` will only load a controller if it hasn't been loaded before
+(locally _or_ remotely). If you want to change this behavior, both `load_local`
+and `load_remote` accept an optional `skip_existing` parameter:
+
+```python
+import asyncio
+
+from aiohttp import ClientSession
+
+from regenmaschine import Client
+
+
+async def main() -> None:
+    """Create the aiohttp session and run the example."""
+    async with ClientSession() as websession:
+        client = Client(websession)
+
+        # Load all of my controllers remotely:
+        await client.load_remote('user@host.com', 'my_password')
+
+        # Load "Home" locally, overwriting the existing remote controller:
+        await client.load_local(
+            '192.168.1.101', 'my_password', skip_existing=False)
+
+
+asyncio.get_event_loop().run_until_complete(main())
+```
 
 # Contributing
 
