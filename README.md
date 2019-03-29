@@ -127,6 +127,9 @@ async def main() -> None:
 asyncio.get_event_loop().run_until_complete(main())
 ```
 
+Bonus tip: `client.load_remote` will load _all_ controllers owned by that email
+address.
+
 Regardless of what type of controller you have (local or remote), the same
 properties and methods are available to each:
 
@@ -255,6 +258,77 @@ asyncio.get_event_loop().run_until_complete(main())
 
 Check out `example.py`, the tests, and the source files themselves for method
 signatures and more examples.
+
+# Loading Controllers Multiple Times
+
+It is technically possible to attempt to load a controller multiple times.
+Let's pretend for a moment that:
+
+* We have a local controller named `Home` (available at `192.168.1.101`).
+* We have a remote controller named `Grandma's House`.
+* Both controllers live under our email address: `user@host.com`
+
+If we load them thus:
+
+```python
+import asyncio
+
+from aiohttp import ClientSession
+
+from regenmaschine import Client
+
+
+async def main() -> None:
+    """Create the aiohttp session and run the example."""
+    async with ClientSession() as websession:
+        client = Client(websession)
+
+        # Load "Home" locally:
+        await client.load_local('192.168.1.101', 'my_password')
+
+        # Load all of my controllers remotely:
+        await client.load_remote('user@host.com', 'my_password')
+
+
+asyncio.get_event_loop().run_until_complete(main())
+```
+
+...then we will have the following:
+
+1. `Home` will be a `LocalController` and accessible over the LAN.
+2. `Grandma's House` will be a `RemoteController` and accessible only over the
+RainMachine™ cloud.
+
+Notice that `regenmaschine` is smart enough to not overwrite a controller that
+already exists: even though `Home` exists as a remote controller owned by
+`user@host.com`, it had already been loaded locally. By default,
+`regenmaschine` will only load a controller if it hasn't been loaded before
+(locally _or_ remotely). If you want to change this behavior, both `load_local`
+and `load_remote` accept an optional `skip_existing` parameter:
+
+```python
+import asyncio
+
+from aiohttp import ClientSession
+
+from regenmaschine import Client
+
+
+async def main() -> None:
+    """Create the aiohttp session and run the example."""
+    async with ClientSession() as websession:
+        client = Client(websession)
+
+        # Load all of my controllers remotely:
+        await client.load_remote('user@host.com', 'my_password')
+
+        # Load "Home" locally, overwriting the existing remote controller:
+        await client.load_local(
+            '192.168.1.101', 'my_password', skip_existing=False)
+
+
+asyncio.get_event_loop().run_until_complete(main())
+```
 
 # Contributing
 
