@@ -3,7 +3,7 @@
 # pylint: disable=too-many-instance-attributes
 import asyncio
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional  # pylint: disable=unused-import
 
 import async_timeout
 from aiohttp import ClientSession
@@ -20,6 +20,7 @@ from .stats import Stats
 from .watering import Watering
 from .zone import Zone
 
+DEFAULT_LOCAL_PORT = 8080
 DEFAULT_TIMEOUT = 10
 
 
@@ -53,8 +54,13 @@ class Client:
 
     @classmethod
     async def create_local(  # pylint: disable=too-many-arguments
-            cls, host: str, password: str, websession: ClientSession, port,
-            ssl, request_timeout) -> 'Client':
+            cls,
+            host: str,
+            password: str,
+            websession: ClientSession,
+            port: int = DEFAULT_LOCAL_PORT,
+            ssl: bool = True,
+            request_timeout: int = DEFAULT_TIMEOUT) -> 'Client':
         """Create a local client."""
         klass = cls(websession, request_timeout)
         klass._url_base = 'https://{0}:{1}/api/4'.format(host, port)
