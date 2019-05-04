@@ -14,7 +14,7 @@ async def main():
     async with ClientSession() as websession:
         try:
             client = Client(websession)
-            await client.load_local('<IP ADDRESS>', '<PASSWORD>', websession)
+            await client.load_local('<IP ADDRESS>', '<PASSWORD>')
 
             for controller in client.controllers.values():
                 print('CLIENT INFORMATION')
