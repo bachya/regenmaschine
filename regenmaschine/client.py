@@ -153,7 +153,7 @@ async def login(
     request_timeout: int = DEFAULT_TIMEOUT
 ) -> Controller:
     """Authenticate against a RainMachine device."""
-    print("regenmaschine.client.login() is deprecated; see documentation!")
+    _LOGGER.warning("regenmaschine.client.login() is deprecated; see documentation!")
     client = Client(websession, request_timeout)
     await client.load_local(host, password, port, ssl)
     return next(iter(client.controllers.values()))
