@@ -12,7 +12,7 @@ def restrictions_currently_json():
         "weekDay": False,
         "rainDelay": False,
         "rainDelayCounter": -1,
-        "rainSensor": False
+        "rainSensor": False,
     }
 
 
@@ -26,7 +26,7 @@ def restrictions_global_json():
         "noWaterInWeekDays": "0000000",
         "noWaterInMonths": "000000000000",
         "rainDelayStartTime": 1524854551,
-        "rainDelayDuration": 0
+        "rainDelayDuration": 0,
     }
 
 

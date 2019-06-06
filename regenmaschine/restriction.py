@@ -11,17 +11,17 @@ class Restriction:
 
     async def current(self) -> dict:
         """Get currently active restrictions."""
-        return await self._request('get', 'restrictions/currently')
+        return await self._request("get", "restrictions/currently")
 
     async def hourly(self) -> list:
         """Get a list of restrictions that are active over the next hour."""
-        data = await self._request('get', 'restrictions/hourly')
-        return data['hourlyRestrictions']
+        data = await self._request("get", "restrictions/hourly")
+        return data["hourlyRestrictions"]
 
     async def raindelay(self) -> dict:
         """Get restriction info related to rain delays."""
-        return await self._request('get', 'restrictions/raindelay')
+        return await self._request("get", "restrictions/raindelay")
 
     async def universal(self) -> dict:
         """Get global (always active) restrictions."""
-        return await self._request('get', 'restrictions/global')
+        return await self._request("get", "restrictions/global")

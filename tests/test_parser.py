@@ -16,21 +16,22 @@ from tests.fixtures.provision import provision_name_json, provision_wifi_json
 
 @pytest.mark.asyncio
 async def test_parsers_current(
-        aresponses, authenticated_local_client, event_loop, parser_json):
+    aresponses, authenticated_local_client, event_loop, parser_json
+):
     """Test getting all current parsers."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            '{0}:{1}'.format(TEST_HOST, TEST_PORT), '/api/4/parser', 'get',
-            aresponses.Response(text=json.dumps(parser_json), status=200))
+            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            "/api/4/parser",
+            "get",
+            aresponses.Response(text=json.dumps(parser_json), status=200),
+        )
 
         async with aiohttp.ClientSession(loop=event_loop) as websession:
             client = await login(
-                TEST_HOST,
-                TEST_PASSWORD,
-                websession,
-                port=TEST_PORT,
-                ssl=False)
+                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
+            )
 
             data = await client.parsers.current()
             assert len(data) == 1
-            assert data[0]['name'] == 'NOAA Parser'
+            assert data[0]["name"] == "NOAA Parser"

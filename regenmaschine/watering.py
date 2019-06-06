@@ -11,46 +11,43 @@ class Watering:
         self._request = request
 
     async def log(
-            self,
-            date: datetime.date = None,
-            days: int = None,
-            details: bool = False) -> list:
+        self, date: datetime.date = None, days: int = None, details: bool = False
+    ) -> list:
         """Get watering information for X days from Y date."""
-        endpoint = 'watering/log'
+        endpoint = "watering/log"
         if details:
-            endpoint += '/details'
+            endpoint += "/details"
 
         if date and days:
-            endpoint = '{0}/{1}/{2}'.format(
-                endpoint, date.strftime('%Y-%m-%d'), days)
+            endpoint = "{0}/{1}/{2}".format(endpoint, date.strftime("%Y-%m-%d"), days)
 
-        data = await self._request('get', endpoint)
-        return data['waterLog']['days']
+        data = await self._request("get", endpoint)
+        return data["waterLog"]["days"]
 
     async def pause_all(self, seconds: int) -> dict:
         """Pause all watering for a specified number of seconds."""
         return await self._request(
-            'post', 'watering/pauseall', json={'duration': seconds})
+            "post", "watering/pauseall", json={"duration": seconds}
+        )
 
     async def queue(self) -> list:
         """Return the queue of active watering activities."""
-        data = await self._request('get', 'watering/queue')
-        return data['queue']
+        data = await self._request("get", "watering/queue")
+        return data["queue"]
 
     async def runs(self, date: datetime.date = None, days: int = None) -> list:
         """Return all program runs for X days from Y date."""
-        endpoint = 'watering/past'
+        endpoint = "watering/past"
 
         if date and days:
-            endpoint = '{0}/{1}/{2}'.format(
-                endpoint, date.strftime('%Y-%m-%d'), days)
+            endpoint = "{0}/{1}/{2}".format(endpoint, date.strftime("%Y-%m-%d"), days)
 
-        data = await self._request('get', endpoint)
-        return data['pastValues']
+        data = await self._request("get", endpoint)
+        return data["pastValues"]
 
     async def stop_all(self) -> dict:
         """Stop all programs and zones from running."""
-        return await self._request('post', 'watering/stopall')
+        return await self._request("post", "watering/stopall")
 
     async def unpause_all(self) -> dict:
         """Unpause all paused watering."""

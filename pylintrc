@@ -1,14 +1,17 @@
 [MESSAGES CONTROL]
 # Reasons disabled:
+# bad-continuation - Invalid attack on black
 # unnecessary-pass - This can hurt readability
-# unused-import - Typing imports often get caught
 disable=
+  bad-continuation,
   unnecessary-pass,
-  unused-import
 
 [REPORTS]
 reports=no
 
 [FORMAT]
 expected-line-ending-format=LF
+
+[SIMILARITIES]
+min-similarity-lines=6
 

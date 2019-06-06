@@ -24,7 +24,7 @@ def diag_json():
         "wifiMode": None,
         "gatewayAddress": "192.168.1.1",
         "cloudStatus": 0,
-        "weatherStatus": True
+        "weatherStatus": True,
     }
 
 

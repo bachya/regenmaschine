@@ -48,14 +48,25 @@ def provision_json():
             "zoneListShowInactive": True,
             "rainSensorRainStart": None,
             "zoneDuration": [
-                300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300
+                300,
+                300,
+                300,
+                300,
+                300,
+                300,
+                300,
+                300,
+                300,
+                300,
+                300,
+                300,
             ],
             "rainSensorIsNormallyClosed": True,
             "useCorrectionForPast": True,
             "useMasterValve": False,
             "runParsersBeforePrograms": True,
             "maxWateringCoef": 2,
-            "mixerHistorySize": 365
+            "mixerHistorySize": 365,
         },
         "location": {
             "elevation": 1593.4514160199999,
@@ -75,8 +86,8 @@ def provision_json():
             "rainSensitivity": 0.80000000000000004,
             "timezone": "America/Los Angeles",
             "longitude": -87.12872612,
-            "name": "123 Main Street, Boston, MA 01234"
-        }
+            "name": "123 Main Street, Boston, MA 01234",
+        },
     }
 
 
@@ -97,5 +108,5 @@ def provision_wifi_json():
         "mode": None,
         "interface": "wlan0",
         "lastWIFICheckTimestamp": 1525126177,
-        "ipAddress": "192.168.1.100"
+        "ipAddress": "192.168.1.100",
     }

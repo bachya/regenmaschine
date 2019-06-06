@@ -11,5 +11,5 @@ class Parser:  # pylint: disable=too-few-public-methods
 
     async def current(self) -> dict:
         """Get current diagnostics."""
-        data = await self._request('get', 'parser')
-        return data['parsers']
+        data = await self._request("get", "parser")
+        return data["parsers"]

@@ -11,9 +11,9 @@ class Diagnostics:
 
     async def current(self) -> dict:
         """Get current diagnostics."""
-        return await self._request('get', 'diag')
+        return await self._request("get", "diag")
 
     async def log(self) -> dict:
         """Get the device log."""
-        data = await self._request('get', 'diag/log')
-        return data['log']
+        data = await self._request("get", "diag/log")
+        return data["log"]

@@ -19,9 +19,7 @@ class TokenExpiredError(RainMachineError):
     pass
 
 
-ERROR_CODES = {
-    1: 'The email has not been validated',
-}
+ERROR_CODES = {1: "The email has not been validated"}
 
 
 def raise_remote_error(error_code: int) -> None:
@@ -30,5 +28,4 @@ def raise_remote_error(error_code: int) -> None:
         error = next((v for k, v in ERROR_CODES.items() if k == error_code))
         raise RequestError(error)
     except StopIteration:
-        raise RequestError(
-            'Unknown remote error code returned: {0}'.format(error_code))
+        raise RequestError("Unknown remote error code returned: {0}".format(error_code))

@@ -11,4 +11,4 @@ class API:  # pylint: disable=too-few-public-methods
 
     async def versions(self) -> dict:
         """Get software, hardware, and API versions."""
-        return await self._request('get', 'apiVer')
+        return await self._request("get", "apiVer")
