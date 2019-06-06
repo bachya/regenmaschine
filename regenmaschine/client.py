@@ -103,7 +103,7 @@ class Client:  # pylint: disable=too-few-public-methods
 
         if not headers:
             headers = {}
-        headers.update({"Content-Type": "application/json"})
+        headers.update({"Connection": "close", "Content-Type": "application/json"})
 
         if not params:
             params = {}
