@@ -1,6 +1,7 @@
 """Define a client to interact with a RainMachine unit."""
 import asyncio
 from datetime import datetime
+import logging
 from typing import Dict
 
 import async_timeout
@@ -9,6 +10,8 @@ from aiohttp.client_exceptions import ClientError
 
 from regenmaschine.controller import Controller, LocalController, RemoteController
 from regenmaschine.errors import RequestError, TokenExpiredError, raise_remote_error
+
+_LOGGER = logging.getLogger(__name__)
 
 DEFAULT_LOCAL_PORT = 8080
 DEFAULT_TIMEOUT = 10
@@ -119,6 +122,7 @@ class Client:  # pylint: disable=too-few-public-methods
                     data = await resp.json(content_type=None)
                     _raise_for_remote_status(url, data)
         except ClientError as err:
+            _LOGGER.debug("Original request error: %s (%s)", err, type(err))
             raise RequestError("Error requesting data from {0}: {1}".format(url, err))
         except asyncio.TimeoutError:
             raise RequestError("Timeout during request: {0}".format(url))
