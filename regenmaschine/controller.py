@@ -3,8 +3,6 @@
 from datetime import datetime, timedelta
 from typing import Awaitable, Callable, Optional
 
-from aiohttp import ClientSession
-
 from regenmaschine.api import API
 from regenmaschine.diagnostics import Diagnostics
 from regenmaschine.parser import Parser
