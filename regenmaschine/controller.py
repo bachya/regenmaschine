@@ -22,16 +22,13 @@ URL_BASE_REMOTE = "https://api.rainmachine.com/{0}/api/4"
 class Controller:  # pylint: disable=too-many-instance-attributes
     """Define the controller."""
 
-    def __init__(
-        self, request: Callable[..., Awaitable[dict]], websession: ClientSession
-    ) -> None:
+    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
         self._access_token = None  # type: Optional[str]
         self._access_token_expiration = None  # type: Optional[datetime]
         self._client_request = request
         self._host = None  # type: Optional[str]
         self._ssl = True
-        self._websession = websession
         self.api_version = None  # type: Optional[str]
         self.hardware_version = None  # type: Optional[int]
         self.mac = None
@@ -76,15 +73,10 @@ class LocalController(Controller):
     """Define a controller accessed over the LAN."""
 
     def __init__(  # pylint: disable=too-many-arguments
-        self,
-        request: Callable[..., Awaitable[dict]],
-        host: str,
-        port: int,
-        ssl: bool,
-        websession: ClientSession,
+        self, request: Callable[..., Awaitable[dict]], host: str, port: int, ssl: bool
     ) -> None:
         """Initialize."""
-        super().__init__(request, websession)
+        super().__init__(request)
 
         self._host = URL_BASE_LOCAL.format(host, port)
         self._ssl = ssl

@@ -37,7 +37,7 @@ class Client:  # pylint: disable=too-few-public-methods
         skip_existing: bool = True,
     ) -> None:
         """Create a local client."""
-        controller = LocalController(self._request, host, port, ssl, self._websession)
+        controller = LocalController(self._request, host, port, ssl)
         await controller.login(password)
 
         wifi_data = await controller.provisioning.wifi()
@@ -76,7 +76,7 @@ class Client:  # pylint: disable=too-few-public-methods
             if skip_existing and sprinkler["mac"] in self.controllers:
                 continue
 
-            controller = RemoteController(self._request, self._websession)
+            controller = RemoteController(self._request)
             await controller.login(access_token, sprinkler["sprinklerId"], password)
 
             version_data = await controller.api.versions()
