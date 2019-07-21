@@ -56,7 +56,7 @@ class Client:  # pylint: disable=too-few-public-methods
     async def load_remote(
         self, email: str, password: str, skip_existing: bool = True
     ) -> None:
-        """Create a local client."""
+        """Create a remote client."""
         auth_resp = await self._request(
             "post",
             "https://my.rainmachine.com/login/auth",
