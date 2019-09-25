@@ -22,7 +22,7 @@ async def test_api_versions(
     """Test getting API, hardware, and software versions."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/apiVer",
             "get",
             aresponses.Response(text=json.dumps(apiver_json), status=200),

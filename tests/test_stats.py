@@ -29,13 +29,13 @@ async def test_stats(
 
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
-            "/api/4/dailystats/{0}".format(today_str),
+            f"{TEST_HOST}:{TEST_PORT}",
+            f"/api/4/dailystats/{today_str}",
             "get",
             aresponses.Response(text=json.dumps(dailystats_date_json), status=200),
         )
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/dailystats/details",
             "get",
             aresponses.Response(text=json.dumps(dailystats_details_json), status=200),

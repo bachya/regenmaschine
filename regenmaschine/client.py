@@ -98,7 +98,7 @@ class Client:  # pylint: disable=too-few-public-methods
         headers: dict = None,
         params: dict = None,
         json: dict = None,
-        ssl: bool = True
+        ssl: bool = True,
     ) -> dict:
         """Make a request against the RainMachine device."""
         if access_token_expiration and datetime.now() >= access_token_expiration:
@@ -123,9 +123,9 @@ class Client:  # pylint: disable=too-few-public-methods
                     _raise_for_remote_status(url, data)
         except ClientError as err:
             _LOGGER.debug("Original request error: %s (%s)", err, type(err))
-            raise RequestError("Error requesting data from {0}: {1}".format(url, err))
+            raise RequestError(f"Error requesting data from {url}: {err}")
         except asyncio.TimeoutError:
-            raise RequestError("Timeout during request: {0}".format(url))
+            raise RequestError(f"Timeout during request: {url}")
 
         return data
 
@@ -137,9 +137,7 @@ def _raise_for_remote_status(url: str, data: dict) -> None:
 
     if data.get("statusCode") and data["statusCode"] != 200:
         raise RequestError(
-            "Error requesting data from {0}: {1} {2}".format(
-                url, data["statusCode"], data["message"]
-            )
+            f"Error requesting data from {url}: {data['statusCode']} {data['message']}"
         )
 
 
@@ -150,7 +148,7 @@ async def login(
     *,
     port: int = 8080,
     ssl: bool = True,
-    request_timeout: int = DEFAULT_TIMEOUT
+    request_timeout: int = DEFAULT_TIMEOUT,
 ) -> Controller:
     """Authenticate against a RainMachine device."""
     _LOGGER.warning("regenmaschine.client.login() is deprecated; see documentation!")

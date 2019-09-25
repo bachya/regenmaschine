@@ -85,13 +85,13 @@ async def test_load_local_skip(
 ):
     """Test skipping the loading of a local client if it's already loaded."""
     authenticated_local_client.add(
-        "{0}:{1}".format(TEST_HOST, TEST_PORT),
+        f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/auth/login",
         "post",
         aresponses.Response(text=json.dumps(auth_login_json), status=200),
     )
     authenticated_local_client.add(
-        "{0}:{1}".format(TEST_HOST, TEST_PORT),
+        f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/provision/wifi",
         "get",
         aresponses.Response(text=json.dumps(provision_wifi_json), status=200),
@@ -112,7 +112,7 @@ async def test_load_local_skip(
 async def test_load_local_failure(aresponses, unauthenticated_json, event_loop):
     """Test loading a local client and receiving a fail response."""
     aresponses.add(
-        "{0}:{1}".format(TEST_HOST, TEST_PORT),
+        f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/auth/login",
         "post",
         aresponses.Response(text=json.dumps(unauthenticated_json), status=401),

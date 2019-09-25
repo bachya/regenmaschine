@@ -26,8 +26,8 @@ async def test_watering_log_details(
 
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
-            "/api/4/watering/log/details/{0}/{1}".format(today_str, 2),
+            f"{TEST_HOST}:{TEST_PORT}",
+            f"/api/4/watering/log/details/{today_str}/2",
             "get",
             aresponses.Response(text=json.dumps(watering_log_json), status=200),
         )
@@ -48,13 +48,13 @@ async def test_watering_pause(
     """Test pausing and unpausing watering."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/watering/pauseall",
             "post",
             aresponses.Response(text=json.dumps(watering_pause_json), status=200),
         )
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/watering/pauseall",
             "post",
             aresponses.Response(text=json.dumps(watering_pause_json), status=200),
@@ -79,7 +79,7 @@ async def test_watering_queue(
     """Test getting the watering queue."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/watering/queue",
             "get",
             aresponses.Response(text=json.dumps(watering_queue_json), status=200),
@@ -104,8 +104,8 @@ async def test_watering_past(
 
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
-            "/api/4/watering/past/{0}/{1}".format(today_str, 2),
+            f"{TEST_HOST}:{TEST_PORT}",
+            f"/api/4/watering/past/{today_str}/2",
             "get",
             aresponses.Response(text=json.dumps(watering_past_json), status=200),
         )
@@ -126,7 +126,7 @@ async def test_watering_stop(
     """Test stopping all watering activities."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/watering/stopall",
             "post",
             aresponses.Response(text=json.dumps(watering_stopall_json), status=200),

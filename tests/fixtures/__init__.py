@@ -24,25 +24,25 @@ def authenticated_local_client(
     """Return an aresponses server for an authenticated local client."""
     client = aresponses.ResponsesMockServer(loop=event_loop)
     client.add(
-        "{0}:{1}".format(TEST_HOST, TEST_PORT),
+        f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/auth/login",
         "post",
         aresponses.Response(text=json.dumps(auth_login_json), status=200),
     )
     client.add(
-        "{0}:{1}".format(TEST_HOST, TEST_PORT),
+        f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/provision/name",
         "get",
         aresponses.Response(text=json.dumps(provision_name_json), status=200),
     )
     client.add(
-        "{0}:{1}".format(TEST_HOST, TEST_PORT),
+        f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/provision/wifi",
         "get",
         aresponses.Response(text=json.dumps(provision_wifi_json), status=200),
     )
     client.add(
-        "{0}:{1}".format(TEST_HOST, TEST_PORT),
+        f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/apiVer",
         "get",
         aresponses.Response(text=json.dumps(apiver_json), status=200),
@@ -81,7 +81,7 @@ def authenticated_remote_client(
     )
     client.add(
         "api.rainmachine.com",
-        "/{0}/api/4/apiVer".format(TEST_SPRINKLER_ID),
+        f"/{TEST_SPRINKLER_ID}/api/4/apiVer",
         "get",
         aresponses.Response(text=json.dumps(apiver_json), status=200),
     )
@@ -149,9 +149,7 @@ def remote_sprinklers_json():
         "sprinklers": [
             {
                 "sprinklerId": TEST_SPRINKLER_ID,
-                "sprinklerUrl": "https://api.rainmachine.com/{0}/".format(
-                    TEST_SPRINKLER_ID
-                ),
+                "sprinklerUrl": f"https://api.rainmachine.com/{TEST_SPRINKLER_ID}/",
                 "mac": TEST_MAC,
                 "name": TEST_NAME,
                 "type": "SPK3",

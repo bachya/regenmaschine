@@ -11,7 +11,7 @@ class Program:
 
     async def _post(self, program_id: int = None, json: dict = None) -> dict:
         """Post data to a (non)existing program."""
-        return await self._request("post", "program/{0}".format(program_id), json=json)
+        return await self._request("post", f"program/{program_id}", json=json)
 
     async def all(self, include_inactive: bool = False) -> list:
         """Return all programs."""
@@ -28,7 +28,7 @@ class Program:
 
     async def get(self, program_id: int) -> dict:
         """Return a specific program."""
-        return await self._request("get", "program/{0}".format(program_id))
+        return await self._request("get", f"program/{program_id}")
 
     async def next(self) -> list:
         """Return the next run date/time for all programs."""
@@ -42,8 +42,8 @@ class Program:
 
     async def start(self, program_id: int) -> dict:
         """Start a program."""
-        return await self._request("post", "program/{0}/start".format(program_id))
+        return await self._request("post", f"program/{program_id}/start")
 
     async def stop(self, program_id: int) -> dict:
         """Stop a program."""
-        return await self._request("post", "program/{0}/stop".format(program_id))
+        return await self._request("post", f"program/{program_id}/stop")

@@ -23,7 +23,7 @@ async def test_diagnostics_current(
     """Test retrieving current diagnostics."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/diag",
             "get",
             aresponses.Response(text=json.dumps(diag_json), status=200),
@@ -45,7 +45,7 @@ async def test_diagnostics_log(
     """Test retrieving the entire diagnostics log."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/diag/log",
             "get",
             aresponses.Response(text=json.dumps(diag_log_json), status=200),

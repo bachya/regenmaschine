@@ -18,12 +18,8 @@ LAN or remotely via the RainMachine™ cloud.
 
 `regenmaschine` is currently supported on:
 
-* Python 3.5
 * Python 3.6
 * Python 3.7
-
-However, running the test suite currently requires Python 3.6 or higher; tests
-run on Python 3.5 will fail.
 
 # Installation
 
@@ -88,8 +84,7 @@ async def main() -> None:
     async with ClientSession() as websession:
         client = Client(websession)
 
-        await client.load_local(
-            '192.168.1.101', 'my_password', port=8080, ssl=True)
+        await client.load_local("192.168.1.101", "my_password", port=8080, ssl=True)
 
         controllers = client.controllers
         # >>> {'ab:cd:ef:12:34:56': <LocalController>}
@@ -118,7 +113,7 @@ async def main() -> None:
     async with ClientSession() as websession:
         client = Client(websession)
 
-        await client.load_remote('rainmachine_email@host.com', 'my_password')
+        await client.load_remote("rainmachine_email@host.com", "my_password")
 
         controllers = client.controllers
         # >>> {'fe:dc:ba:98:76:54': <RemoteController>, ...}
@@ -133,13 +128,13 @@ address.
 Regardless of the type of controller you have loaded (local or remote), the
 same properties and methods are available to each:
 
-
 ```python
 import asyncio
+import datetime
 
 from aiohttp import ClientSession
 
-import regenmaschine
+from regenmaschine import Client
 
 
 async def main() -> None:
@@ -148,34 +143,33 @@ async def main() -> None:
         client = Client(websession)
 
         # Load a local controller:
-        await client.load_local(
-            '192.168.1.101', 'my_password', port=8080, ssl=True)
+        await client.load_local("192.168.1.101", "my_password", port=8080, ssl=True)
 
         # Load all remote controllers associated with an account:
-        await client.load_remote('rainmachine_email@host.com', 'my_password')
+        await client.load_remote("rainmachine_email@host.com", "my_password")
 
         # They all act the same! The only difference is that remote API calls
         # will pass through the RainMachine™ cloud:
         for mac_address, controller in client.controllers:
             # Print some client properties:
-            print('Name: {0}'.format(controller.name))
-            print('Host: {0}'.format(controller.host))
-            print('MAC Address: {0}'.format(controller.mac))
-            print('API Version: {0}'.format(controller.api_version))
-            print('Software Version: {0}'.format(controller.software_version))
-            print('Hardware Version: {0}'.format(controller.hardware_version))
+            print(f"Name: {controller.name}")
+            print(f"Host: {controller.host}")
+            print(f"MAC Address: {controller.mac}")
+            print(f"API Version: {controller.api_version}")
+            print(f"Software Version: {controller.software_version}")
+            print(f"Hardware Version: {controller.hardware_version}")
 
             # Get all diagnostic information:
             diagnostics = await controller.diagnostics.current()
 
             # Get all weather parsers:
-            parsers = await controller.parsers.current():
+            parsers = await controller.parsers.current()
 
             # Get all programs:
-            programs = await controller.programs.all():
+            programs = await controller.programs.all()
 
             # Include inactive programs:
-            programs = await controller.programs.all(include_inactive=True):
+            programs = await controller.programs.all(include_inactive=True)
 
             # Get a specific program:
             program_1 = await controller.programs.get(1)
@@ -195,13 +189,13 @@ async def main() -> None:
             await controller.programs.stop(1)
 
             # Get basic details about all zones:
-            zones = await controller.zones.all():
+            zones = await controller.zones.all()
 
             # Get advanced details about all zones:
-            zones = await controller.zones.all(details=True):
+            zones = await controller.zones.all(details=True)
 
             # Include inactive zones:
-            zones = await controller.zones.all(include_inactive=True):
+            zones = await controller.zones.all(include_inactive=True)
 
             # Get basic details about a specific zone:
             zone_1 = await controller.zones.get(1)
@@ -231,17 +225,17 @@ async def main() -> None:
             # Get various types of active watering restrictions:
             current = await controller.restrictions.current()
             universal = await controller.restrictions.universal()
-            hourly = await controller.restrictions.hourly():
+            hourly = await controller.restrictions.hourly()
             raindelay = await controller.restrictions.raindelay()
 
             # Get watering stats:
-            today = await controller.stats.on_date(date=datetime.date.today())
-            upcoming_days = await controller.stats.upcoming(details=True):
+            today = await controller.stats.on_date(datetime.date.today())
+            upcoming_days = await controller.stats.upcoming(details=True)
 
             # Get info on various watering activities not already covered:
-            log = await controller.watering.log(date=datetime.date.today(), 2):
+            log = await controller.watering.log(datetime.date.today(), 2)
             queue = await controller.watering.queue()
-            runs = await controller.watering.runs(date=datetime.date.today())
+            runs = await controller.watering.runs(datetime.date.today())
 
             # Pause all watering activities for 30 seconds:
             await controller.watering.pause_all(30)
@@ -284,10 +278,10 @@ async def main() -> None:
         client = Client(websession)
 
         # Load "Home" locally:
-        await client.load_local('192.168.1.101', 'my_password')
+        await client.load_local("192.168.1.101", "my_password")
 
         # Load all of my controllers remotely:
-        await client.load_remote('user@host.com', 'my_password')
+        await client.load_remote("user@host.com", "my_password")
 
 
 asyncio.get_event_loop().run_until_complete(main())
@@ -320,11 +314,10 @@ async def main() -> None:
         client = Client(websession)
 
         # Load all of my controllers remotely:
-        await client.load_remote('user@host.com', 'my_password')
+        await client.load_remote("user@host.com", "my_password")
 
         # Load "Home" locally, overwriting the existing remote controller:
-        await client.load_local(
-            '192.168.1.101', 'my_password', skip_existing=False)
+        await client.load_local("192.168.1.101", "my_password", skip_existing=False)
 
 
 asyncio.get_event_loop().run_until_complete(main())

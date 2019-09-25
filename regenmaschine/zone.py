@@ -11,9 +11,7 @@ class Zone:
 
     async def _post(self, zone_id: int = None, json: dict = None) -> dict:
         """Post data to a (non)existing zone."""
-        return await self._request(
-            "post", "zone/{0}/properties".format(zone_id), json=json
-        )
+        return await self._request("post", f"zone/{zone_id}/properties", json=json)
 
     async def all(
         self, *, details: bool = False, include_inactive: bool = False
@@ -35,17 +33,15 @@ class Zone:
 
     async def get(self, zone_id: int, *, details: bool = False) -> dict:
         """Return a specific zone."""
-        endpoint = "zone/{0}".format(zone_id)
+        endpoint = f"zone/{zone_id}"
         if details:
             endpoint += "/properties"
         return await self._request("get", endpoint)
 
     async def start(self, zone_id: int, time: int) -> dict:
         """Start a program."""
-        return await self._request(
-            "post", "zone/{0}/start".format(zone_id), json={"time": time}
-        )
+        return await self._request("post", f"zone/{zone_id}/start", json={"time": time})
 
     async def stop(self, zone_id: int) -> dict:
         """Stop a program."""
-        return await self._request("post", "zone/{0}/stop".format(zone_id))
+        return await self._request("post", f"zone/{zone_id}/stop")

@@ -19,7 +19,7 @@ class Watering:
             endpoint += "/details"
 
         if date and days:
-            endpoint = "{0}/{1}/{2}".format(endpoint, date.strftime("%Y-%m-%d"), days)
+            endpoint = f"{endpoint}/{date.strftime('%Y-%m-%d')}/{days}"
 
         data = await self._request("get", endpoint)
         return data["waterLog"]["days"]
@@ -40,7 +40,7 @@ class Watering:
         endpoint = "watering/past"
 
         if date and days:
-            endpoint = "{0}/{1}/{2}".format(endpoint, date.strftime("%Y-%m-%d"), days)
+            endpoint = f"{endpoint}/{date.strftime('%Y-%m-%d')}/{days}"
 
         data = await self._request("get", endpoint)
         return data["pastValues"]
