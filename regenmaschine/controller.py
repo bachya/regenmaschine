@@ -52,12 +52,12 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         headers: dict = None,
         params: dict = None,
         json: dict = None,
-        ssl: bool = True
+        ssl: bool = True,
     ) -> dict:
         """Wrap the generic request method to add access token, etc."""
         return await self._client_request(
             method,
-            "{0}/{1}".format(self._host, endpoint),
+            f"{self._host}/{endpoint}",
             access_token=self._access_token,
             access_token_expiration=self._access_token_expiration,
             headers=headers,
@@ -82,9 +82,7 @@ class LocalController(Controller):
     async def login(self, password):
         """Authenticate against the device (locally)."""
         auth_resp = await self._client_request(
-            "post",
-            "{0}/auth/login".format(self._host),
-            json={"pwd": password, "remember": 1},
+            "post", f"{self._host}/auth/login", json={"pwd": password, "remember": 1}
         )
 
         self._access_token = auth_resp["access_token"]

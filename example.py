@@ -18,18 +18,18 @@ async def main():
 
             for controller in client.controllers.values():
                 print("CLIENT INFORMATION")
-                print("Name: {0}".format(controller.name))
-                print("MAC Address: {0}".format(controller.mac))
-                print("API Version: {0}".format(controller.api_version))
-                print("Software Version: {0}".format(controller.software_version))
-                print("Hardware Version: {0}".format(controller.hardware_version))
+                print(f"Name: {controller.name}")
+                print(f"MAC Address: {controller.mac}")
+                print(f"API Version: {controller.api_version}")
+                print(f"Software Version: {controller.software_version}")
+                print(f"Hardware Version: {controller.hardware_version}")
 
                 # Work with diagnostics:
                 print()
                 print("RAINMACHINE DIAGNOSTICS")
                 data = await controller.diagnostics.current()
-                print("Uptime: {0}".format(data["uptime"]))
-                print("Software Version: {0}".format(data["softwareVersion"]))
+                print(f"Uptime: {data['uptime']}")
+                print(f"Software Version: {data['softwareVersion']}")
 
                 # Work with parsers:
                 print()
@@ -41,24 +41,22 @@ async def main():
                 print()
                 print("ALL PROGRAMS")
                 for program in await controller.programs.all(include_inactive=True):
-                    print("Program #{0}: {1}".format(program["uid"], program["name"]))
+                    print(f"Program #{program['uid']}: {program['name']}")
 
                 print()
                 print("PROGRAM BY ID")
                 program_1 = await controller.programs.get(1)
-                print("Program 1's Start Time: {0}".format(program_1["startTime"]))
+                print(f"Program 1's Start Time: {program_1['startTime']}")
 
                 print()
                 print("NEXT RUN TIMES")
                 for program in await controller.programs.next():
-                    print(
-                        "Program #{0}: {1}".format(program["pid"], program["startTime"])
-                    )
+                    print(f"Program #{program['pid']}: {program['startTime']}")
 
                 print()
                 print("RUNNING PROGRAMS")
                 for program in await controller.programs.running():
-                    print("Program #{0}".format(program["uid"]))
+                    print(f"Program #{program['uid']}")
 
                 print()
                 print("STARTING PROGRAM #1")
@@ -74,51 +72,47 @@ async def main():
                 print()
                 print("PROVISIONING INFO")
                 name = await controller.provisioning.device_name
-                print("Device Name: {0}".format(name))
+                print(f"Device Name: {name}")
                 settings = await controller.provisioning.settings()
-                print("Database Path: {0}".format(settings["system"]["databasePath"]))
-                print("Station Name: {0}".format(settings["location"]["stationName"]))
+                print(f"Database Path: {settings['system']['databasePath']}")
+                print(f"Station Name: {settings['location']['stationName']}")
                 wifi = await controller.provisioning.wifi()
-                print("IP Address: {0}".format(wifi["ipAddress"]))
+                print(f"IP Address: {wifi['ipAddress']}")
 
                 # Work with restrictions:
                 print()
                 print("RESTRICTIONS")
                 current = await controller.restrictions.current()
-                print("Rain Delay Restrictions: {0}".format(current["rainDelay"]))
+                print(f"Rain Delay Restrictions: {current['rainDelay']}")
                 universal = await controller.restrictions.universal()
-                print("Freeze Protect: {0}".format(universal["freezeProtectEnabled"]))
+                print(f"Freeze Protect: {universal['freezeProtectEnabled']}")
                 print("Hourly Restrictions:")
                 for restriction in await controller.restrictions.hourly():
                     print(restriction["name"])
                 raindelay = await controller.restrictions.raindelay()
-                print("Rain Delay Counter: {0}".format(raindelay["delayCounter"]))
+                print(f"Rain Delay Counter: {raindelay['delayCounter']}")
 
                 # Work with restrictions:
                 print()
                 print("STATS")
                 today = await controller.stats.on_date(date=datetime.date.today())
-                print("Min for Today: {0}".format(today["mint"]))
+                print(f"Min for Today: {today['mint']}")
                 for day in await controller.stats.upcoming(details=True):
-                    print("{0} Min: {1}".format(day["day"], day["mint"]))
+                    print(f"{day['day']} Min: {day['mint']}")
 
                 # Work with watering:
                 print()
                 print("WATERING")
                 for day in await controller.watering.log(date=datetime.date.today()):
-                    print("{0} duration: {1}".format(day["date"], day["realDuration"]))
+                    print(f"{day['date']} duration: {day['realDuration']}")
                 queue = await controller.watering.queue()
-                print("Current Queue: {0}".format(queue))
+                print(f"Current Queue: {queue}")
 
                 print("Runs:")
                 for watering_run in await controller.watering.runs(
                     date=datetime.date.today()
                 ):
-                    print(
-                        "{0} ({1})".format(
-                            watering_run["dateTime"], watering_run["et0"]
-                        )
-                    )
+                    print(f"{watering_run['dateTime']} ({watering_run['et0']})")
 
                 print()
                 print("PAUSING ALL WATERING FOR 30 SECONDS")
@@ -138,20 +132,12 @@ async def main():
                 print()
                 print("ALL ACTIVE ZONES")
                 for zone in await controller.zones.all(details=True):
-                    print(
-                        "Zone #{0}: {1} (soil: {2})".format(
-                            zone["uid"], zone["name"], zone["soil"]
-                        )
-                    )
+                    print(f"Zone #{zone['uid']}: {zone['name']} (soil: {zone['soil']})")
 
                 print()
                 print("ZONE BY ID")
                 zone_1 = await controller.zones.get(1, details=True)
-                print(
-                    "Zone 1's Name: {0} (soil: {1})".format(
-                        zone_1["name"], zone_1["soil"]
-                    )
-                )
+                print(f"Zone 1's Name: {zone_1['name']} (soil: {zone_1['soil']})")
 
                 print()
                 print("STARTING ZONE #1 FOR 3 SECONDS")

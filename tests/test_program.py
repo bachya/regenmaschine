@@ -21,13 +21,13 @@ async def test_program_enable_disable(
     """Test enabling a program."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1",
             "post",
             aresponses.Response(text=json.dumps(program_post_json), status=200),
         )
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1",
             "post",
             aresponses.Response(text=json.dumps(program_post_json), status=200),
@@ -52,7 +52,7 @@ async def test_program_get(
     """Test getting all programs."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program",
             "get",
             aresponses.Response(text=json.dumps(program_json), status=200),
@@ -75,7 +75,7 @@ async def test_program_get_active(
     """Test getting only active programs."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program",
             "get",
             aresponses.Response(text=json.dumps(program_json), status=200),
@@ -98,7 +98,7 @@ async def test_program_get_by_id(
     """Test getting a program by its ID."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1",
             "get",
             aresponses.Response(text=json.dumps(program_id_json), status=200),
@@ -125,7 +125,7 @@ async def test_program_next_run(
     """Test getting the next run of a program."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/nextrun",
             "get",
             aresponses.Response(text=json.dumps(program_nextrun_json), status=200),
@@ -147,7 +147,7 @@ async def test_program_running(
     """Test getting all running programs."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/watering/program",
             "get",
             aresponses.Response(text=json.dumps(watering_program_json), status=200),
@@ -170,13 +170,13 @@ async def test_program_start_and_stop(
     """Test starting and stopping a program."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1/start",
             "post",
             aresponses.Response(text=json.dumps(program_start_stop_json), status=200),
         )
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1/stop",
             "post",
             aresponses.Response(text=json.dumps(program_start_stop_json), status=200),

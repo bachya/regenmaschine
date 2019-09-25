@@ -25,19 +25,19 @@ async def test_endpoints(
     """Test getting all provisioning data."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/provision",
             "get",
             aresponses.Response(text=json.dumps(provision_json), status=200),
         )
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/provision/name",
             "get",
             aresponses.Response(text=json.dumps(provision_name_json), status=200),
         )
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/provision/wifi",
             "get",
             aresponses.Response(text=json.dumps(provision_wifi_json), status=200),

@@ -21,7 +21,7 @@ async def test_parsers_current(
     """Test getting all current parsers."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/parser",
             "get",
             aresponses.Response(text=json.dumps(parser_json), status=200),

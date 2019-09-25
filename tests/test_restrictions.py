@@ -21,7 +21,7 @@ async def test_restrictions_current(
     """Test getting any current restrictions."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/restrictions/currently",
             "get",
             aresponses.Response(
@@ -45,7 +45,7 @@ async def test_restrictions_global(
     """Test getting any global restrictions."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/restrictions/global",
             "get",
             aresponses.Response(text=json.dumps(restrictions_global_json), status=200),
@@ -67,7 +67,7 @@ async def test_restrictions_hourly(
     """Test getting any hourly restrictions."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/restrictions/hourly",
             "get",
             aresponses.Response(text=json.dumps(restrictions_hourly_json), status=200),
@@ -89,7 +89,7 @@ async def test_restrictions_raindelay(
     """Test getting any rain delay-related restrictions."""
     async with authenticated_local_client:
         authenticated_local_client.add(
-            "{0}:{1}".format(TEST_HOST, TEST_PORT),
+            f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/restrictions/raindelay",
             "get",
             aresponses.Response(
