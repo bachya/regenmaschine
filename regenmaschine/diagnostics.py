@@ -7,7 +7,7 @@ class Diagnostics:
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
-        self._request = request
+        self._request: Callable[..., Awaitable[dict]] = request
 
     async def current(self) -> dict:
         """Get current diagnostics."""
@@ -15,5 +15,5 @@ class Diagnostics:
 
     async def log(self) -> dict:
         """Get the device log."""
-        data = await self._request("get", "diag/log")
+        data: dict = await self._request("get", "diag/log")
         return data["log"]

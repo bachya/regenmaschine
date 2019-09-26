@@ -7,9 +7,9 @@ class Parser:  # pylint: disable=too-few-public-methods
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
-        self._request = request
+        self._request: Callable[..., Awaitable[dict]] = request
 
     async def current(self) -> dict:
         """Get current diagnostics."""
-        data = await self._request("get", "parser")
+        data: dict = await self._request("get", "parser")
         return data["parsers"]
