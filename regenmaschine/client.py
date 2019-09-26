@@ -2,7 +2,7 @@
 import asyncio
 from datetime import datetime
 import logging
-from typing import Dict
+from typing import Dict, Optional
 
 import async_timeout
 from aiohttp import ClientSession
@@ -11,10 +11,10 @@ from aiohttp.client_exceptions import ClientError
 from regenmaschine.controller import Controller, LocalController, RemoteController
 from regenmaschine.errors import RequestError, TokenExpiredError, raise_remote_error
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER: logging.Logger = logging.getLogger(__name__)
 
-DEFAULT_LOCAL_PORT = 8080
-DEFAULT_TIMEOUT = 10
+DEFAULT_LOCAL_PORT: int = 8080
+DEFAULT_TIMEOUT: int = 10
 
 
 class Client:  # pylint: disable=too-few-public-methods
@@ -24,9 +24,9 @@ class Client:  # pylint: disable=too-few-public-methods
         self, websession: ClientSession, request_timeout: int = DEFAULT_TIMEOUT
     ) -> None:
         """Initialize."""
-        self._websession = websession
-        self.controllers = {}  # type: Dict[str, Controller]
-        self.request_timeout = request_timeout
+        self._websession: ClientSession = websession
+        self.controllers: Dict[str, Controller] = {}
+        self.request_timeout: int = request_timeout
 
     async def load_local(  # pylint: disable=too-many-arguments
         self,
@@ -37,14 +37,14 @@ class Client:  # pylint: disable=too-few-public-methods
         skip_existing: bool = True,
     ) -> None:
         """Create a local client."""
-        controller = LocalController(self._request, host, port, ssl)
+        controller: LocalController = LocalController(self._request, host, port, ssl)
         await controller.login(password)
 
-        wifi_data = await controller.provisioning.wifi()
+        wifi_data: dict = await controller.provisioning.wifi()
         if skip_existing and wifi_data["macAddress"] in self.controllers:
             return
 
-        version_data = await controller.api.versions()
+        version_data: dict = await controller.api.versions()
         controller.api_version = version_data["apiVer"]
         controller.hardware_version = version_data["hwVer"]
         controller.mac = wifi_data["macAddress"]
@@ -57,15 +57,15 @@ class Client:  # pylint: disable=too-few-public-methods
         self, email: str, password: str, skip_existing: bool = True
     ) -> None:
         """Create a remote client."""
-        auth_resp = await self._request(
+        auth_resp: dict = await self._request(
             "post",
             "https://my.rainmachine.com/login/auth",
             json={"user": {"email": email, "pwd": password, "remember": 1}},
         )
 
-        access_token = auth_resp["access_token"]
+        access_token: str = auth_resp["access_token"]
 
-        sprinklers_resp = await self._request(
+        sprinklers_resp: dict = await self._request(
             "post",
             "https://my.rainmachine.com/devices/get-sprinklers",
             access_token=access_token,
@@ -76,10 +76,10 @@ class Client:  # pylint: disable=too-few-public-methods
             if skip_existing and sprinkler["mac"] in self.controllers:
                 continue
 
-            controller = RemoteController(self._request)
+            controller: RemoteController = RemoteController(self._request)
             await controller.login(access_token, sprinkler["sprinklerId"], password)
 
-            version_data = await controller.api.versions()
+            version_data: dict = await controller.api.versions()
             controller.api_version = version_data["apiVer"]
             controller.hardware_version = version_data["hwVer"]
             controller.mac = sprinkler["mac"]
@@ -93,11 +93,11 @@ class Client:  # pylint: disable=too-few-public-methods
         method: str,
         url: str,
         *,
-        access_token: str = None,
-        access_token_expiration: datetime = None,
-        headers: dict = None,
-        params: dict = None,
-        json: dict = None,
+        access_token: Optional[str] = None,
+        access_token_expiration: Optional[datetime] = None,
+        headers: Optional[dict] = None,
+        params: Optional[dict] = None,
+        json: Optional[dict] = None,
         ssl: bool = True,
     ) -> dict:
         """Make a request against the RainMachine device."""
@@ -119,7 +119,7 @@ class Client:  # pylint: disable=too-few-public-methods
                     method, url, headers=headers, params=params, json=json, ssl=ssl
                 ) as resp:
                     resp.raise_for_status()
-                    data = await resp.json(content_type=None)
+                    data: dict = await resp.json(content_type=None)
                     _raise_for_remote_status(url, data)
         except ClientError as err:
             _LOGGER.debug("Original request error: %s (%s)", err, type(err))
@@ -152,6 +152,6 @@ async def login(
 ) -> Controller:
     """Authenticate against a RainMachine device."""
     _LOGGER.warning("regenmaschine.client.login() is deprecated; see documentation!")
-    client = Client(websession, request_timeout)
+    client: Client = Client(websession, request_timeout)
     await client.load_local(host, password, port, ssl)
     return next(iter(client.controllers.values()))

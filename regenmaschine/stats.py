@@ -8,7 +8,7 @@ class Stats:
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
-        self._request = request
+        self._request: Callable[..., Awaitable[dict]] = request
 
     async def on_date(self, date: datetime.date) -> dict:
         """Get statistics for a certain date."""
@@ -16,10 +16,10 @@ class Stats:
 
     async def upcoming(self, details: bool = False) -> list:
         """Return watering statistics for the next 6 days."""
-        endpoint = "dailystats"
-        key = "DailyStats"
+        endpoint: str = "dailystats"
+        key: str = "DailyStats"
         if details:
             endpoint += "/details"
             key = "DailyStatsDetails"
-        data = await self._request("get", endpoint)
+        data: dict = await self._request("get", endpoint)
         return data[key]

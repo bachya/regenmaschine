@@ -7,7 +7,7 @@ class Restriction:
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
-        self._request = request
+        self._request: Callable[..., Awaitable[dict]] = request
 
     async def current(self) -> dict:
         """Get currently active restrictions."""
@@ -15,7 +15,7 @@ class Restriction:
 
     async def hourly(self) -> list:
         """Get a list of restrictions that are active over the next hour."""
-        data = await self._request("get", "restrictions/hourly")
+        data: dict = await self._request("get", "restrictions/hourly")
         return data["hourlyRestrictions"]
 
     async def raindelay(self) -> dict:
