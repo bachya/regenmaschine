@@ -20,6 +20,7 @@ LAN or remotely via the RainMachine™ cloud.
 
 * Python 3.6
 * Python 3.7
+* Python 3.8
 
 # Installation
 
