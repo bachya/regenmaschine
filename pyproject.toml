@@ -31,6 +31,7 @@ pydocstyle = "^4.0.1"
 pylint = "^2.4.3"
 pytest-aiohttp = "^0.3.0"
 pytest-cov = "^2.8.1"
+pytest-mock = "^1.11.2"
 
 [tool.tox]
 legacy_tox_ini = """
