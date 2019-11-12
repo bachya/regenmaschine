@@ -330,7 +330,7 @@ asyncio.get_event_loop().run_until_complete(main())
   or [initiate a discussion on one](https://github.com/bachya/regenmaschine/issues/new).
 2. [Fork the repository](https://github.com/bachya/regenmaschine/fork).
 3. Install the dev environment: `make init`.
-4. Enter the virtual environment: `pipenv shell`
+4. Enter the virtual environment: `source .venv/bin/activate`
 5. Code your new feature or bug fix.
 6. Write a test that covers your new functionality.
 7. Update `README.md` with any new documentation.

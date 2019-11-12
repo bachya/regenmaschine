@@ -1,7 +1,2 @@
 [run]
 source = regenmaschine
-
-omit =
-    regenmaschine/__version__.py
-    regenmaschine/udp.py
-
