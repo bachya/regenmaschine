@@ -1,6 +1,6 @@
 # 💧 Regenmaschine: A Simple Python Library for RainMachine™
 
-[![Travis CI](https://travis-ci.org/bachya/regenmaschine.svg?branch=master)](https://travis-ci.org/bachya/regenmaschine)
+[![CI](https://github.com/bachya/regenmaschine/workflows/CI/badge.svg)](https://github.com/bachya/regenmaschine/actions)
 [![PyPi](https://img.shields.io/pypi/v/regenmaschine.svg)](https://pypi.python.org/pypi/regenmaschine)
 [![Version](https://img.shields.io/pypi/pyversions/regenmaschine.svg)](https://pypi.python.org/pypi/regenmaschine)
 [![License](https://img.shields.io/pypi/l/regenmaschine.svg)](https://github.com/bachya/regenmaschine/blob/master/LICENSE)
