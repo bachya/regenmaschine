@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "regenmaschine"
-version = "1.5.2"
+version = "1.5.3"
 description = "A simple API for RainMachine sprinkler controllers"
 readme = "README.md"
 authors = ["Aaron Bach <bachya1208@gmail.com>"]
