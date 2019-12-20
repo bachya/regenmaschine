@@ -4,9 +4,9 @@ from datetime import datetime
 import logging
 from typing import Dict, Optional
 
-import async_timeout
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
+import async_timeout
 
 from regenmaschine.controller import Controller, LocalController, RemoteController
 from regenmaschine.errors import RequestError, TokenExpiredError, raise_remote_error

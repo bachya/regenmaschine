@@ -8,7 +8,7 @@ import pytest
 from regenmaschine import login
 
 from tests.const import TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import authenticated_local_client, auth_login_json
+from tests.fixtures import auth_login_json, authenticated_local_client
 from tests.fixtures.api import apiver_json
 from tests.fixtures.provision import *
 
