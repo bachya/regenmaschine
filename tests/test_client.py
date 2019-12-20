@@ -1,8 +1,8 @@
 """Define tests for the client object."""
 # pylint: disable=redefined-outer-name,unused-import
 import asyncio
-import json
 from datetime import datetime, timedelta
+import json
 
 import aiohttp
 import asynctest
@@ -24,13 +24,13 @@ from tests.const import (
     TEST_SW_VERSION,
 )
 from tests.fixtures import (
+    auth_login_json,
     authenticated_local_client,
     authenticated_remote_client,
-    auth_login_json,
     remote_auth_login_1_json,
     remote_auth_login_2_json,
-    remote_error_known,
     remote_error_http_body,
+    remote_error_known,
     remote_error_unknown,
     remote_sprinklers_json,
     unauthenticated_json,
