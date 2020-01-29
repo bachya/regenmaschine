@@ -4,7 +4,7 @@ from datetime import date
 import aiohttp
 import pytest
 
-from regenmaschine import login
+from regenmaschine import Client
 
 from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
@@ -34,12 +34,12 @@ async def test_stats(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.stats.on_date(today)
+            data = await controller.stats.on_date(today)
             assert data["percentage"] == 100
 
-            data = await client.stats.upcoming(details=True)
+            data = await controller.stats.upcoming(details=True)
             assert len(data[0]["programs"]) == 4

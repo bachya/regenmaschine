@@ -4,7 +4,7 @@ import datetime
 import aiohttp
 import pytest
 
-from regenmaschine import login
+from regenmaschine import Client
 
 from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
@@ -26,11 +26,11 @@ async def test_watering_log_details(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.watering.log(today, 2, details=True)
+            data = await controller.watering.log(today, 2, details=True)
             assert len(data) == 2
 
 
@@ -56,14 +56,14 @@ async def test_watering_pause(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.watering.pause_all(30)
+            data = await controller.watering.pause_all(30)
             assert data["message"] == "OK"
 
-            data = await client.watering.unpause_all()
+            data = await controller.watering.unpause_all()
             assert data["message"] == "OK"
 
 
@@ -81,11 +81,11 @@ async def test_watering_queue(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.watering.queue()
+            data = await controller.watering.queue()
             assert not data
 
 
@@ -106,11 +106,11 @@ async def test_watering_past(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.watering.runs(today, 2)
+            data = await controller.watering.runs(today, 2)
             assert len(data) == 8
 
 
@@ -128,9 +128,9 @@ async def test_watering_stop(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.watering.stop_all()
+            data = await controller.watering.stop_all()
             assert data["message"] == "OK"

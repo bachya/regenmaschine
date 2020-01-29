@@ -139,19 +139,3 @@ def _raise_for_remote_status(url: str, data: dict) -> None:
         raise RequestError(
             f"Error requesting data from {url}: {data['statusCode']} {data['message']}"
         )
-
-
-async def login(
-    host: str,
-    password: str,
-    websession: ClientSession,
-    *,
-    port: int = 8080,
-    ssl: bool = True,
-    request_timeout: int = DEFAULT_TIMEOUT,
-) -> Controller:
-    """Authenticate against a RainMachine device."""
-    _LOGGER.warning("regenmaschine.client.login() is deprecated; see documentation!")
-    client: Client = Client(websession, request_timeout)
-    await client.load_local(host, password, port, ssl)
-    return next(iter(client.controllers.values()))

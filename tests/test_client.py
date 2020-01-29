@@ -7,7 +7,7 @@ import aiohttp
 import asynctest
 import pytest
 
-from regenmaschine import Client, login
+from regenmaschine import Client
 from regenmaschine.errors import RequestError, TokenExpiredError
 
 from .common import (
@@ -30,16 +30,16 @@ async def test_legacy_login(authenticated_local_client):
     """Test loading a local client through the legacy method."""
     async with authenticated_local_client:
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            assert client._access_token == TEST_ACCESS_TOKEN
-            assert client.api_version == TEST_API_VERSION
-            assert client.hardware_version == TEST_HW_VERSION
-            assert client.mac == TEST_MAC
-            assert client.name == TEST_NAME
-            assert client.software_version == TEST_SW_VERSION
+            assert controller._access_token == TEST_ACCESS_TOKEN
+            assert controller.api_version == TEST_API_VERSION
+            assert controller.hardware_version == TEST_HW_VERSION
+            assert controller.mac == TEST_MAC
+            assert controller.name == TEST_NAME
+            assert controller.software_version == TEST_SW_VERSION
 
 
 @pytest.mark.asyncio
@@ -231,15 +231,12 @@ async def test_remote_error_unknown(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_request_timeout(authenticated_local_client, mocker):
+async def test_request_timeout(authenticated_local_client):
     """Test whether the client properly raises an error on timeout."""
 
     async def long_running_login(*args, **kwargs):  # pylint: disable=unused-argument
         """Define a method that takes 0.5 seconds to execute."""
         await asyncio.sleep(0.5)
-
-    mock_login = mocker.patch("regenmaschine.login")
-    mock_login.return_value = long_running_login
 
     with asynctest.mock.patch.object(
         aiohttp.ClientResponse, "json", long_running_login
@@ -247,13 +244,9 @@ async def test_request_timeout(authenticated_local_client, mocker):
         async with authenticated_local_client:
             async with aiohttp.ClientSession() as websession:
                 with pytest.raises(RequestError):
-                    await login(
-                        TEST_HOST,
-                        TEST_PASSWORD,
-                        websession,
-                        port=TEST_PORT,
-                        ssl=False,
-                        request_timeout=0.1,
+                    client = Client(websession, request_timeout=0.1)
+                    await client.load_local(
+                        TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False
                     )
 
 
@@ -263,9 +256,13 @@ async def test_token_expired_exception(authenticated_local_client):
     async with authenticated_local_client:
         with pytest.raises(TokenExpiredError):
             async with aiohttp.ClientSession() as websession:
-                client = await login(
-                    TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
+                client = Client(websession)
+                await client.load_local(
+                    TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False
                 )
+                controller = next(iter(client.controllers.values()))
 
-                client._access_token_expiration = datetime.now() - timedelta(hours=1)
-                await client._request("get", "random/endpoint")
+                controller._access_token_expiration = datetime.now() - timedelta(
+                    hours=1
+                )
+                await controller._request("get", "random/endpoint")

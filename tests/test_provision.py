@@ -2,7 +2,7 @@
 import aiohttp
 import pytest
 
-from regenmaschine import login
+from regenmaschine import Client
 
 from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
@@ -37,13 +37,13 @@ async def test_endpoints(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            name = await client.provisioning.device_name
+            name = await controller.provisioning.device_name
             assert name == "My House"
 
-            data = await client.provisioning.settings()
+            data = await controller.provisioning.settings()
             assert data["system"]["databasePath"] == "/rainmachine-app/DB/Default"
             assert data["location"]["stationName"] == "MY STATION"

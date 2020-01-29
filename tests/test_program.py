@@ -2,7 +2,7 @@
 import aiohttp
 import pytest
 
-from regenmaschine import login
+from regenmaschine import Client
 
 from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
@@ -29,14 +29,14 @@ async def test_program_enable_disable(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            resp = await client.programs.enable(1)
+            resp = await controller.programs.enable(1)
             assert resp["message"] == "OK"
 
-            resp = await client.programs.disable(1)
+            resp = await controller.programs.disable(1)
             assert resp["message"] == "OK"
 
 
@@ -52,11 +52,11 @@ async def test_program_get(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.programs.all(include_inactive=True)
+            data = await controller.programs.all(include_inactive=True)
             assert len(data) == 2
             assert data[0]["name"] == "Morning"
 
@@ -73,11 +73,11 @@ async def test_program_get_active(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.programs.all()
+            data = await controller.programs.all()
             assert len(data) == 1
             assert data[0]["name"] == "Morning"
 
@@ -96,11 +96,11 @@ async def test_program_get_by_id(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.programs.get(1)
+            data = await controller.programs.get(1)
             assert data["name"] == "Morning"
 
 
@@ -118,11 +118,11 @@ async def test_program_next_run(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.programs.next()
+            data = await controller.programs.next()
             assert len(data) == 2
 
 
@@ -140,11 +140,11 @@ async def test_program_running(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.programs.running()
+            data = await controller.programs.running()
             assert len(data) == 1
             assert data[0]["name"] == "Evening"
 
@@ -171,12 +171,12 @@ async def test_program_start_and_stop(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.programs.start(1)
+            data = await controller.programs.start(1)
             assert data["message"] == "OK"
 
-            data = await client.programs.stop(1)
+            data = await controller.programs.stop(1)
             assert data["message"] == "OK"
