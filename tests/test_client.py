@@ -1,8 +1,7 @@
 """Define tests for the client object."""
-# pylint: disable=redefined-outer-name,unused-import
+# pylint: disable=protected-access
 import asyncio
 from datetime import datetime, timedelta
-import json
 
 import aiohttp
 import asynctest
@@ -11,7 +10,7 @@ import pytest
 from regenmaschine import Client, login
 from regenmaschine.errors import RequestError, TokenExpiredError
 
-from tests.const import (
+from .common import (
     TEST_ACCESS_TOKEN,
     TEST_API_VERSION,
     TEST_EMAIL,
@@ -22,28 +21,15 @@ from tests.const import (
     TEST_PASSWORD,
     TEST_PORT,
     TEST_SW_VERSION,
+    load_fixture,
 )
-from tests.fixtures import (
-    auth_login_json,
-    authenticated_local_client,
-    authenticated_remote_client,
-    remote_auth_login_1_json,
-    remote_auth_login_2_json,
-    remote_error_http_body,
-    remote_error_known,
-    remote_error_unknown,
-    remote_sprinklers_json,
-    unauthenticated_json,
-)
-from tests.fixtures.api import apiver_json
-from tests.fixtures.provision import provision_name_json, provision_wifi_json
 
 
 @pytest.mark.asyncio
-async def test_legacy_login(authenticated_local_client, event_loop):
+async def test_legacy_login(authenticated_local_client):
     """Test loading a local client through the legacy method."""
     async with authenticated_local_client:
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )
@@ -57,10 +43,10 @@ async def test_legacy_login(authenticated_local_client, event_loop):
 
 
 @pytest.mark.asyncio
-async def test_load_local(authenticated_local_client, event_loop):
+async def test_load_local(authenticated_local_client):
     """Test loading a local client."""
     async with authenticated_local_client:
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = Client(websession)
             await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, False)
 
@@ -76,29 +62,25 @@ async def test_load_local(authenticated_local_client, event_loop):
 
 
 @pytest.mark.asyncio
-async def test_load_local_skip(
-    aresponses,
-    auth_login_json,
-    provision_wifi_json,
-    authenticated_local_client,
-    event_loop,
-):
+async def test_load_local_skip(aresponses, authenticated_local_client):
     """Test skipping the loading of a local client if it's already loaded."""
     authenticated_local_client.add(
         f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/auth/login",
         "post",
-        aresponses.Response(text=json.dumps(auth_login_json), status=200),
+        aresponses.Response(text=load_fixture("auth_login_response.json"), status=200),
     )
     authenticated_local_client.add(
         f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/provision/wifi",
         "get",
-        aresponses.Response(text=json.dumps(provision_wifi_json), status=200),
+        aresponses.Response(
+            text=load_fixture("provision_wifi_response.json"), status=200
+        ),
     )
 
     async with authenticated_local_client:
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = Client(websession)
             await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, True)
             controller = client.controllers[TEST_MAC]
@@ -109,17 +91,19 @@ async def test_load_local_skip(
 
 
 @pytest.mark.asyncio
-async def test_load_local_failure(aresponses, unauthenticated_json, event_loop):
+async def test_load_local_failure(aresponses):
     """Test loading a local client and receiving a fail response."""
     aresponses.add(
         f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/auth/login",
         "post",
-        aresponses.Response(text=json.dumps(unauthenticated_json), status=401),
+        aresponses.Response(
+            text=load_fixture("unauthenticated_response.json"), status=401
+        ),
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = Client(websession)
             await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, False)
 
@@ -144,29 +128,27 @@ async def test_load_remote(authenticated_remote_client, event_loop):
 
 
 @pytest.mark.asyncio
-async def test_load_remote_skip(
-    aresponses,
-    authenticated_remote_client,
-    remote_auth_login_1_json,
-    remote_sprinklers_json,
-    event_loop,
-):
+async def test_load_remote_skip(aresponses, authenticated_remote_client):
     """Test skipping the loading of a remote client if it's already loaded."""
     authenticated_remote_client.add(
         "my.rainmachine.com",
         "/login/auth",
         "post",
-        aresponses.Response(text=json.dumps(remote_auth_login_1_json), status=200),
+        aresponses.Response(
+            text=load_fixture("remote_auth_login_1_response.json"), status=200
+        ),
     )
     authenticated_remote_client.add(
         "my.rainmachine.com",
         "/devices/get-sprinklers",
         "post",
-        aresponses.Response(text=json.dumps(remote_sprinklers_json), status=200),
+        aresponses.Response(
+            text=load_fixture("remote_sprinklers_response.json"), status=200
+        ),
     )
 
     async with authenticated_remote_client:
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = Client(websession)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD, True)
             controller = client.controllers[TEST_MAC]
@@ -177,74 +159,82 @@ async def test_load_remote_skip(
 
 
 @pytest.mark.asyncio
-async def test_load_remote_failure(aresponses, unauthenticated_json, event_loop):
+async def test_load_remote_failure(aresponses):
     """Test loading a remote client and receiving a fail response."""
     aresponses.add(
         "my.rainmachine.com",
         "/login/auth",
         "post",
-        aresponses.Response(text=json.dumps(unauthenticated_json), status=401),
+        aresponses.Response(
+            text=load_fixture("unauthenticated_response.json"), status=401
+        ),
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = Client(websession)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
 
 
 @pytest.mark.asyncio
-async def test_remote_error_known(aresponses, event_loop, remote_error_known):
+async def test_remote_error_known(aresponses):
     """Test that remote error handling works."""
     aresponses.add(
         "my.rainmachine.com",
         "/login/auth",
         "post",
-        aresponses.Response(text=json.dumps(remote_error_known), status=200),
+        aresponses.Response(
+            text=load_fixture("remote_error_known_response.json"), status=200
+        ),
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = Client(websession)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
 
 
 @pytest.mark.asyncio
-async def test_remote_error_http_body(aresponses, event_loop, remote_error_http_body):
+async def test_remote_error_http_body(aresponses):
     """Test that remote error handling works."""
     aresponses.add(
         "my.rainmachine.com",
         "/login/auth",
         "post",
-        aresponses.Response(text=json.dumps(remote_error_http_body), status=200),
+        aresponses.Response(
+            text=load_fixture("remote_error_http_body_response.json"), status=200
+        ),
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = Client(websession)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
 
 
 @pytest.mark.asyncio
-async def test_remote_error_unknown(aresponses, event_loop, remote_error_unknown):
+async def test_remote_error_unknown(aresponses):
     """Test that remote error handling works."""
     aresponses.add(
         "my.rainmachine.com",
         "/login/auth",
         "post",
-        aresponses.Response(text=json.dumps(remote_error_unknown), status=200),
+        aresponses.Response(
+            text=load_fixture("remote_error_unknown_response.json"), status=200
+        ),
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = Client(websession)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
 
 
 @pytest.mark.asyncio
-async def test_request_timeout(authenticated_local_client, event_loop, mocker):
+async def test_request_timeout(authenticated_local_client, mocker):
     """Test whether the client properly raises an error on timeout."""
 
-    async def long_running_login(*args, **kwargs):
+    async def long_running_login(*args, **kwargs):  # pylint: disable=unused-argument
         """Define a method that takes 0.5 seconds to execute."""
         await asyncio.sleep(0.5)
 
@@ -255,7 +245,7 @@ async def test_request_timeout(authenticated_local_client, event_loop, mocker):
         aiohttp.ClientResponse, "json", long_running_login
     ):
         async with authenticated_local_client:
-            async with aiohttp.ClientSession(loop=event_loop) as websession:
+            async with aiohttp.ClientSession() as websession:
                 with pytest.raises(RequestError):
                     await login(
                         TEST_HOST,
@@ -268,11 +258,11 @@ async def test_request_timeout(authenticated_local_client, event_loop, mocker):
 
 
 @pytest.mark.asyncio
-async def test_token_expired_exception(authenticated_local_client, event_loop):
+async def test_token_expired_exception(authenticated_local_client):
     """Test that the appropriate error is thrown when a token expires."""
     async with authenticated_local_client:
         with pytest.raises(TokenExpiredError):
-            async with aiohttp.ClientSession(loop=event_loop) as websession:
+            async with aiohttp.ClientSession() as websession:
                 client = await login(
                     TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
                 )

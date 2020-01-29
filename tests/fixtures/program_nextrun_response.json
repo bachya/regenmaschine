@@ -1,0 +1,12 @@
+{
+  "nextRuns": [
+    {
+      "pid": 1,
+      "startTime": "06:00"
+    },
+    {
+      "pid": 2,
+      "startTime": "22:00"
+    }
+  ]
+}

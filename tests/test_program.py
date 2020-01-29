@@ -1,39 +1,34 @@
 """Define tests for program endpoints."""
-# pylint: disable=redefined-outer-name,too-many-arguments
-import json
-
 import aiohttp
 import pytest
 
 from regenmaschine import login
 
-from tests.const import TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import auth_login_json, authenticated_local_client
-from tests.fixtures.api import apiver_json
-from tests.fixtures.program import *
-from tests.fixtures.provision import provision_name_json, provision_wifi_json
+from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_program_enable_disable(
-    aresponses, authenticated_local_client, event_loop, program_post_json
-):
+async def test_program_enable_disable(aresponses, authenticated_local_client):
     """Test enabling a program."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1",
             "post",
-            aresponses.Response(text=json.dumps(program_post_json), status=200),
+            aresponses.Response(
+                text=load_fixture("program_post_response.json"), status=200
+            ),
         )
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1",
             "post",
-            aresponses.Response(text=json.dumps(program_post_json), status=200),
+            aresponses.Response(
+                text=load_fixture("program_post_response.json"), status=200
+            ),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )
@@ -46,19 +41,17 @@ async def test_program_enable_disable(
 
 
 @pytest.mark.asyncio
-async def test_program_get(
-    aresponses, authenticated_local_client, event_loop, program_json
-):
+async def test_program_get(aresponses, authenticated_local_client):
     """Test getting all programs."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program",
             "get",
-            aresponses.Response(text=json.dumps(program_json), status=200),
+            aresponses.Response(text=load_fixture("program_response.json"), status=200),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )
@@ -69,19 +62,17 @@ async def test_program_get(
 
 
 @pytest.mark.asyncio
-async def test_program_get_active(
-    aresponses, authenticated_local_client, event_loop, program_json
-):
+async def test_program_get_active(aresponses, authenticated_local_client):
     """Test getting only active programs."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program",
             "get",
-            aresponses.Response(text=json.dumps(program_json), status=200),
+            aresponses.Response(text=load_fixture("program_response.json"), status=200),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )
@@ -92,19 +83,19 @@ async def test_program_get_active(
 
 
 @pytest.mark.asyncio
-async def test_program_get_by_id(
-    aresponses, authenticated_local_client, event_loop, program_id_json
-):
+async def test_program_get_by_id(aresponses, authenticated_local_client):
     """Test getting a program by its ID."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1",
             "get",
-            aresponses.Response(text=json.dumps(program_id_json), status=200),
+            aresponses.Response(
+                text=load_fixture("program_id_response.json"), status=200
+            ),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )
@@ -114,24 +105,19 @@ async def test_program_get_by_id(
 
 
 @pytest.mark.asyncio
-async def test_program_next_run(
-    aresponses,
-    authenticated_local_client,
-    event_loop,
-    program_nextrun_json,
-    program_start_stop_json,
-    watering_program_json,
-):
+async def test_program_next_run(aresponses, authenticated_local_client):
     """Test getting the next run of a program."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/nextrun",
             "get",
-            aresponses.Response(text=json.dumps(program_nextrun_json), status=200),
+            aresponses.Response(
+                text=load_fixture("program_nextrun_response.json"), status=200
+            ),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )
@@ -141,19 +127,19 @@ async def test_program_next_run(
 
 
 @pytest.mark.asyncio
-async def test_program_running(
-    aresponses, authenticated_local_client, event_loop, watering_program_json
-):
+async def test_program_running(aresponses, authenticated_local_client):
     """Test getting all running programs."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/watering/program",
             "get",
-            aresponses.Response(text=json.dumps(watering_program_json), status=200),
+            aresponses.Response(
+                text=load_fixture("watering_program_response.json"), status=200
+            ),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )
@@ -164,25 +150,27 @@ async def test_program_running(
 
 
 @pytest.mark.asyncio
-async def test_program_start_and_stop(
-    aresponses, authenticated_local_client, event_loop, program_start_stop_json
-):
+async def test_program_start_and_stop(aresponses, authenticated_local_client):
     """Test starting and stopping a program."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1/start",
             "post",
-            aresponses.Response(text=json.dumps(program_start_stop_json), status=200),
+            aresponses.Response(
+                text=load_fixture("program_start_stop_response.json"), status=200
+            ),
         )
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/program/1/stop",
             "post",
-            aresponses.Response(text=json.dumps(program_start_stop_json), status=200),
+            aresponses.Response(
+                text=load_fixture("program_start_stop_response.json"), status=200
+            ),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )

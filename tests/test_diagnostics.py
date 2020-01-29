@@ -1,35 +1,24 @@
 """Define tests for diagnostics endpoints."""
-# pylint: disable=redefined-outer-name
-
-import json
-
 import aiohttp
-import aresponses
 import pytest
 
 from regenmaschine import login
 
-from tests.const import TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import auth_login_json, authenticated_local_client
-from tests.fixtures.api import apiver_json
-from tests.fixtures.diagnostics import *
-from tests.fixtures.provision import provision_name_json, provision_wifi_json
+from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_diagnostics_current(
-    aresponses, authenticated_local_client, diag_json, event_loop
-):
+async def test_diagnostics_current(aresponses, authenticated_local_client):
     """Test retrieving current diagnostics."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/diag",
             "get",
-            aresponses.Response(text=json.dumps(diag_json), status=200),
+            aresponses.Response(text=load_fixture("diag_response.json"), status=200),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )
@@ -39,19 +28,19 @@ async def test_diagnostics_current(
 
 
 @pytest.mark.asyncio
-async def test_diagnostics_log(
-    aresponses, authenticated_local_client, diag_log_json, event_loop
-):
+async def test_diagnostics_log(aresponses, authenticated_local_client):
     """Test retrieving the entire diagnostics log."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/diag/log",
             "get",
-            aresponses.Response(text=json.dumps(diag_log_json), status=200),
+            aresponses.Response(
+                text=load_fixture("diag_log_response.json"), status=200
+            ),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )

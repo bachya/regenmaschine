@@ -1,33 +1,24 @@
 """Define tests for parser endpoints."""
-# pylint: disable=redefined-outer-name
-import json
-
 import aiohttp
 import pytest
 
 from regenmaschine import login
 
-from tests.const import TEST_ACCESS_TOKEN, TEST_HOST, TEST_PASSWORD, TEST_PORT
-from tests.fixtures import auth_login_json, authenticated_local_client
-from tests.fixtures.api import apiver_json
-from tests.fixtures.parser import *
-from tests.fixtures.provision import provision_name_json, provision_wifi_json
+from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_parsers_current(
-    aresponses, authenticated_local_client, event_loop, parser_json
-):
+async def test_parsers_current(aresponses, authenticated_local_client):
     """Test getting all current parsers."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/parser",
             "get",
-            aresponses.Response(text=json.dumps(parser_json), status=200),
+            aresponses.Response(text=load_fixture("parser_response.json"), status=200),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )

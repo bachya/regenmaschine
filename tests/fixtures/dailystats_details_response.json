@@ -1,0 +1,489 @@
+{
+  "DailyStatsDetails": [
+    {
+      "dayTimestamp": 1528092000,
+      "day": "2018-06-04",
+      "mint": 12.78,
+      "maxt": 33.33,
+      "icon": 2,
+      "programs": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        }
+      ],
+      "simulatedPrograms": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 2,
+              "scheduledWateringTime": 300,
+              "computedWateringTime": 300,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayTimestamp": 1528178400,
+      "day": "2018-06-05",
+      "mint": 13.89,
+      "maxt": 34.44,
+      "icon": 3,
+      "programs": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        }
+      ],
+      "simulatedPrograms": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 2,
+              "scheduledWateringTime": 300,
+              "computedWateringTime": 300,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayTimestamp": 1528264800,
+      "day": "2018-06-06",
+      "mint": 14.44,
+      "maxt": 32.78,
+      "icon": 3,
+      "programs": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        }
+      ],
+      "simulatedPrograms": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 2,
+              "scheduledWateringTime": 300,
+              "computedWateringTime": 300,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayTimestamp": 1528351200,
+      "day": "2018-06-07",
+      "mint": 13.89,
+      "maxt": 33.89,
+      "icon": 3,
+      "programs": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        }
+      ],
+      "simulatedPrograms": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 2,
+              "scheduledWateringTime": 300,
+              "computedWateringTime": 300,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayTimestamp": 1528437600,
+      "day": "2018-06-08",
+      "mint": 13.89,
+      "maxt": 34.44,
+      "icon": 3,
+      "programs": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        }
+      ],
+      "simulatedPrograms": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 2,
+              "scheduledWateringTime": 300,
+              "computedWateringTime": 300,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayTimestamp": 1528524000,
+      "day": "2018-06-09",
+      "mint": 14.44,
+      "maxt": 33.89,
+      "icon": 3,
+      "programs": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "zones": [
+            {
+              "id": 1,
+              "scheduledWateringTime": 1243,
+              "computedWateringTime": 1243,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            },
+            {
+              "id": 2,
+              "scheduledWateringTime": 2680,
+              "computedWateringTime": 2680,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100,
+              "wateringFlag": 0
+            }
+          ]
+        }
+      ],
+      "simulatedPrograms": [
+        {
+          "id": 1,
+          "zones": [
+            {
+              "id": 2,
+              "scheduledWateringTime": 300,
+              "computedWateringTime": 300,
+              "availableWater": 0,
+              "coefficient": 1,
+              "percentage": 100
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "dayTimestamp": 1528610400,
+      "day": "2018-06-10",
+      "mint": null,
+      "maxt": null,
+      "icon": null,
+      "programs": [],
+      "simulatedPrograms": []
+    }
+  ]
+}

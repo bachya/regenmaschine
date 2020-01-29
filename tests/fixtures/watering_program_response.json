@@ -1,0 +1,12 @@
+{
+  "programs": [
+    {
+      "uid": 2,
+      "name": "Evening",
+      "manual": false,
+      "userStartTime": "2018-06-02 22:00:00",
+      "realStartTime": "2018-06-02 22:00:02",
+      "status": 1
+    }
+  ]
+}
