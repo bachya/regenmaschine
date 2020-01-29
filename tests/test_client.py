@@ -220,7 +220,7 @@ async def test_remote_error_unknown(aresponses):
         "/login/auth",
         "post",
         aresponses.Response(
-            text=load_fixture("remote_error_known_response.json"), status=200
+            text=load_fixture("remote_error_unknown_response.json"), status=200
         ),
     )
 
