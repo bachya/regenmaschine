@@ -2,7 +2,7 @@
 import aiohttp
 import pytest
 
-from regenmaschine import login
+from regenmaschine import Client
 
 from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
@@ -21,11 +21,11 @@ async def test_api_versions(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.api.versions()
+            data = await controller.api.versions()
             assert data["apiVer"] == "4.5.0"
             assert data["hwVer"] == 3
             assert data["swVer"] == "4.0.925"

@@ -2,7 +2,7 @@
 import aiohttp
 import pytest
 
-from regenmaschine import login
+from regenmaschine import Client
 
 from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
@@ -29,14 +29,14 @@ async def test_zone_enable_disable(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            resp = await client.zones.enable(1)
+            resp = await controller.zones.enable(1)
             assert resp["message"] == "OK"
 
-            resp = await client.zones.disable(1)
+            resp = await controller.zones.disable(1)
             assert resp["message"] == "OK"
 
 
@@ -54,11 +54,11 @@ async def test_zone_get(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.zones.all(details=True, include_inactive=True)
+            data = await controller.zones.all(details=True, include_inactive=True)
             assert len(data) == 2
             assert data[0]["name"] == "Landscaping"
 
@@ -77,11 +77,11 @@ async def test_zone_get_active(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.zones.all(details=True)
+            data = await controller.zones.all(details=True)
             assert len(data) == 1
             assert data[0]["name"] == "Landscaping"
 
@@ -100,11 +100,11 @@ async def test_zone_get_by_id(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.zones.get(1, details=True)
+            data = await controller.zones.get(1, details=True)
             assert data["name"] == "Landscaping"
 
 
@@ -130,12 +130,12 @@ async def test_zone_start_stop(aresponses, authenticated_local_client):
         )
 
         async with aiohttp.ClientSession() as websession:
-            client = await login(
-                TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
-            )
+            client = Client(websession)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
 
-            data = await client.zones.start(1, 60)
+            data = await controller.zones.start(1, 60)
             assert data["message"] == "OK"
 
-            data = await client.zones.stop(1)
+            data = await controller.zones.stop(1)
             assert data["message"] == "OK"
