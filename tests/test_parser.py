@@ -1,5 +1,4 @@
 """Define tests for parser endpoints."""
-# pylint: disable=redefined-outer-name
 import aiohttp
 import pytest
 

@@ -1,5 +1,5 @@
 """Define tests for the client object."""
-# pylint: disable=protected-access,redefined-outer-name
+# pylint: disable=protected-access
 import asyncio
 from datetime import datetime, timedelta
 

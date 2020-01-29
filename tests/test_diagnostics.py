@@ -1,7 +1,5 @@
 """Define tests for diagnostics endpoints."""
-# pylint: disable=redefined-outer-name
 import aiohttp
-import aresponses
 import pytest
 
 from regenmaschine import login
