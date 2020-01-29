@@ -1,0 +1,13 @@
+{
+    "errorType": 0,
+    "sprinklers": [
+        {
+            "sprinklerId": "12345abcde",
+            "sprinklerUrl": "https://api.rainmachine.com/12345abcde/",
+            "mac": "ab:cd:ef:12:34:56",
+            "name": "My House",
+            "type": "SPK3",
+            "swVer": "4.0.974"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+  "macAddress": "ab:cd:ef:12:34:56",
+  "ssid": null,
+  "netmaskAddress": null,
+  "hasClientLink": false,
+  "mode": null,
+  "interface": "wlan0",
+  "lastWIFICheckTimestamp": 1525126177,
+  "ipAddress": "192.168.1.100"
+}

@@ -1,34 +1,26 @@
 """Define tests for api endpoints."""
-# pylint: disable=redefined-outer-name
-
-import json
-
 import aiohttp
-import aresponses
 import pytest
 
 from regenmaschine import login
 
-from .const import TEST_HOST, TEST_PASSWORD, TEST_PORT
-from .fixtures import auth_login_json, authenticated_local_client
-from .fixtures.api import apiver_json
-from .fixtures.provision import provision_name_json, provision_wifi_json
+from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_api_versions(
-    apiver_json, aresponses, authenticated_local_client, event_loop
-):
+async def test_api_versions(aresponses, authenticated_local_client):
     """Test getting API, hardware, and software versions."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/apiVer",
             "get",
-            aresponses.Response(text=json.dumps(apiver_json), status=200),
+            aresponses.Response(
+                text=load_fixture("api_version_response.json"), status=200
+            ),
         )
 
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
+        async with aiohttp.ClientSession() as websession:
             client = await login(
                 TEST_HOST, TEST_PASSWORD, websession, port=TEST_PORT, ssl=False
             )

@@ -1,0 +1,68 @@
+{
+  "pastValues": [
+    {
+      "pid": 3,
+      "dateTimestamp": 1528005600,
+      "dateTime": "2018-06-03 00:00:00",
+      "used": false,
+      "et0": 6.025417130938126,
+      "qpf": 0
+    },
+    {
+      "pid": 4,
+      "dateTimestamp": 1528005600,
+      "dateTime": "2018-06-03 00:00:00",
+      "used": false,
+      "et0": 6.025417130938126,
+      "qpf": 0
+    },
+    {
+      "pid": 3,
+      "dateTimestamp": 1528092000,
+      "dateTime": "2018-06-04 00:00:00",
+      "used": false,
+      "et0": 7.1343372845726805,
+      "qpf": 0
+    },
+    {
+      "pid": 4,
+      "dateTimestamp": 1528092000,
+      "dateTime": "2018-06-04 00:00:00",
+      "used": false,
+      "et0": 7.1343372845726805,
+      "qpf": 0
+    },
+    {
+      "pid": 1,
+      "dateTimestamp": 1528005600,
+      "dateTime": "2018-06-03 00:00:00",
+      "used": true,
+      "et0": 6.010685943453997,
+      "qpf": 0.13
+    },
+    {
+      "pid": 2,
+      "dateTimestamp": 1528005600,
+      "dateTime": "2018-06-03 00:00:00",
+      "used": true,
+      "et0": 5.612352387321412,
+      "qpf": 0
+    },
+    {
+      "pid": 1,
+      "dateTimestamp": 1528092000,
+      "dateTime": "2018-06-04 00:00:00",
+      "used": true,
+      "et0": 7.2596885196807355,
+      "qpf": 0
+    },
+    {
+      "pid": 2,
+      "dateTimestamp": 1528092000,
+      "dateTime": "2018-06-04 00:00:00",
+      "used": false,
+      "et0": 7.356361013751831,
+      "qpf": 0
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": 0,
+  "day": "2018-06-04",
+  "mint": 12.78,
+  "maxt": 33.33,
+  "icon": 2,
+  "percentage": 100,
+  "wateringFlag": 0,
+  "vibration": [
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100
+  ],
+  "simulatedPercentage": 100,
+  "simulatedVibration": [
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100,
+    100
+  ]
+}
