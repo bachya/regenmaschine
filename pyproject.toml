@@ -19,7 +19,7 @@ use_parentheses = true
 
 [tool.poetry]
 name = "regenmaschine"
-version = "2.0.1"
+version = "2.0.2"
 description = "A simple API for RainMachine sprinkler controllers"
 readme = "README.md"
 authors = ["Aaron Bach <bachya1208@gmail.com>"]
