@@ -231,7 +231,7 @@ async def test_remote_error_unknown(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_request_timeout(authenticated_local_client):
+async def test_request_timeout(authenticated_local_client):  # noqa: D202
     """Test whether the client properly raises an error on timeout."""
 
     async def long_running_login(*args, **kwargs):  # pylint: disable=unused-argument
