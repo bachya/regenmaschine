@@ -28,8 +28,8 @@ async def test_program_enable_disable(aresponses, authenticated_local_client):
             ),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
@@ -51,8 +51,8 @@ async def test_program_get(aresponses, authenticated_local_client):
             aresponses.Response(text=load_fixture("program_response.json"), status=200),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
@@ -72,8 +72,8 @@ async def test_program_get_active(aresponses, authenticated_local_client):
             aresponses.Response(text=load_fixture("program_response.json"), status=200),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
@@ -95,8 +95,8 @@ async def test_program_get_by_id(aresponses, authenticated_local_client):
             ),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
@@ -117,8 +117,8 @@ async def test_program_next_run(aresponses, authenticated_local_client):
             ),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
@@ -139,8 +139,8 @@ async def test_program_running(aresponses, authenticated_local_client):
             ),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
@@ -170,8 +170,8 @@ async def test_program_start_and_stop(aresponses, authenticated_local_client):
             ),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 

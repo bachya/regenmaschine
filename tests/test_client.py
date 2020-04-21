@@ -29,8 +29,8 @@ from .common import (
 async def test_legacy_login(authenticated_local_client):
     """Test loading a local client through the legacy method."""
     async with authenticated_local_client:
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
@@ -46,8 +46,8 @@ async def test_legacy_login(authenticated_local_client):
 async def test_load_local(authenticated_local_client):
     """Test loading a local client."""
     async with authenticated_local_client:
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, False)
 
             assert len(client.controllers) == 1
@@ -80,8 +80,8 @@ async def test_load_local_skip(aresponses, authenticated_local_client):
     )
 
     async with authenticated_local_client:
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, True)
             controller = client.controllers[TEST_MAC]
 
@@ -103,8 +103,8 @@ async def test_load_local_failure(aresponses):
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, False)
 
 
@@ -112,8 +112,8 @@ async def test_load_local_failure(aresponses):
 async def test_load_remote(authenticated_remote_client, event_loop):
     """Test loading a remote client."""
     async with authenticated_remote_client:
-        async with aiohttp.ClientSession(loop=event_loop) as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession(loop=event_loop) as session:
+            client = Client(session=session)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
 
             assert len(client.controllers) == 1
@@ -148,8 +148,8 @@ async def test_load_remote_skip(aresponses, authenticated_remote_client):
     )
 
     async with authenticated_remote_client:
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD, True)
             controller = client.controllers[TEST_MAC]
 
@@ -171,8 +171,8 @@ async def test_load_remote_failure(aresponses):
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
 
 
@@ -189,8 +189,8 @@ async def test_remote_error_known(aresponses):
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
 
 
@@ -207,8 +207,8 @@ async def test_remote_error_http_body(aresponses):
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
 
 
@@ -225,8 +225,8 @@ async def test_remote_error_unknown(aresponses):
     )
 
     with pytest.raises(RequestError):
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
 
 
@@ -242,9 +242,9 @@ async def test_request_timeout(authenticated_local_client):  # noqa: D202
         aiohttp.ClientResponse, "json", long_running_login
     ):
         async with authenticated_local_client:
-            async with aiohttp.ClientSession() as websession:
+            async with aiohttp.ClientSession() as session:
                 with pytest.raises(RequestError):
-                    client = Client(websession, request_timeout=0.1)
+                    client = Client(session=session, request_timeout=0.1)
                     await client.load_local(
                         TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False
                     )
@@ -255,8 +255,8 @@ async def test_token_expired_exception(authenticated_local_client):
     """Test that the appropriate error is thrown when a token expires."""
     async with authenticated_local_client:
         with pytest.raises(TokenExpiredError):
-            async with aiohttp.ClientSession() as websession:
-                client = Client(websession)
+            async with aiohttp.ClientSession() as session:
+                client = Client(session=session)
                 await client.load_local(
                     TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False
                 )

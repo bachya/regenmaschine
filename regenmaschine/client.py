@@ -4,7 +4,7 @@ from datetime import datetime
 import logging
 from typing import Dict, Optional
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError
 import async_timeout
 
@@ -21,10 +21,13 @@ class Client:  # pylint: disable=too-few-public-methods
     """Define the client."""
 
     def __init__(
-        self, websession: ClientSession, request_timeout: int = DEFAULT_TIMEOUT
+        self,
+        *,
+        session: Optional[ClientSession] = None,
+        request_timeout: int = DEFAULT_TIMEOUT,
     ) -> None:
         """Initialize."""
-        self._websession: ClientSession = websession
+        self._session: ClientSession = session
         self.controllers: Dict[str, Controller] = {}
         self.request_timeout: int = request_timeout
 
@@ -104,19 +107,24 @@ class Client:  # pylint: disable=too-few-public-methods
         if access_token_expiration and datetime.now() >= access_token_expiration:
             raise TokenExpiredError("Long-lived access token has expired")
 
-        if not headers:
-            headers = {}
-        headers.update({"Connection": "close", "Content-Type": "application/json"})
+        _headers = headers or {}
+        _headers.update({"Connection": "close", "Content-Type": "application/json"})
 
-        if not params:
-            params = {}
+        _params = params or {}
         if access_token:
-            params.update({"access_token": access_token})
+            _params.update({"access_token": access_token})
+
+        use_running_session = self._session and not self._session.closed
+
+        if use_running_session:
+            session = self._session
+        else:
+            session = ClientSession(timeout=ClientTimeout(total=DEFAULT_TIMEOUT))
 
         try:
             async with async_timeout.timeout(self.request_timeout):
-                async with self._websession.request(
-                    method, url, headers=headers, params=params, json=json, ssl=ssl
+                async with session.request(
+                    method, url, headers=_headers, params=_params, json=json, ssl=ssl
                 ) as resp:
                     resp.raise_for_status()
                     data: dict = await resp.json(content_type=None)
@@ -126,6 +134,9 @@ class Client:  # pylint: disable=too-few-public-methods
             raise RequestError(f"Error requesting data from {url}: {err}")
         except asyncio.TimeoutError:
             raise RequestError(f"Timeout during request: {url}")
+        finally:
+            if not use_running_session:
+                await session.close()
 
         return data
 

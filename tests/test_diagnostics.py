@@ -18,8 +18,8 @@ async def test_diagnostics_current(aresponses, authenticated_local_client):
             aresponses.Response(text=load_fixture("diag_response.json"), status=200),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
@@ -40,8 +40,8 @@ async def test_diagnostics_log(aresponses, authenticated_local_client):
             ),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
