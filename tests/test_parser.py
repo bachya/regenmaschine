@@ -18,8 +18,8 @@ async def test_parsers_current(aresponses, authenticated_local_client):
             aresponses.Response(text=load_fixture("parser_response.json"), status=200),
         )
 
-        async with aiohttp.ClientSession() as websession:
-            client = Client(websession)
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 

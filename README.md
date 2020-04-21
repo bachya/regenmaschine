@@ -14,6 +14,12 @@ Python library for interacting with
 It gives developers an easy API to manage their controllers over their local
 LAN or remotely via the RainMachine™ cloud.
 
+- [Python Versions](#python-versions)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Loading Controllers Multiple Times](#loading-controllers-multiple-times)
+- [Contributing](#contributing)
+
 # Python Versions
 
 `regenmaschine` is currently supported on:
@@ -28,27 +34,7 @@ LAN or remotely via the RainMachine™ cloud.
 pip install regenmaschine
 ```
 
-# Example
-
-`regenmaschine` starts within an
-[aiohttp](https://aiohttp.readthedocs.io/en/stable/) `ClientSession`:
-
-```python
-import asyncio
-
-from aiohttp import ClientSession
-
-from regenmaschine import Client
-
-
-async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-        # YOUR CODE HERE...
-
-
-asyncio.get_event_loop().run_until_complete(main())
-```
+# Usage
 
 Creating a `regenmaschine` `Client` might be the easiest thing you do all day:
 
@@ -61,12 +47,40 @@ from regenmaschine import Client
 
 
 async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-        client = Client(websession)
+    """Run!"""
+    client = Client()
+
+    # ...
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
+```
+
+By default, the library creates a new connection to the sprinkler controller with each
+coroutine. If you are calling a large number of coroutines (or merely want to squeeze
+out every second of runtime savings possible), an
+[`aiohttp`](https://github.com/aio-libs/aiohttp) `ClientSession` can be used for connection
+pooling:
+
+See the module docstrings throughout the library for full info on all parameters, return
+types, etc.
+
+
+```python
+import asyncio
+
+from aiohttp import ClientSession
+
+from regenmaschine import Client
+
+
+async def main() -> None:
+    """Run!"""
+    async with ClientSession() as session:
+        client = Client(session=session)
+
+
+asyncio.run(main())
 ```
 
 Once you have a client, you can load a local controller (i.e., one that is
@@ -81,9 +95,9 @@ from regenmaschine import Client
 
 
 async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-        client = Client(websession)
+    """Run!"""
+    async with ClientSession() as session:
+        client = Client(session=session)
 
         await client.load_local("192.168.1.101", "my_password", port=8080, ssl=True)
 
@@ -91,7 +105,7 @@ async def main() -> None:
         # >>> {'ab:cd:ef:12:34:56': <LocalController>}
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
 ```
 
 If you have 1, 2 or 100 other local controllers, you can load them in the same
@@ -110,9 +124,9 @@ from regenmaschine import Client
 
 
 async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-        client = Client(websession)
+    """Run!"""
+    async with ClientSession() as session:
+        client = Client(session=session)
 
         await client.load_remote("rainmachine_email@host.com", "my_password")
 
@@ -120,7 +134,7 @@ async def main() -> None:
         # >>> {'xx:xx:xx:xx:xx:xx': <RemoteController>, ...}
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
 ```
 
 Bonus tip: `client.load_remote` will load _all_ controllers owned by that email
@@ -139,9 +153,9 @@ from regenmaschine import Client
 
 
 async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-        client = Client(websession)
+    """Run!"""
+    async with ClientSession() as session:
+        client = Client(session=session)
 
         # Load a local controller:
         await client.load_local("192.168.1.101", "my_password", port=8080, ssl=True)
@@ -248,7 +262,7 @@ async def main() -> None:
             await controller.watering.stop_all()
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
 ```
 
 Check out `example.py`, the tests, and the source files themselves for method
@@ -274,9 +288,9 @@ from regenmaschine import Client
 
 
 async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-        client = Client(websession)
+    """Run!"""
+    async with ClientSession() as session:
+        client = Client(session=session)
 
         # Load "Home" locally:
         await client.load_local("192.168.1.101", "my_password")
@@ -285,7 +299,7 @@ async def main() -> None:
         await client.load_remote("user@host.com", "my_password")
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
 ```
 
 ...then we will have the following:
@@ -310,9 +324,9 @@ from regenmaschine import Client
 
 
 async def main() -> None:
-    """Create the aiohttp session and run the example."""
-    async with ClientSession() as websession:
-        client = Client(websession)
+    """Run!"""
+    async with ClientSession() as session:
+        client = Client(session=session)
 
         # Load all of my controllers remotely:
         await client.load_remote("user@host.com", "my_password")
@@ -321,7 +335,7 @@ async def main() -> None:
         await client.load_local("192.168.1.101", "my_password", skip_existing=False)
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
 ```
 
 # Contributing
@@ -330,7 +344,7 @@ asyncio.get_event_loop().run_until_complete(main())
   or [initiate a discussion on one](https://github.com/bachya/regenmaschine/issues/new).
 2. [Fork the repository](https://github.com/bachya/regenmaschine/fork).
 3. (_optional, but highly recommended_) Create a virtual environment: `python3 -m venv .venv`
-4. (_optional, but highly recommended_) Enter the virtual environment: `source ./venv/bin/activate`
+4. (_optional, but highly recommended_) Enter the virtual environment: `source ./.venv/bin/activate`
 5. Install the dev environment: `script/setup`
 6. Code your new feature or bug fix.
 7. Write tests that cover your new functionality.

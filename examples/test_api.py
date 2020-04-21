@@ -11,9 +11,9 @@ from regenmaschine.errors import RainMachineError
 
 async def main():
     """Run."""
-    async with ClientSession() as websession:
+    async with ClientSession() as session:
         try:
-            client = Client(websession)
+            client = Client(session=session)
             await client.load_local("<IP ADDRESS>", "<PASSWORD>")
 
             for controller in client.controllers.values():
@@ -152,4 +152,4 @@ async def main():
             print(err)
 
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
