@@ -14,6 +14,12 @@ Python library for interacting with
 It gives developers an easy API to manage their controllers over their local
 LAN or remotely via the RainMachine™ cloud.
 
+- [Python Versions](#python-versions)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Loading Controllers Multiple Times](#loading-controllers-multiple-times)
+- [Contributing](#contributing)
+
 # Python Versions
 
 `regenmaschine` is currently supported on:
@@ -338,7 +344,7 @@ asyncio.run(main())
   or [initiate a discussion on one](https://github.com/bachya/regenmaschine/issues/new).
 2. [Fork the repository](https://github.com/bachya/regenmaschine/fork).
 3. (_optional, but highly recommended_) Create a virtual environment: `python3 -m venv .venv`
-4. (_optional, but highly recommended_) Enter the virtual environment: `source ./venv/bin/activate`
+4. (_optional, but highly recommended_) Enter the virtual environment: `source ./.venv/bin/activate`
 5. Install the dev environment: `script/setup`
 6. Code your new feature or bug fix.
 7. Write tests that cover your new functionality.
