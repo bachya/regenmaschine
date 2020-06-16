@@ -12,10 +12,10 @@ from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 @pytest.mark.asyncio
 async def test_stats(aresponses, authenticated_local_client):
     """Test getting states (with or without details)."""
-    today = date.today()
-    today_str = today.strftime("%Y-%m-%d")
-
     async with authenticated_local_client:
+        today = date.today()
+        today_str = today.strftime("%Y-%m-%d")
+
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             f"/api/4/dailystats/{today_str}",

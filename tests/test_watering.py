@@ -12,10 +12,10 @@ from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 @pytest.mark.asyncio
 async def test_watering_log_details(aresponses, authenticated_local_client):
     """Test getting watering log details."""
-    today = datetime.date.today()
-    today_str = today.strftime("%Y-%m-%d")
-
     async with authenticated_local_client:
+        today = datetime.date.today()
+        today_str = today.strftime("%Y-%m-%d")
+
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             f"/api/4/watering/log/details/{today_str}/2",
@@ -92,10 +92,10 @@ async def test_watering_queue(aresponses, authenticated_local_client):
 @pytest.mark.asyncio
 async def test_watering_past(aresponses, authenticated_local_client):
     """Test gettinng info on past watering runs."""
-    today = datetime.date.today()
-    today_str = today.strftime("%Y-%m-%d")
-
     async with authenticated_local_client:
+        today = datetime.date.today()
+        today_str = today.strftime("%Y-%m-%d")
+
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             f"/api/4/watering/past/{today_str}/2",
