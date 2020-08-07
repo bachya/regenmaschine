@@ -14,7 +14,7 @@ from regenmaschine.errors import RequestError, TokenExpiredError, raise_remote_e
 _LOGGER: logging.Logger = logging.getLogger(__name__)
 
 DEFAULT_LOCAL_PORT: int = 8080
-DEFAULT_TIMEOUT: int = 10
+DEFAULT_TIMEOUT: int = 30
 
 
 class Client:  # pylint: disable=too-few-public-methods
