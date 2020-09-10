@@ -4,13 +4,13 @@ import asyncio
 from datetime import datetime, timedelta
 
 import aiohttp
-import asynctest
 import pytest
 
 from regenmaschine import Client
 from regenmaschine.errors import RequestError, TokenExpiredError
 
-from .common import (
+import tests.async_mock as mock
+from tests.common import (
     TEST_ACCESS_TOKEN,
     TEST_API_VERSION,
     TEST_EMAIL,
@@ -238,9 +238,7 @@ async def test_request_timeout(authenticated_local_client):  # noqa: D202
         """Define a method that takes 0.5 seconds to execute."""
         await asyncio.sleep(0.5)
 
-    with asynctest.mock.patch.object(
-        aiohttp.ClientResponse, "json", long_running_login
-    ):
+    with mock.patch.object(aiohttp.ClientResponse, "json", long_running_login):
         async with authenticated_local_client:
             async with aiohttp.ClientSession() as session:
                 with pytest.raises(RequestError):
