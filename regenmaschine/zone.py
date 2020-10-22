@@ -17,10 +17,10 @@ class Zone:
         self, *, details: bool = False, include_inactive: bool = False
     ) -> list:
         """Return all zones (with optional advanced properties)."""
-        endpoint: str = "zone"
+        endpoint = "zone"
         if details:
             endpoint += "/properties"
-        data: dict = await self._request("get", endpoint)
+        data = await self._request("get", endpoint)
         return [z for z in data["zones"] if include_inactive or z["active"]]
 
     async def disable(self, zone_id: int) -> dict:
@@ -33,7 +33,7 @@ class Zone:
 
     async def get(self, zone_id: int, *, details: bool = False) -> dict:
         """Return a specific zone."""
-        endpoint: str = f"zone/{zone_id}"
+        endpoint = f"zone/{zone_id}"
         if details:
             endpoint += "/properties"
         return await self._request("get", endpoint)

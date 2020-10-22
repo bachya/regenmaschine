@@ -44,26 +44,14 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         self.watering: Watering = Watering(self._request)
         self.zones: Zone = Zone(self._request)
 
-    async def _request(
-        self,
-        method: str,
-        endpoint: str,
-        *,
-        headers: Optional[dict] = None,
-        params: Optional[dict] = None,
-        json: Optional[dict] = None,
-        ssl: bool = True,
-    ) -> dict:
+    async def _request(self, method: str, endpoint: str, **kwargs) -> dict:
         """Wrap the generic request method to add access token, etc."""
         return await self._client_request(
             method,
             f"{self._host}/{endpoint}",
             access_token=self._access_token,
             access_token_expiration=self._access_token_expiration,
-            headers=headers,
-            params=params,
-            json=json,
-            ssl=ssl,
+            **kwargs,
         )
 
 

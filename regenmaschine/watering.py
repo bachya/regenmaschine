@@ -14,14 +14,14 @@ class Watering:
         self, date: datetime.date = None, days: int = None, details: bool = False
     ) -> list:
         """Get watering information for X days from Y date."""
-        endpoint: str = "watering/log"
+        endpoint = "watering/log"
         if details:
             endpoint += "/details"
 
         if date and days:
             endpoint = f"{endpoint}/{date.strftime('%Y-%m-%d')}/{days}"
 
-        data: dict = await self._request("get", endpoint)
+        data = await self._request("get", endpoint)
         return data["waterLog"]["days"]
 
     async def pause_all(self, seconds: int) -> dict:
@@ -32,17 +32,17 @@ class Watering:
 
     async def queue(self) -> list:
         """Return the queue of active watering activities."""
-        data: dict = await self._request("get", "watering/queue")
+        data = await self._request("get", "watering/queue")
         return data["queue"]
 
     async def runs(self, date: datetime.date = None, days: int = None) -> list:
         """Return all program runs for X days from Y date."""
-        endpoint: str = "watering/past"
+        endpoint = "watering/past"
 
         if date and days:
             endpoint = f"{endpoint}/{date.strftime('%Y-%m-%d')}/{days}"
 
-        data: dict = await self._request("get", endpoint)
+        data = await self._request("get", endpoint)
         return data["pastValues"]
 
     async def stop_all(self) -> dict:

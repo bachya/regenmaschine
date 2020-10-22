@@ -16,8 +16,8 @@ class Stats:
 
     async def upcoming(self, details: bool = False) -> list:
         """Return watering statistics for the next 6 days."""
-        endpoint: str = "dailystats"
-        key: str = "DailyStats"
+        endpoint = "dailystats"
+        key = "DailyStats"
         if details:
             endpoint += "/details"
             key = "DailyStatsDetails"
