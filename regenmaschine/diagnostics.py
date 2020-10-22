@@ -15,5 +15,5 @@ class Diagnostics:
 
     async def log(self) -> dict:
         """Get the device log."""
-        data: dict = await self._request("get", "diag/log")
+        data = await self._request("get", "diag/log")
         return data["log"]

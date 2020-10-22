@@ -15,7 +15,7 @@ class Restriction:
 
     async def hourly(self) -> list:
         """Get a list of restrictions that are active over the next hour."""
-        data: dict = await self._request("get", "restrictions/hourly")
+        data = await self._request("get", "restrictions/hourly")
         return data["hourlyRestrictions"]
 
     async def raindelay(self) -> dict:

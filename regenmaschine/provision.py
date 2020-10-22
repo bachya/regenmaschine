@@ -12,7 +12,7 @@ class Provision:
     @property
     async def device_name(self) -> str:
         """Get the name of the device."""
-        data: dict = await self._request("get", "provision/name")
+        data = await self._request("get", "provision/name")
         return data["name"]
 
     async def settings(self) -> dict:

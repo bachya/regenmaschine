@@ -17,7 +17,7 @@ DEFAULT_LOCAL_PORT: int = 8080
 DEFAULT_TIMEOUT: int = 30
 
 
-class Client:  # pylint: disable=too-few-public-methods
+class Client:
     """Define the client."""
 
     def __init__(
@@ -40,7 +40,7 @@ class Client:  # pylint: disable=too-few-public-methods
         skip_existing: bool = True,
     ) -> None:
         """Create a local client."""
-        controller: LocalController = LocalController(self._request, host, port, ssl)
+        controller: LocalController = LocalController(self.request, host, port, ssl)
         await controller.login(password)
 
         wifi_data: dict = await controller.provisioning.wifi()
@@ -60,7 +60,7 @@ class Client:  # pylint: disable=too-few-public-methods
         self, email: str, password: str, skip_existing: bool = True
     ) -> None:
         """Create a remote client."""
-        auth_resp: dict = await self._request(
+        auth_resp: dict = await self.request(
             "post",
             "https://my.rainmachine.com/login/auth",
             json={"user": {"email": email, "pwd": password, "remember": 1}},
@@ -68,7 +68,7 @@ class Client:  # pylint: disable=too-few-public-methods
 
         access_token: str = auth_resp["access_token"]
 
-        sprinklers_resp: dict = await self._request(
+        sprinklers_resp: dict = await self.request(
             "post",
             "https://my.rainmachine.com/devices/get-sprinklers",
             access_token=access_token,
@@ -79,7 +79,7 @@ class Client:  # pylint: disable=too-few-public-methods
             if skip_existing and sprinkler["mac"] in self.controllers:
                 continue
 
-            controller: RemoteController = RemoteController(self._request)
+            controller: RemoteController = RemoteController(self.request)
             await controller.login(access_token, sprinkler["sprinklerId"], password)
 
             version_data: dict = await controller.api.versions()
@@ -91,28 +91,26 @@ class Client:  # pylint: disable=too-few-public-methods
 
             self.controllers[sprinkler["mac"]] = controller
 
-    async def _request(
+    async def request(
         self,
         method: str,
         url: str,
         *,
         access_token: Optional[str] = None,
         access_token_expiration: Optional[datetime] = None,
-        headers: Optional[dict] = None,
-        params: Optional[dict] = None,
-        json: Optional[dict] = None,
-        ssl: bool = True,
+        **kwargs,
     ) -> dict:
         """Make a request against the RainMachine device."""
         if access_token_expiration and datetime.now() >= access_token_expiration:
             raise TokenExpiredError("Long-lived access token has expired")
 
-        _headers = headers or {}
-        _headers.update({"Connection": "close", "Content-Type": "application/json"})
+        kwargs.setdefault("headers", {})
+        kwargs["headers"]["Connection"] = "close"
+        kwargs["headers"]["Content-Type"] = "application/json"
 
-        _params = params or {}
+        kwargs.setdefault("params", {})
         if access_token:
-            _params.update({"access_token": access_token})
+            kwargs["params"]["access_token"] = access_token
 
         use_running_session = self._session and not self._session.closed
 
@@ -123,9 +121,7 @@ class Client:  # pylint: disable=too-few-public-methods
 
         try:
             async with async_timeout.timeout(self.request_timeout):
-                async with session.request(
-                    method, url, headers=_headers, params=_params, json=json, ssl=ssl
-                ) as resp:
+                async with session.request(method, url, **kwargs) as resp:
                     resp.raise_for_status()
                     data: dict = await resp.json(content_type=None)
                     _raise_for_remote_status(url, data)
