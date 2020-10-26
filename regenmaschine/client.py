@@ -98,6 +98,7 @@ class Client:
         *,
         access_token: Optional[str] = None,
         access_token_expiration: Optional[datetime] = None,
+        ssl: bool = True,
         **kwargs,
     ) -> dict:
         """Make a request against the RainMachine device."""
@@ -121,7 +122,7 @@ class Client:
 
         try:
             async with async_timeout.timeout(self.request_timeout):
-                async with session.request(method, url, **kwargs) as resp:
+                async with session.request(method, url, ssl=ssl, **kwargs) as resp:
                     resp.raise_for_status()
                     data: dict = await resp.json(content_type=None)
                     _raise_for_remote_status(url, data)
