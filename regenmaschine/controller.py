@@ -51,6 +51,7 @@ class Controller:  # pylint: disable=too-many-instance-attributes
             f"{self._host}/{endpoint}",
             access_token=self._access_token,
             access_token_expiration=self._access_token_expiration,
+            ssl=self._ssl,
             **kwargs,
         )
 
