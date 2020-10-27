@@ -1,5 +1,5 @@
 """Define an object to interact with programs."""
-from typing import Awaitable, Callable
+from typing import Awaitable, Callable, Dict
 
 
 class Program:
@@ -9,10 +9,14 @@ class Program:
         """Initialize."""
         self._request: Callable[..., Awaitable[dict]] = request
 
-    async def all(self, include_inactive: bool = False) -> list:
+    async def all(self, include_inactive: bool = False) -> Dict[int, dict]:
         """Return all programs."""
         data = await self._request("get", "program")
-        return [p for p in data["programs"] if include_inactive or p["active"]]
+        return {
+            program["uid"]: program
+            for program in data["programs"]
+            if include_inactive or program["active"]
+        }
 
     async def disable(self, program_id: int) -> dict:
         """Disable a program."""

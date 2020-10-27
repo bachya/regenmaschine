@@ -56,9 +56,9 @@ async def test_program_get(aresponses, authenticated_local_client):
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
-            data = await controller.programs.all(include_inactive=True)
-            assert len(data) == 2
-            assert data[0]["name"] == "Morning"
+            programs = await controller.programs.all(include_inactive=True)
+            assert len(programs) == 2
+            assert programs[1]["name"] == "Morning"
 
 
 @pytest.mark.asyncio
@@ -77,9 +77,9 @@ async def test_program_get_active(aresponses, authenticated_local_client):
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
-            data = await controller.programs.all()
-            assert len(data) == 1
-            assert data[0]["name"] == "Morning"
+            programs = await controller.programs.all()
+            assert len(programs) == 1
+            assert programs[1]["name"] == "Morning"
 
 
 @pytest.mark.asyncio

@@ -142,8 +142,8 @@
       ]
     },
     {
-      "uid": 1,
-      "name": "Morning",
+      "uid": 2,
+      "name": "Evening",
       "active": false,
       "startTime": "06:00",
       "cycles": 0,
