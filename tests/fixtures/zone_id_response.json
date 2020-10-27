@@ -1,0 +1,15 @@
+{
+  "uid": 1,
+  "name": "Landscaping",
+  "state": 0,
+  "active": true,
+  "userDuration": 0,
+  "machineDuration": 0,
+  "remaining": 0,
+  "cycle": 0,
+  "noOfCycles": 0,
+  "restriction": false,
+  "type": 4,
+  "master": false,
+  "waterSense": false
+}

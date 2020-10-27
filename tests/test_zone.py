@@ -46,11 +46,9 @@ async def test_zone_get(aresponses, authenticated_local_client):
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
-            "/api/4/zone/properties",
+            "/api/4/zone",
             "get",
-            aresponses.Response(
-                text=load_fixture("zone_properties_response.json"), status=200
-            ),
+            aresponses.Response(text=load_fixture("zone_response.json"), status=200),
         )
 
         async with aiohttp.ClientSession() as session:
@@ -58,15 +56,22 @@ async def test_zone_get(aresponses, authenticated_local_client):
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
-            data = await controller.zones.all(details=True, include_inactive=True)
-            assert len(data) == 2
-            assert data[0]["name"] == "Landscaping"
+            zones = await controller.zones.all(include_inactive=True)
+            assert len(zones) == 12
+            assert zones[1]["name"] == "Landscaping"
+            assert zones[1]["active"] is True
 
 
 @pytest.mark.asyncio
-async def test_zone_get_active(aresponses, authenticated_local_client):
-    """Test getting info on active zones."""
+async def test_zone_get_details(aresponses, authenticated_local_client):
+    """Test getting all zones with details."""
     async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/zone",
+            "get",
+            aresponses.Response(text=load_fixture("zone_response.json"), status=200),
+        )
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/zone/properties",
@@ -81,15 +86,43 @@ async def test_zone_get_active(aresponses, authenticated_local_client):
             await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
             controller = next(iter(client.controllers.values()))
 
-            data = await controller.zones.all(details=True)
-            assert len(data) == 1
-            assert data[0]["name"] == "Landscaping"
+            zones = await controller.zones.all(details=True)
+            assert len(zones) == 2
+            assert zones[1]["name"] == "Landscaping"
+            assert zones[1]["active"] is True
+            assert zones[1]["ETcoef"] == 0.80000000000000004
 
 
 @pytest.mark.asyncio
 async def test_zone_get_by_id(aresponses, authenticated_local_client):
     """Test getting properties on a specific zone by ID."""
     async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/zone/1",
+            "get",
+            aresponses.Response(text=load_fixture("zone_id_response.json"), status=200),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
+
+            data = await controller.zones.get(1)
+            assert data["name"] == "Landscaping"
+
+
+@pytest.mark.asyncio
+async def test_zone_get_by_id_details(aresponses, authenticated_local_client):
+    """Test getting advanced properties on a specific zone by ID."""
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/zone/1",
+            "get",
+            aresponses.Response(text=load_fixture("zone_id_response.json"), status=200),
+        )
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/zone/1/properties",
