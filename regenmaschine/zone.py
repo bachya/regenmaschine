@@ -1,5 +1,6 @@
 """Define an object to interact with zones."""
-from typing import Awaitable, Callable
+import asyncio
+from typing import Awaitable, Callable, Dict
 
 
 class Zone:
@@ -15,13 +16,29 @@ class Zone:
 
     async def all(
         self, *, details: bool = False, include_inactive: bool = False
-    ) -> list:
+    ) -> Dict[int, dict]:
         """Return all zones (with optional advanced properties)."""
-        endpoint = "zone"
+        tasks = [self._request("get", "zone")]
         if details:
-            endpoint += "/properties"
-        data = await self._request("get", endpoint)
-        return [z for z in data["zones"] if include_inactive or z["active"]]
+            tasks.append(self._request("get", "zone/properties"))
+
+        results = await asyncio.gather(*tasks)
+
+        if len(results) == 1:
+            return {
+                zone["uid"]: zone
+                for zone in results[0]["zones"]
+                if zone["active"] or include_inactive
+            }
+
+        return {
+            zone["uid"]: {
+                **zone,
+                **next((z for z in results[1]["zones"] if z["uid"] == zone["uid"])),
+            }
+            for zone in results[0]["zones"]
+            if zone["active"] or include_inactive
+        }
 
     async def disable(self, zone_id: int) -> dict:
         """Disable a zone."""
@@ -33,10 +50,16 @@ class Zone:
 
     async def get(self, zone_id: int, *, details: bool = False) -> dict:
         """Return a specific zone."""
-        endpoint = f"zone/{zone_id}"
+        tasks = [self._request("get", f"zone/{zone_id}")]
         if details:
-            endpoint += "/properties"
-        return await self._request("get", endpoint)
+            tasks.append(self._request("get", f"zone/{zone_id}/properties"))
+
+        results = await asyncio.gather(*tasks)
+
+        if len(results) == 1:
+            return results[0]
+
+        return {**results[0], **results[1]}
 
     async def start(self, zone_id: int, time: int) -> dict:
         """Start a program."""
