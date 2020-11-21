@@ -17,6 +17,17 @@ DEFAULT_LOCAL_PORT: int = 8080
 DEFAULT_TIMEOUT: int = 30
 
 
+def _raise_for_remote_status(url: str, data: dict) -> None:
+    """Raise an error from the remote API if necessary."""
+    if data.get("errorType") and data["errorType"] > 0:
+        raise_remote_error(data["errorType"])
+
+    if data.get("statusCode") and data["statusCode"] != 200:
+        raise RequestError(
+            f"Error requesting data from {url}: {data['statusCode']} {data['message']}"
+        )
+
+
 class Client:
     """Define the client."""
 
@@ -124,26 +135,14 @@ class Client:
             async with async_timeout.timeout(self.request_timeout):
                 async with session.request(method, url, ssl=ssl, **kwargs) as resp:
                     resp.raise_for_status()
-                    data: dict = await resp.json(content_type=None)
+                    data = await resp.json(content_type=None)
                     _raise_for_remote_status(url, data)
         except ClientError as err:
-            _LOGGER.debug("Original request error: %s (%s)", err, type(err))
-            raise RequestError(f"Error requesting data from {url}: {err}")
-        except asyncio.TimeoutError:
-            raise RequestError(f"Timeout during request: {url}")
+            raise RequestError(f"Error requesting data from {url}") from err
+        except asyncio.TimeoutError as err:
+            raise RequestError(f"Timeout during request: {url}") from err
         finally:
             if not use_running_session:
                 await session.close()
 
         return data
-
-
-def _raise_for_remote_status(url: str, data: dict) -> None:
-    """Raise an error from the remote API if necessary."""
-    if data.get("errorType") and data["errorType"] > 0:
-        raise_remote_error(data["errorType"])
-
-    if data.get("statusCode") and data["statusCode"] != 200:
-        raise RequestError(
-            f"Error requesting data from {url}: {data['statusCode']} {data['message']}"
-        )
