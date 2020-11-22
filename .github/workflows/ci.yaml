@@ -84,3 +84,5 @@ jobs:
       - uses: pre-commit/action@v2.0.0
         env:
           SKIP: no-commit-to-branch
+        env:
+          SKIP: no-commit-to-branch
