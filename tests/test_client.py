@@ -97,9 +97,7 @@ async def test_load_local_failure(aresponses):
         f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/auth/login",
         "post",
-        aresponses.Response(
-            text=load_fixture("unauthenticated_response.json"), status=401
-        ),
+        aresponses.Response(text=None, status=500),
     )
 
     with pytest.raises(RequestError):
@@ -170,7 +168,7 @@ async def test_load_remote_failure(aresponses):
         ),
     )
 
-    with pytest.raises(RequestError):
+    with pytest.raises(TokenExpiredError):
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
             await client.load_remote(TEST_EMAIL, TEST_PASSWORD)
@@ -249,8 +247,26 @@ async def test_request_timeout(authenticated_local_client):  # noqa: D202
 
 
 @pytest.mark.asyncio
-async def test_token_expired_exception(authenticated_local_client):
-    """Test that the appropriate error is thrown when a token expires."""
+async def test_token_expired_explicit_exception(aresponses):
+    """Test that the appropriate error is thrown when a token expires explicitly."""
+    aresponses.add(
+        f"{TEST_HOST}:{TEST_PORT}",
+        "/api/4/auth/login",
+        "post",
+        aresponses.Response(
+            text=load_fixture("unauthenticated_response.json"), status=401
+        ),
+    )
+
+    with pytest.raises(TokenExpiredError):
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, False)
+
+
+@pytest.mark.asyncio
+async def test_token_expired_implicit_exception(authenticated_local_client):
+    """Test that the appropriate error is thrown when a token expires implicitly."""
     async with authenticated_local_client:
         with pytest.raises(TokenExpiredError):
             async with aiohttp.ClientSession() as session:

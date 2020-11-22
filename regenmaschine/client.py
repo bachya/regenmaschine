@@ -138,6 +138,8 @@ class Client:
                     data = await resp.json(content_type=None)
                     _raise_for_remote_status(url, data)
         except ClientError as err:
+            if "401" in str(err):
+                raise TokenExpiredError("Long-lived access token has expired") from err
             raise RequestError(f"Error requesting data from {url}") from err
         except asyncio.TimeoutError as err:
             raise RequestError(f"Timeout during request: {url}") from err
