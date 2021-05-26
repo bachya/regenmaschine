@@ -58,16 +58,6 @@ async def main():
                 for program in await controller.programs.running():
                     print(f"Program #{program['uid']}")
 
-                print()
-                print("STARTING PROGRAM #1")
-                print(await controller.programs.start(1))
-
-                await asyncio.sleep(3)
-
-                print()
-                print("STOPPING PROGRAM #1")
-                print(await controller.programs.stop(1))
-
                 # Work with provisioning:
                 print()
                 print("PROVISIONING INFO")
@@ -114,20 +104,6 @@ async def main():
                 ):
                     print(f"{watering_run['dateTime']} ({watering_run['et0']})")
 
-                print()
-                print("PAUSING ALL WATERING FOR 30 SECONDS")
-                print(await controller.watering.pause_all(30))
-
-                await asyncio.sleep(3)
-
-                print()
-                print("UNPAUSING WATERING")
-                print(await controller.watering.unpause_all())
-
-                print()
-                print("STOPPING ALL WATERING")
-                print(await controller.watering.stop_all())
-
                 # Work with zones:
                 print()
                 print("ALL ACTIVE ZONES")
@@ -138,16 +114,6 @@ async def main():
                 print("ZONE BY ID")
                 zone_1 = await controller.zones.get(1, details=True)
                 print(f"Zone 1's Name: {zone_1['name']} (soil: {zone_1['soil']})")
-
-                print()
-                print("STARTING ZONE #1 FOR 3 SECONDS")
-                print(await controller.zones.start(1, 3))
-
-                await asyncio.sleep(3)
-
-                print()
-                print("STOPPING ZONE #1")
-                print(await controller.zones.stop(1))
         except RainMachineError as err:
             print(err)
 
