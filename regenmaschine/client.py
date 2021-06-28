@@ -40,69 +40,9 @@ class Client:
         """Initialize."""
         self._session: ClientSession = session
         self.controllers: Dict[str, Controller] = {}
-        self.request_timeout: int = request_timeout
+        self._request_timeout: int = request_timeout
 
-    async def load_local(  # pylint: disable=too-many-arguments
-        self,
-        host: str,
-        password: str,
-        port: int = DEFAULT_LOCAL_PORT,
-        ssl: bool = True,
-        skip_existing: bool = True,
-    ) -> None:
-        """Create a local client."""
-        controller: LocalController = LocalController(self.request, host, port, ssl)
-        await controller.login(password)
-
-        wifi_data: dict = await controller.provisioning.wifi()
-        if skip_existing and wifi_data["macAddress"] in self.controllers:
-            return
-
-        version_data: dict = await controller.api.versions()
-        controller.api_version = version_data["apiVer"]
-        controller.hardware_version = version_data["hwVer"]
-        controller.mac = wifi_data["macAddress"]
-        controller.name = await controller.provisioning.device_name
-        controller.software_version = version_data["swVer"]
-
-        self.controllers[controller.mac] = controller  # type: ignore
-
-    async def load_remote(
-        self, email: str, password: str, skip_existing: bool = True
-    ) -> None:
-        """Create a remote client."""
-        auth_resp: dict = await self.request(
-            "post",
-            "https://my.rainmachine.com/login/auth",
-            json={"user": {"email": email, "pwd": password, "remember": 1}},
-        )
-
-        access_token: str = auth_resp["access_token"]
-
-        sprinklers_resp: dict = await self.request(
-            "post",
-            "https://my.rainmachine.com/devices/get-sprinklers",
-            access_token=access_token,
-            json={"user": {"email": email, "pwd": password, "remember": 1}},
-        )
-
-        for sprinkler in sprinklers_resp["sprinklers"]:
-            if skip_existing and sprinkler["mac"] in self.controllers:
-                continue
-
-            controller: RemoteController = RemoteController(self.request)
-            await controller.login(access_token, sprinkler["sprinklerId"], password)
-
-            version_data: dict = await controller.api.versions()
-            controller.api_version = version_data["apiVer"]
-            controller.hardware_version = version_data["hwVer"]
-            controller.mac = sprinkler["mac"]
-            controller.name = sprinkler["name"]
-            controller.software_version = version_data["swVer"]
-
-            self.controllers[sprinkler["mac"]] = controller
-
-    async def request(
+    async def _request(
         self,
         method: str,
         url: str,
@@ -132,7 +72,7 @@ class Client:
             session = ClientSession(timeout=ClientTimeout(total=DEFAULT_TIMEOUT))
 
         try:
-            async with async_timeout.timeout(self.request_timeout):
+            async with async_timeout.timeout(self._request_timeout):
                 async with session.request(method, url, ssl=ssl, **kwargs) as resp:
                     resp.raise_for_status()
                     data = await resp.json(content_type=None)
@@ -147,4 +87,66 @@ class Client:
             if not use_running_session:
                 await session.close()
 
+        _LOGGER.debug("Data received for %s: %s", url, data)
+
         return data
+
+    async def load_local(  # pylint: disable=too-many-arguments
+        self,
+        host: str,
+        password: str,
+        port: int = DEFAULT_LOCAL_PORT,
+        ssl: bool = True,
+        skip_existing: bool = True,
+    ) -> None:
+        """Create a local client."""
+        controller: LocalController = LocalController(self._request, host, port, ssl)
+        await controller.login(password)
+
+        wifi_data: dict = await controller.provisioning.wifi()
+        if skip_existing and wifi_data["macAddress"] in self.controllers:
+            return
+
+        version_data: dict = await controller.api.versions()
+        controller.api_version = version_data["apiVer"]
+        controller.hardware_version = version_data["hwVer"]
+        controller.mac = wifi_data["macAddress"]
+        controller.name = await controller.provisioning.device_name
+        controller.software_version = version_data["swVer"]
+
+        self.controllers[controller.mac] = controller  # type: ignore
+
+    async def load_remote(
+        self, email: str, password: str, skip_existing: bool = True
+    ) -> None:
+        """Create a remote client."""
+        auth_resp: dict = await self._request(
+            "post",
+            "https://my.rainmachine.com/login/auth",
+            json={"user": {"email": email, "pwd": password, "remember": 1}},
+        )
+
+        access_token: str = auth_resp["access_token"]
+
+        sprinklers_resp: dict = await self._request(
+            "post",
+            "https://my.rainmachine.com/devices/get-sprinklers",
+            access_token=access_token,
+            json={"user": {"email": email, "pwd": password, "remember": 1}},
+        )
+
+        for sprinkler in sprinklers_resp["sprinklers"]:
+            if skip_existing and sprinkler["mac"] in self.controllers:
+                continue
+
+            controller: RemoteController = RemoteController(self._request)
+            await controller.login(access_token, sprinkler["sprinklerId"], password)
+
+            version_data: dict = await controller.api.versions()
+            controller.api_version = version_data["apiVer"]
+            controller.hardware_version = version_data["hwVer"]
+            controller.mac = sprinkler["mac"]
+            controller.name = sprinkler["name"]
+            controller.software_version = version_data["swVer"]
+
+            self.controllers[sprinkler["mac"]] = controller
