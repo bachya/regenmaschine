@@ -40,7 +40,8 @@ async def main():
                 # Work with programs:
                 print()
                 print("ALL PROGRAMS")
-                for program in await controller.programs.all(include_inactive=True):
+                programs = await controller.programs.all(include_inactive=True)
+                for program in programs.values():
                     print(f"Program #{program['uid']}: {program['name']}")
 
                 print()
@@ -107,7 +108,8 @@ async def main():
                 # Work with zones:
                 print()
                 print("ALL ACTIVE ZONES")
-                for zone in await controller.zones.all(details=True):
+                zones = await controller.zones.all(details=True)
+                for zone in zones.values():
                     print(f"Zone #{zone['uid']}: {zone['name']} (soil: {zone['soil']})")
 
                 print()
