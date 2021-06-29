@@ -2,120 +2,89 @@
 # pylint: disable=too-many-locals,too-many-statements
 import asyncio
 import datetime
+import logging
 
 from aiohttp import ClientSession
 
 from regenmaschine import Client
 from regenmaschine.errors import RainMachineError
 
+_LOGGER = logging.getLogger(__name__)
+
 
 async def main():
     """Run."""
+    logging.basicConfig(level=logging.INFO)
     async with ClientSession() as session:
         try:
             client = Client(session=session)
             await client.load_local("<IP ADDRESS>", "<PASSWORD>")
 
             for controller in client.controllers.values():
-                print("CLIENT INFORMATION")
-                print(f"Name: {controller.name}")
-                print(f"MAC Address: {controller.mac}")
-                print(f"API Version: {controller.api_version}")
-                print(f"Software Version: {controller.software_version}")
-                print(f"Hardware Version: {controller.hardware_version}")
+                _LOGGER.info("CLIENT INFORMATION")
+                _LOGGER.info("Name: %s", controller.name)
+                _LOGGER.info("MAC Address: %s", controller.mac)
+                _LOGGER.info("API Version: %s", controller.api_version)
+                _LOGGER.info("Software Version: %s", controller.software_version)
+                _LOGGER.info("Hardware Version: %s", controller.hardware_version)
 
-                # Work with diagnostics:
-                print()
-                print("RAINMACHINE DIAGNOSTICS")
-                data = await controller.diagnostics.current()
-                print(f"Uptime: {data['uptime']}")
-                print(f"Software Version: {data['softwareVersion']}")
+                _LOGGER.info("RAINMACHINE DIAGNOSTICS")
+                diagnostics = await controller.diagnostics.current()
+                _LOGGER.info(diagnostics)
 
-                # Work with parsers:
-                print()
-                print("RAINMACHINE PARSERS")
-                for parser in await controller.parsers.current():
-                    print(parser["name"])
+                _LOGGER.info("RAINMACHINE PARSERS")
+                parsers = await controller.parsers.current()
+                _LOGGER.info(parsers)
 
                 # Work with programs:
-                print()
-                print("ALL PROGRAMS")
+                _LOGGER.info("ALL PROGRAMS")
                 programs = await controller.programs.all(include_inactive=True)
-                for program in programs.values():
-                    print(f"Program #{program['uid']}: {program['name']}")
+                _LOGGER.info(programs)
 
-                print()
-                print("PROGRAM BY ID")
-                program_1 = await controller.programs.get(1)
-                print(f"Program 1's Start Time: {program_1['startTime']}")
+                _LOGGER.info("NEXT RUN TIMES")
+                next_programs = await controller.programs.next()
+                _LOGGER.info(next_programs)
 
-                print()
-                print("NEXT RUN TIMES")
-                for program in await controller.programs.next():
-                    print(f"Program #{program['pid']}: {program['startTime']}")
+                _LOGGER.info("RUNNING PROGRAMS")
+                running_programs = await controller.programs.running()
+                _LOGGER.info(running_programs)
 
-                print()
-                print("RUNNING PROGRAMS")
-                for program in await controller.programs.running():
-                    print(f"Program #{program['uid']}")
-
-                # Work with provisioning:
-                print()
-                print("PROVISIONING INFO")
+                _LOGGER.info("PROVISIONING INFO")
                 name = await controller.provisioning.device_name
-                print(f"Device Name: {name}")
+                _LOGGER.info("Device Name: %s", name)
                 settings = await controller.provisioning.settings()
-                print(f"Database Path: {settings['system']['databasePath']}")
-                print(f"Station Name: {settings['location']['stationName']}")
+                _LOGGER.info(settings)
                 wifi = await controller.provisioning.wifi()
-                print(f"IP Address: {wifi['ipAddress']}")
+                _LOGGER.info(wifi)
 
-                # Work with restrictions:
-                print()
-                print("RESTRICTIONS")
+                _LOGGER.info("RESTRICTIONS")
                 current = await controller.restrictions.current()
-                print(f"Rain Delay Restrictions: {current['rainDelay']}")
+                _LOGGER.info(current)
                 universal = await controller.restrictions.universal()
-                print(f"Freeze Protect: {universal['freezeProtectEnabled']}")
-                print("Hourly Restrictions:")
-                for restriction in await controller.restrictions.hourly():
-                    print(restriction["name"])
+                _LOGGER.info(universal)
+                hourly = await controller.restrictions.hourly()
+                _LOGGER.info(hourly)
                 raindelay = await controller.restrictions.raindelay()
-                print(f"Rain Delay Counter: {raindelay['delayCounter']}")
+                _LOGGER.info(raindelay)
 
-                # Work with restrictions:
-                print()
-                print("STATS")
+                _LOGGER.info("STATS")
                 today = await controller.stats.on_date(date=datetime.date.today())
-                print(f"Min for Today: {today['mint']}")
-                for day in await controller.stats.upcoming(details=True):
-                    print(f"{day['day']} Min: {day['mint']}")
+                _LOGGER.info(today)
+                upcoming = await controller.stats.upcoming(details=True)
+                _LOGGER.info(upcoming)
 
-                # Work with watering:
-                print()
-                print("WATERING")
-                for day in await controller.watering.log(date=datetime.date.today()):
-                    print(f"{day['date']} duration: {day['realDuration']}")
+                _LOGGER.info("WATERING")
+                log = await controller.watering.log(date=datetime.date.today())
+                _LOGGER.info(log)
                 queue = await controller.watering.queue()
-                print(f"Current Queue: {queue}")
+                _LOGGER.info(queue)
 
-                print("Runs:")
-                for watering_run in await controller.watering.runs(
-                    date=datetime.date.today()
-                ):
-                    print(f"{watering_run['dateTime']} ({watering_run['et0']})")
+                runs = await controller.watering.runs(date=datetime.date.today())
+                _LOGGER.info(runs)
 
-                # Work with zones:
-                print()
                 print("ALL ACTIVE ZONES")
                 zones = await controller.zones.all(details=True)
-                for zone in zones.values():
-                    print(f"Zone #{zone['uid']}: {zone['name']} (soil: {zone['soil']})")
-
-                print()
-                print("ZONE BY ID")
-                zone_1 = await controller.zones.get(1, details=True)
-                print(f"Zone 1's Name: {zone_1['name']} (soil: {zone_1['soil']})")
+                _LOGGER.info(zones)
         except RainMachineError as err:
             print(err)
 
