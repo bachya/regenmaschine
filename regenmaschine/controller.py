@@ -1,7 +1,7 @@
 """Define a RainMachine controller class."""
 # pylint: disable=too-few-public-methods,too-many-instance-attributes
 from datetime import datetime, timedelta
-from typing import Awaitable, Callable, Optional
+from typing import Any, Awaitable, Callable, Dict, Optional
 
 from regenmaschine.api import API
 from regenmaschine.diagnostics import Diagnostics
@@ -24,9 +24,9 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         """Initialize."""
         self._access_token: Optional[str] = None
         self._access_token_expiration: Optional[datetime] = None
-        self._client_request: Callable[..., Awaitable[dict]] = request
+        self._client_request = request
         self._host: Optional[str] = None
-        self._ssl: bool = True
+        self._ssl = True
         self.api_version: Optional[str] = None
         self.hardware_version: Optional[int] = None
         self.mac: Optional[str] = None
@@ -34,17 +34,19 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         self.software_version: Optional[str] = None
 
         # API endpoints:
-        self.api: API = API(self._request)
-        self.diagnostics: Diagnostics = Diagnostics(self._request)
-        self.parsers: Parser = Parser(self._request)
-        self.programs: Program = Program(self._request)
-        self.provisioning: Provision = Provision(self._request)
-        self.restrictions: Restriction = Restriction(self._request)
-        self.stats: Stats = Stats(self._request)
-        self.watering: Watering = Watering(self._request)
-        self.zones: Zone = Zone(self._request)
+        self.api = API(self._request)
+        self.diagnostics = Diagnostics(self._request)
+        self.parsers = Parser(self._request)
+        self.programs = Program(self._request)
+        self.provisioning = Provision(self._request)
+        self.restrictions = Restriction(self._request)
+        self.stats = Stats(self._request)
+        self.watering = Watering(self._request)
+        self.zones = Zone(self._request)
 
-    async def _request(self, method: str, endpoint: str, **kwargs) -> dict:
+    async def _request(
+        self, method: str, endpoint: str, **kwargs: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Wrap the generic request method to add access token, etc."""
         return await self._client_request(
             method,
@@ -65,12 +67,12 @@ class LocalController(Controller):
         """Initialize."""
         super().__init__(request)
 
-        self._host: str = URL_BASE_LOCAL.format(host, port)
-        self._ssl: bool = ssl
+        self._host = URL_BASE_LOCAL.format(host, port)
+        self._ssl = ssl
 
-    async def login(self, password):
+    async def login(self, password: str) -> None:
         """Authenticate against the device (locally)."""
-        auth_resp: dict = await self._client_request(
+        auth_resp = await self._client_request(
             "post", f"{self._host}/auth/login", json={"pwd": password, "remember": 1}
         )
 
@@ -94,5 +96,5 @@ class RemoteController(Controller):
             json={"sprinklerId": sprinkler_id, "pwd": password},
         )
 
-        self._access_token: str = auth_resp["access_token"]
-        self._host: str = URL_BASE_REMOTE.format(sprinkler_id)
+        self._access_token = auth_resp["access_token"]
+        self._host = URL_BASE_REMOTE.format(sprinkler_id)

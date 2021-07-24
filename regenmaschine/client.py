@@ -2,7 +2,7 @@
 import asyncio
 from datetime import datetime
 import logging
-from typing import Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError
@@ -17,7 +17,7 @@ DEFAULT_LOCAL_PORT: int = 8080
 DEFAULT_TIMEOUT: int = 30
 
 
-def _raise_for_remote_status(url: str, data: dict) -> None:
+def _raise_for_remote_status(url: str, data: Dict[str, Any]) -> None:
     """Raise an error from the remote API if necessary."""
     if data.get("errorType") and data["errorType"] > 0:
         raise_remote_error(data["errorType"])
@@ -38,9 +38,9 @@ class Client:
         request_timeout: int = DEFAULT_TIMEOUT,
     ) -> None:
         """Initialize."""
-        self._session: ClientSession = session
+        self._request_timeout = request_timeout
+        self._session = session
         self.controllers: Dict[str, Controller] = {}
-        self._request_timeout: int = request_timeout
 
     async def _request(
         self,
@@ -50,7 +50,7 @@ class Client:
         access_token: Optional[str] = None,
         access_token_expiration: Optional[datetime] = None,
         ssl: bool = True,
-        **kwargs,
+        **kwargs: Dict[str, Any],
     ) -> dict:
         """Make a request against the RainMachine device."""
         if access_token_expiration and datetime.now() >= access_token_expiration:
@@ -71,6 +71,8 @@ class Client:
         else:
             session = ClientSession(timeout=ClientTimeout(total=DEFAULT_TIMEOUT))
 
+        assert session
+
         try:
             async with async_timeout.timeout(self._request_timeout):
                 async with session.request(method, url, ssl=ssl, **kwargs) as resp:
@@ -89,7 +91,7 @@ class Client:
 
         _LOGGER.debug("Data received for %s: %s", url, data)
 
-        return data
+        return cast(Dict[str, Any], data)
 
     async def load_local(  # pylint: disable=too-many-arguments
         self,
@@ -103,11 +105,11 @@ class Client:
         controller: LocalController = LocalController(self._request, host, port, ssl)
         await controller.login(password)
 
-        wifi_data: dict = await controller.provisioning.wifi()
+        wifi_data = await controller.provisioning.wifi()
         if skip_existing and wifi_data["macAddress"] in self.controllers:
             return
 
-        version_data: dict = await controller.api.versions()
+        version_data = await controller.api.versions()
         controller.api_version = version_data["apiVer"]
         controller.hardware_version = version_data["hwVer"]
         controller.mac = wifi_data["macAddress"]
@@ -120,7 +122,7 @@ class Client:
         self, email: str, password: str, skip_existing: bool = True
     ) -> None:
         """Create a remote client."""
-        auth_resp: dict = await self._request(
+        auth_resp = await self._request(
             "post",
             "https://my.rainmachine.com/login/auth",
             json={"user": {"email": email, "pwd": password, "remember": 1}},
@@ -128,7 +130,7 @@ class Client:
 
         access_token: str = auth_resp["access_token"]
 
-        sprinklers_resp: dict = await self._request(
+        sprinklers_resp = await self._request(
             "post",
             "https://my.rainmachine.com/devices/get-sprinklers",
             access_token=access_token,
@@ -142,7 +144,7 @@ class Client:
             controller: RemoteController = RemoteController(self._request)
             await controller.login(access_token, sprinkler["sprinklerId"], password)
 
-            version_data: dict = await controller.api.versions()
+            version_data = await controller.api.versions()
             controller.api_version = version_data["apiVer"]
             controller.hardware_version = version_data["hwVer"]
             controller.mac = sprinkler["mac"]

@@ -1,15 +1,15 @@
 """Define an object to interact with RainMachine weather parsers."""
-from typing import Awaitable, Callable
+from typing import Any, Awaitable, Callable, Dict, cast
 
 
 class Parser:  # pylint: disable=too-few-public-methods
     """Define a parser object."""
 
-    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
+    def __init__(self, request: Callable[..., Awaitable[Dict[str, Any]]]) -> None:
         """Initialize."""
-        self._request: Callable[..., Awaitable[dict]] = request
+        self._request = request
 
-    async def current(self) -> dict:
+    async def current(self) -> Dict[str, Any]:
         """Get current diagnostics."""
         data = await self._request("get", "parser")
-        return data["parsers"]
+        return cast(Dict[str, Any], data["parsers"])
