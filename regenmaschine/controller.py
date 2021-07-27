@@ -25,13 +25,13 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         self._access_token: Optional[str] = None
         self._access_token_expiration: Optional[datetime] = None
         self._client_request = request
-        self._host: Optional[str] = None
+        self._host: str = ""
         self._ssl = True
-        self.api_version: Optional[str] = None
-        self.hardware_version: Optional[int] = None
-        self.mac: Optional[str] = None
-        self.name: Optional[str] = None
-        self.software_version: Optional[str] = None
+        self.api_version: str = ""
+        self.hardware_version: int = 0
+        self.mac: str = ""
+        self.name: str = ""
+        self.software_version: str = ""
 
         # API endpoints:
         self.api = API(self._request)

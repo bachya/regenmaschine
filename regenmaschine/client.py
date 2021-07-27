@@ -116,7 +116,7 @@ class Client:
         controller.name = await controller.provisioning.device_name
         controller.software_version = version_data["swVer"]
 
-        self.controllers[controller.mac] = controller  # type: ignore
+        self.controllers[controller.mac] = controller
 
     async def load_remote(
         self, email: str, password: str, skip_existing: bool = True
