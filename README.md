@@ -84,6 +84,8 @@ async def main() -> None:
 asyncio.run(main())
 ```
 
+## Loading Local (Accessible Over the LAN) Controllers
+
 Once you have a client, you can load a local controller (i.e., one that is
 accessible over the LAN) very easily:
 
@@ -108,6 +110,8 @@ async def main() -> None:
 
 asyncio.run(main())
 ```
+
+## Loading Remote (Accessible Over the RainMachine Cloud) Controllers
 
 If you have 1, 2 or 100 other local controllers, you can load them in the same
 way – `client.controllers` will keep your controllers all organized.
@@ -140,6 +144,8 @@ asyncio.run(main())
 
 Bonus tip: `client.load_remote` will load _all_ controllers owned by that email
 address.
+
+## Using the Controller
 
 Regardless of the type of controller you have loaded (local or remote), the
 same properties and methods are available to each:
