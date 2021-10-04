@@ -273,7 +273,7 @@ asyncio.run(main())
 ```
 
 Check out `example.py`, the tests, and the source files themselves for method
-signatures and more examples.
+signatures and more examples. For additional reference, the full RainMachine™ API documentation is available [here](https://rainmachine.docs.apiary.io/).
 
 # Loading Controllers Multiple Times
 

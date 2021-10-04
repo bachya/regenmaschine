@@ -1,0 +1,18 @@
+{
+  "weather": [
+    {
+      "mintemp": null,
+      "maxtemp": null,
+      "temperature": null,
+      "wind": null,
+      "solarrad": null,
+      "qpf": null,
+      "rain": null,
+      "minrh": null,
+      "maxrh": null,
+      "condition": 26,
+      "pressure": null,
+      "dewpoint": null
+    }
+  ]
+}
