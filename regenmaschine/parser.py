@@ -1,5 +1,8 @@
 """Define an object to interact with RainMachine weather parsers."""
+import logging
 from typing import Any, Awaitable, Callable, Dict, cast
+
+_LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
 class Parser:  # pylint: disable=too-few-public-methods
@@ -13,3 +16,12 @@ class Parser:  # pylint: disable=too-few-public-methods
         """Get current diagnostics."""
         data = await self._request("get", "parser")
         return cast(Dict[str, Any], data["parsers"])
+
+    async def post_data(self, json_payload: str) -> Dict[str, Any]:
+        """Post weather data from an external source.
+
+        Local Weather Push service should be enabled from Settings > Weather >
+        Developer tab for RainMachine to consider the values being sent.
+        """
+        _LOGGER.debug(json_payload)
+        return await self._request("post", "parser/data", json=json_payload)
