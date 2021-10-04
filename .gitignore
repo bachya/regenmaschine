@@ -7,4 +7,3 @@ regenmaschine.egg-info
 coverage.xml
 poetry.lock
 tags
-dist/
