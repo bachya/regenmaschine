@@ -1,9 +1,10 @@
 .coverage
 .mypy_cache
 .tox/
-.venv
+.venv/
 __pycache__/
 regenmaschine.egg-info
 coverage.xml
 poetry.lock
 tags
+dist/

@@ -18,12 +18,12 @@ class Parser:  # pylint: disable=too-few-public-methods
         return cast(Dict[str, Any], data["parsers"])
 
     async def post_data(
-        self, json_payload: Dict[str, List[Dict[str, Any]]]
+        self, payload: Dict[str, List[Dict[str, Any]]]
     ) -> Dict[str, Any]:
         """Post weather data from an external source.
 
         Local Weather Push service should be enabled from Settings > Weather >
         Developer tab for RainMachine to consider the values being sent.
         """
-        _LOGGER.debug(json_payload)
-        return await self._request("post", "parser/data", json=json_payload)
+        _LOGGER.debug(payload)
+        return await self._request("post", "parser/data", json=payload)
