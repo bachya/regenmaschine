@@ -1,5 +1,5 @@
 """Define an object to interact with RainMachine weather parsers."""
-from typing import Any, Awaitable, Callable, Dict, cast
+from typing import Any, Awaitable, Callable, Dict, List, cast
 
 
 class Parser:  # pylint: disable=too-few-public-methods
@@ -13,3 +13,13 @@ class Parser:  # pylint: disable=too-few-public-methods
         """Get current diagnostics."""
         data = await self._request("get", "parser")
         return cast(Dict[str, Any], data["parsers"])
+
+    async def post_data(
+        self, payload: Dict[str, List[Dict[str, Any]]]
+    ) -> Dict[str, Any]:
+        """Post weather data from an external source.
+
+        Reference API Documentation for details:
+        https://rainmachine.docs.apiary.io/#reference/weather-services/parserdata/post
+        """
+        return await self._request("post", "parser/data", json=payload)
