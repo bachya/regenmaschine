@@ -11,7 +11,7 @@
 `regenmaschine` (German for "rain machine") is a simple, clean, well-tested
 Python library for interacting with
 [RainMachine™ smart sprinkler controllers](http://www.rainmachine.com/).
-It gives developers an easy [API](https://rainmachine.docs.apiary.io/) to manage their controllers over their local
+It gives developers an easy API to manage their controllers over their local
 LAN or remotely via the RainMachine™ cloud.
 
 - [Python Versions](#python-versions)
@@ -24,10 +24,10 @@ LAN or remotely via the RainMachine™ cloud.
 
 `regenmaschine` is currently supported on:
 
-- Python 3.6
-- Python 3.7
-- Python 3.8
-- Python 3.9
+* Python 3.6
+* Python 3.7
+* Python 3.8
+* Python 3.9
 
 # Installation
 
@@ -65,6 +65,7 @@ pooling:
 
 See the module docstrings throughout the library for full info on all parameters, return
 types, etc.
+
 
 ```python
 import asyncio
@@ -272,16 +273,16 @@ asyncio.run(main())
 ```
 
 Check out `example.py`, the tests, and the source files themselves for method
-signatures and more examples.
+signatures and more examples. For additional reference, the full RainMachine™ API documentation is available [here](https://rainmachine.docs.apiary.io/).
 
 # Loading Controllers Multiple Times
 
 It is technically possible to load a controller multiple times. Let's pretend
 for a moment that:
 
-- We have a local controller named `Home` (available at `192.168.1.101`).
-- We have a remote controller named `Grandma's House`.
-- Both controllers live under our email address: `user@host.com`
+* We have a local controller named `Home` (available at `192.168.1.101`).
+* We have a remote controller named `Grandma's House`.
+* Both controllers live under our email address: `user@host.com`
 
 If we load them thus:
 
@@ -312,7 +313,7 @@ asyncio.run(main())
 
 1. `Home` will be a `LocalController` and accessible over the LAN.
 2. `Grandma's House` will be a `RemoteController` and accessible only over the
-   RainMachine™ cloud.
+RainMachine™ cloud.
 
 Notice that `regenmaschine` is smart enough to not overwrite a controller that
 already exists: even though `Home` exists as a remote controller owned by
@@ -347,7 +348,7 @@ asyncio.run(main())
 # Contributing
 
 1. [Check for open features/bugs](https://github.com/bachya/regenmaschine/issues)
-   or [initiate a discussion on one](https://github.com/bachya/regenmaschine/issues/new).
+  or [initiate a discussion on one](https://github.com/bachya/regenmaschine/issues/new).
 2. [Fork the repository](https://github.com/bachya/regenmaschine/fork).
 3. (_optional, but highly recommended_) Create a virtual environment: `python3 -m venv .venv`
 4. (_optional, but highly recommended_) Enter the virtual environment: `source ./.venv/bin/activate`

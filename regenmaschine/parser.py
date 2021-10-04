@@ -1,8 +1,5 @@
 """Define an object to interact with RainMachine weather parsers."""
-import logging
 from typing import Any, Awaitable, Callable, Dict, List, cast
-
-_LOGGER: logging.Logger = logging.getLogger(__name__)
 
 
 class Parser:  # pylint: disable=too-few-public-methods
@@ -22,8 +19,7 @@ class Parser:  # pylint: disable=too-few-public-methods
     ) -> Dict[str, Any]:
         """Post weather data from an external source.
 
-        Local Weather Push service should be enabled from Settings > Weather >
-        Developer tab for RainMachine to consider the values being sent.
+        Reference API Documentation for details:
+        https://rainmachine.docs.apiary.io/#reference/weather-services/parserdata/post
         """
-        _LOGGER.debug(payload)
         return await self._request("post", "parser/data", json=payload)
