@@ -5,7 +5,7 @@ import logging
 from typing import Any, Dict, Optional, cast
 
 from aiohttp import ClientSession, ClientTimeout
-from aiohttp.client_exceptions import ClientError
+from aiohttp.client_exceptions import ClientError, ServerDisconnectedError
 import async_timeout
 
 from regenmaschine.controller import Controller, LocalController, RemoteController
@@ -57,7 +57,6 @@ class Client:
             raise TokenExpiredError("Long-lived access token has expired")
 
         kwargs.setdefault("headers", {})
-        kwargs["headers"]["Connection"] = "close"
         kwargs["headers"]["Content-Type"] = "application/json"
 
         kwargs.setdefault("params", {})
@@ -73,21 +72,33 @@ class Client:
 
         assert session
 
-        try:
-            async with async_timeout.timeout(self._request_timeout):
-                async with session.request(method, url, ssl=ssl, **kwargs) as resp:
-                    resp.raise_for_status()
-                    data = await resp.json(content_type=None)
-                    _raise_for_remote_status(url, data)
-        except ClientError as err:
-            if "401" in str(err):
-                raise TokenExpiredError("Long-lived access token has expired") from err
-            raise RequestError(f"Error requesting data from {url}") from err
-        except asyncio.TimeoutError as err:
-            raise RequestError(f"Timeout during request: {url}") from err
-        finally:
-            if not use_running_session:
-                await session.close()
+        for attempt in range(2):
+            try:
+                async with async_timeout.timeout(self._request_timeout):
+                    async with session.request(method, url, ssl=ssl, **kwargs) as resp:
+                        resp.raise_for_status()
+                        data = await resp.json(content_type=None)
+                        _raise_for_remote_status(url, data)
+            except ServerDisconnectedError:
+                # The HTTP/1.1 spec allows the device to close the connection
+                # at any time. aiohttp raises ServerDisconnectedError to let us
+                # decide what to do. In this case we want to retry as it likely
+                # means the connection was stale and the server closed it on us.
+                if attempt == 0:
+                    continue
+                raise
+            except ClientError as err:
+                if "401" in str(err):
+                    raise TokenExpiredError(
+                        "Long-lived access token has expired"
+                    ) from err
+                raise RequestError(f"Error requesting data from {url}") from err
+            except asyncio.TimeoutError as err:
+                raise RequestError(f"Timeout during request: {url}") from err
+            finally:
+                if not use_running_session:
+                    await session.close()
+            break
 
         _LOGGER.debug("Data received for %s: %s", url, data)
 
