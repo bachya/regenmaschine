@@ -1,2 +1,6 @@
 [run]
 source = regenmaschine
+
+[report]
+exclude_lines =
+    assert False
