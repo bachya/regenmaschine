@@ -283,7 +283,9 @@ async def test_token_expired_implicit_exception(authenticated_local_client):
 
 
 @pytest.mark.asyncio
-async def test_retry_on_server_disconnected(aresponses, authenticated_local_client):
+async def test_retry_only_once_on_server_disconnected(
+    aresponses, authenticated_local_client
+):
     """Test we retry on server disconnected."""
     async with authenticated_local_client:
         authenticated_local_client.add(
@@ -313,3 +315,8 @@ async def test_retry_on_server_disconnected(aresponses, authenticated_local_clie
 
             data = await controller.restrictions.raindelay()
             assert data["delayCounter"] == -1
+
+            with pytest.raises(aiohttp.ServerDisconnectedError), mock.patch.object(
+                session, "request", side_effect=aiohttp.ServerDisconnectedError
+            ):
+                await controller.restrictions.raindelay()
