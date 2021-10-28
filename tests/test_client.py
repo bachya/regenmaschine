@@ -316,7 +316,7 @@ async def test_retry_only_once_on_server_disconnected(
             data = await controller.restrictions.raindelay()
             assert data["delayCounter"] == -1
 
-            with pytest.raises(aiohttp.ServerDisconnectedError), mock.patch.object(
+            with pytest.raises(RequestError), mock.patch.object(
                 session, "request", side_effect=aiohttp.ServerDisconnectedError
             ):
                 await controller.restrictions.raindelay()
