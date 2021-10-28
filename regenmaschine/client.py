@@ -87,7 +87,9 @@ class Client:
                     # means the connection was stale and the server closed it on us.
                     if attempt == 0:
                         continue
-                    raise RequestError(f"Error requesting data from {url} ({err}))") from err
+                    raise RequestError(
+                        f"Error requesting data from {url} ({err}))"
+                    ) from err
 
         finally:
             if not use_running_session:
