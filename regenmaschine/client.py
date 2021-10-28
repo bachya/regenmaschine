@@ -95,7 +95,7 @@ class Client:
             if not use_running_session:
                 await session.close()
 
-        assert False, "unreachable"
+        assert False, "unreachable"  # https://github.com/python/mypy/issues/8964
 
     async def _request_with_session(
         self,
