@@ -5,7 +5,7 @@ import logging
 from typing import Any, Dict, Optional, cast
 
 from aiohttp import ClientSession, ClientTimeout
-from aiohttp.client_exceptions import ClientError
+from aiohttp.client_exceptions import ClientError, ServerDisconnectedError
 import async_timeout
 
 from regenmaschine.controller import Controller, LocalController, RemoteController
@@ -57,7 +57,6 @@ class Client:
             raise TokenExpiredError("Long-lived access token has expired")
 
         kwargs.setdefault("headers", {})
-        kwargs["headers"]["Connection"] = "close"
         kwargs["headers"]["Content-Type"] = "application/json"
 
         kwargs.setdefault("params", {})
@@ -74,23 +73,56 @@ class Client:
         assert session
 
         try:
-            async with async_timeout.timeout(self._request_timeout):
-                async with session.request(method, url, ssl=ssl, **kwargs) as resp:
-                    resp.raise_for_status()
-                    data = await resp.json(content_type=None)
-                    _raise_for_remote_status(url, data)
+            # Only try 2x for ServerDisconnectedError to comply with the RFC
+            # https://datatracker.ietf.org/doc/html/rfc2616#section-8.1.4
+            for attempt in range(2):
+                try:
+                    return await self._request_with_session(
+                        session, method, url, ssl, **kwargs
+                    )
+                except ServerDisconnectedError as err:
+                    # The HTTP/1.1 spec allows the device to close the connection
+                    # at any time. aiohttp raises ServerDisconnectedError to let us
+                    # decide what to do. In this case we want to retry as it likely
+                    # means the connection was stale and the server closed it on us.
+                    if attempt == 0:
+                        continue
+                    raise RequestError(
+                        f"Error requesting data from {url} ({err}))"
+                    ) from err
+
+        finally:
+            if not use_running_session:
+                await session.close()
+
+        assert False, "unreachable"  # https://github.com/python/mypy/issues/8964
+
+    async def _request_with_session(
+        self,
+        session: ClientSession,
+        method: str,
+        url: str,
+        ssl: bool,
+        **kwargs: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        """Make a request with a session."""
+        try:
+            async with async_timeout.timeout(self._request_timeout), session.request(
+                method, url, ssl=ssl, **kwargs
+            ) as resp:
+                resp.raise_for_status()
+                data = await resp.json(content_type=None)
+                _raise_for_remote_status(url, data)
+        except ServerDisconnectedError:
+            raise
         except ClientError as err:
             if "401" in str(err):
                 raise TokenExpiredError("Long-lived access token has expired") from err
             raise RequestError(f"Error requesting data from {url}") from err
         except asyncio.TimeoutError as err:
-            raise RequestError(f"Timeout during request: {url}") from err
-        finally:
-            if not use_running_session:
-                await session.close()
+            raise RequestError(f"Error requesting data from {url} ({err}))") from err
 
         _LOGGER.debug("Data received for %s: %s", url, data)
-
         return cast(Dict[str, Any], data)
 
     async def load_local(  # pylint: disable=too-many-arguments
