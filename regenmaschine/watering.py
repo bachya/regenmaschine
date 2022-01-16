@@ -2,6 +2,8 @@
 import datetime
 from typing import Any, Awaitable, Callable, Dict, List, Optional, cast
 
+MAX_PAUSE_DURATION = 43200
+
 
 class Watering:
     """Define a watering object."""
@@ -29,6 +31,11 @@ class Watering:
 
     async def pause_all(self, seconds: int) -> Dict[str, Any]:
         """Pause all watering for a specified number of seconds."""
+        if seconds > MAX_PAUSE_DURATION:
+            raise ValueError(
+                f"Cannot pause watering for more than {MAX_PAUSE_DURATION} seconds"
+            )
+
         return await self._request(
             "post", "watering/pauseall", json={"duration": seconds}
         )
