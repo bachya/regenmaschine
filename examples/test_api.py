@@ -16,82 +16,77 @@ async def main():
     """Run."""
     logging.basicConfig(level=logging.INFO)
     async with ClientSession() as session:
-        # try:
-        client = Client(session=session)
-        await client.load_local("172.16.20.29", "yvV880VFQFs*X6IHh[YWoKnVU")
+        try:
+            client = Client(session=session)
+            await client.load_local("<IP ADDRESS>", "<PASSWORD>")
 
-        for controller in client.controllers.values():
-            duration = 43100
-            while True:
-                print(f"Attempting duration: {duration}")
-                await controller.watering.pause_all(duration)
-                duration += 1
-                # _LOGGER.info("CLIENT INFORMATION")
-                # _LOGGER.info("Name: %s", controller.name)
-                # _LOGGER.info("MAC Address: %s", controller.mac)
-                # _LOGGER.info("API Version: %s", controller.api_version)
-                # _LOGGER.info("Software Version: %s", controller.software_version)
-                # _LOGGER.info("Hardware Version: %s", controller.hardware_version)
+            for controller in client.controllers.values():
+                _LOGGER.info("CLIENT INFORMATION")
+                _LOGGER.info("Name: %s", controller.name)
+                _LOGGER.info("MAC Address: %s", controller.mac)
+                _LOGGER.info("API Version: %s", controller.api_version)
+                _LOGGER.info("Software Version: %s", controller.software_version)
+                _LOGGER.info("Hardware Version: %s", controller.hardware_version)
 
-                # _LOGGER.info("RAINMACHINE DIAGNOSTICS")
-                # diagnostics = await controller.diagnostics.current()
-                # _LOGGER.info(diagnostics)
+                _LOGGER.info("RAINMACHINE DIAGNOSTICS")
+                diagnostics = await controller.diagnostics.current()
+                _LOGGER.info(diagnostics)
 
-                # _LOGGER.info("RAINMACHINE PARSERS")
-                # parsers = await controller.parsers.current()
-                # _LOGGER.info(parsers)
+                _LOGGER.info("RAINMACHINE PARSERS")
+                parsers = await controller.parsers.current()
+                _LOGGER.info(parsers)
 
-                # # Work with programs:
-                # _LOGGER.info("ALL PROGRAMS")
-                # programs = await controller.programs.all(include_inactive=True)
-                # _LOGGER.info(programs)
+                # Work with programs:
+                _LOGGER.info("ALL PROGRAMS")
+                programs = await controller.programs.all(include_inactive=True)
+                _LOGGER.info(programs)
 
-                # _LOGGER.info("NEXT RUN TIMES")
-                # next_programs = await controller.programs.next()
-                # _LOGGER.info(next_programs)
+                _LOGGER.info("NEXT RUN TIMES")
+                next_programs = await controller.programs.next()
+                _LOGGER.info(next_programs)
 
-                # _LOGGER.info("RUNNING PROGRAMS")
-                # running_programs = await controller.programs.running()
-                # _LOGGER.info(running_programs)
+                _LOGGER.info("RUNNING PROGRAMS")
+                running_programs = await controller.programs.running()
+                _LOGGER.info(running_programs)
 
-                # _LOGGER.info("PROVISIONING INFO")
-                # name = await controller.provisioning.device_name
-                # _LOGGER.info("Device Name: %s", name)
-                # settings = await controller.provisioning.settings()
-                # _LOGGER.info(settings)
-                # wifi = await controller.provisioning.wifi()
-                # _LOGGER.info(wifi)
+                _LOGGER.info("PROVISIONING INFO")
+                name = await controller.provisioning.device_name
+                _LOGGER.info("Device Name: %s", name)
+                settings = await controller.provisioning.settings()
+                _LOGGER.info(settings)
+                wifi = await controller.provisioning.wifi()
+                _LOGGER.info(wifi)
 
-                # _LOGGER.info("RESTRICTIONS")
-                # current = await controller.restrictions.current()
-                # _LOGGER.info(current)
-                # universal = await controller.restrictions.universal()
-                # _LOGGER.info(universal)
-                # hourly = await controller.restrictions.hourly()
-                # _LOGGER.info(hourly)
-                # raindelay = await controller.restrictions.raindelay()
-                # _LOGGER.info(raindelay)
+                _LOGGER.info("RESTRICTIONS")
+                current = await controller.restrictions.current()
+                _LOGGER.info(current)
+                universal = await controller.restrictions.universal()
+                _LOGGER.info(universal)
+                hourly = await controller.restrictions.hourly()
+                _LOGGER.info(hourly)
+                raindelay = await controller.restrictions.raindelay()
+                _LOGGER.info(raindelay)
 
-                # _LOGGER.info("STATS")
-                # today = await controller.stats.on_date(date=datetime.date.today())
-                # _LOGGER.info(today)
-                # upcoming = await controller.stats.upcoming(details=True)
-                # _LOGGER.info(upcoming)
+                _LOGGER.info("STATS")
+                today = await controller.stats.on_date(date=datetime.date.today())
+                _LOGGER.info(today)
+                upcoming = await controller.stats.upcoming(details=True)
+                _LOGGER.info(upcoming)
 
-                # _LOGGER.info("WATERING")
-                # log = await controller.watering.log(date=datetime.date.today())
-                # _LOGGER.info(log)
-                # queue = await controller.watering.queue()
-                # _LOGGER.info(queue)
+                _LOGGER.info("WATERING")
+                log = await controller.watering.log(date=datetime.date.today())
+                _LOGGER.info(log)
+                queue = await controller.watering.queue()
+                _LOGGER.info(queue)
 
-                # runs = await controller.watering.runs(date=datetime.date.today())
-                # _LOGGER.info(runs)
+                runs = await controller.watering.runs(date=datetime.date.today())
+                _LOGGER.info(runs)
 
-                # print("ALL ACTIVE ZONES")
-                # zones = await controller.zones.all(details=True)
-                # _LOGGER.info(zones)
-        # except RainMachineError as err:
-            # print(err)
+                print("ALL ACTIVE ZONES")
+                zones = await controller.zones.all(details=True)
+                _LOGGER.info(zones)
+        except RainMachineError as err:
+            print(err)
 
 
 asyncio.run(main())
