@@ -1,10 +1,86 @@
 """Define tests for restriction endpoints."""
+from datetime import timedelta
+
 import aiohttp
 import pytest
 
 from regenmaschine import Client
 
 from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
+
+
+@pytest.mark.asyncio
+async def test_restrict_unrestrict(aresponses, authenticated_local_client):
+    """Test restricting watering and then unrestricting it.."""
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/restrictions/global",
+            "post",
+            aresponses.Response(
+                text=load_fixture("restrict_response.json"), status=200
+            ),
+        )
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/restrictions/global",
+            "post",
+            aresponses.Response(
+                text=load_fixture("unrestrict_response.json"), status=200
+            ),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
+
+            await controller.restrictions.restrict(timedelta(hours=15))
+            await controller.restrictions.unrestrict()
+
+
+@pytest.mark.asyncio
+async def test_restrictions_hourly(aresponses, authenticated_local_client):
+    """Test getting any hourly restrictions."""
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/restrictions/hourly",
+            "get",
+            aresponses.Response(
+                text=load_fixture("restrictions_hourly_response.json"), status=200
+            ),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
+
+            data = await controller.restrictions.hourly()
+            assert not data
+
+
+@pytest.mark.asyncio
+async def test_restrictions_raindelay(aresponses, authenticated_local_client):
+    """Test getting any rain delay-related restrictions."""
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/restrictions/raindelay",
+            "get",
+            aresponses.Response(
+                text=load_fixture("restrictions_raindelay_response.json"), status=200
+            ),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            controller = next(iter(client.controllers.values()))
+
+            data = await controller.restrictions.raindelay()
+            assert data["delayCounter"] == -1
 
 
 @pytest.mark.asyncio
