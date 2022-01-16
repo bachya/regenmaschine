@@ -63,6 +63,9 @@ async def test_watering_pause(aresponses, authenticated_local_client):
             data = await controller.watering.pause_all(30)
             assert data["message"] == "OK"
 
+            with pytest.raises(ValueError):
+                data = await controller.watering.pause_all(60 * 60 * 24)
+
             data = await controller.watering.unpause_all()
             assert data["message"] == "OK"
 
