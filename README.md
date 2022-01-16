@@ -251,6 +251,11 @@ async def main() -> None:
             hourly = await controller.restrictions.hourly()
             raindelay = await controller.restrictions.raindelay()
 
+            # Restrict all watering activities for 3 days:
+            await controller.restrictions.restrict(datetime.timedelta(days=3))
+            # ...and then unrestrict watering activities:
+            await controller.restrictions.unrestrict()
+
             # Get watering stats:
             today = await controller.stats.on_date(datetime.date.today())
             upcoming_days = await controller.stats.upcoming(details=True)
