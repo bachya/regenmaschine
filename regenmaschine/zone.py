@@ -36,7 +36,7 @@ class Zone:
         return {
             zone["uid"]: {
                 **zone,
-                **next((z for z in results[1]["zones"] if z["uid"] == zone["uid"])),
+                **next(z for z in results[1]["zones"] if z["uid"] == zone["uid"]),
             }
             for zone in results[0]["zones"]
             if zone["active"] or include_inactive
