@@ -41,14 +41,17 @@ async def test_zone_enable_disable(aresponses, authenticated_local_client):
 
 
 @pytest.mark.asyncio
-async def test_zone_get(aresponses, authenticated_local_client):
+@pytest.mark.parametrize(
+    "zone_fixture_filename", ["zone_response.json", "zone_response_gen1.json"]
+)
+async def test_zone_get(aresponses, authenticated_local_client, zone_fixture_filename):
     """Test getting info on all zones."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/zone",
             "get",
-            aresponses.Response(text=load_fixture("zone_response.json"), status=200),
+            aresponses.Response(text=load_fixture(zone_fixture_filename), status=200),
         )
 
         async with aiohttp.ClientSession() as session:
@@ -63,14 +66,19 @@ async def test_zone_get(aresponses, authenticated_local_client):
 
 
 @pytest.mark.asyncio
-async def test_zone_get_details(aresponses, authenticated_local_client):
+@pytest.mark.parametrize(
+    "zone_fixture_filename", ["zone_response.json", "zone_response_gen1.json"]
+)
+async def test_zone_get_detail(
+    aresponses, authenticated_local_client, zone_fixture_filename
+):
     """Test getting all zones with details."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/zone",
             "get",
-            aresponses.Response(text=load_fixture("zone_response.json"), status=200),
+            aresponses.Response(text=load_fixture(zone_fixture_filename), status=200),
         )
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",

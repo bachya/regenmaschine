@@ -21,26 +21,26 @@ class Zone:
     ) -> Dict[int, Dict[str, Any]]:
         """Return all zones (with optional advanced properties)."""
         tasks = [self._request("get", "zone")]
+
         if details:
             tasks.append(self._request("get", "zone/properties"))
 
         results = await asyncio.gather(*tasks)
 
-        if len(results) == 1:
-            return {
-                zone["uid"]: zone
-                for zone in results[0]["zones"]
-                if zone["active"] or include_inactive
-            }
+        zones = {}
+        for zone in results[0]["zones"]:
+            if details:
+                [extra] = [z for z in results[1]["zones"] if z["uid"] == zone["uid"]]
+                zone_data = {**zone, **extra}
+            else:
+                if "active" not in zone:
+                    zone["active"] = True
+                zone_data = zone
 
-        return {
-            zone["uid"]: {
-                **zone,
-                **next(z for z in results[1]["zones"] if z["uid"] == zone["uid"]),
-            }
-            for zone in results[0]["zones"]
-            if zone["active"] or include_inactive
-        }
+            if zone_data["active"] or include_inactive:
+                zones[zone_data["uid"]] = zone_data
+
+        return zones
 
     async def disable(self, zone_id: int) -> Dict[str, Any]:
         """Disable a zone."""
