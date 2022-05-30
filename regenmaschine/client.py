@@ -88,7 +88,7 @@ class Client:
                     if attempt == 0:
                         continue
                     raise RequestError(
-                        f"Error requesting data from {url} ({err}))"
+                        f"Error requesting data from {url}: {err}"
                     ) from err
 
         finally:
@@ -118,9 +118,9 @@ class Client:
         except ClientError as err:
             if "401" in str(err):
                 raise TokenExpiredError("Long-lived access token has expired") from err
-            raise RequestError(f"Error requesting data from {url}") from err
+            raise RequestError(f"Error requesting data from {url}: {err}") from err
         except asyncio.TimeoutError as err:
-            raise RequestError(f"Error requesting data from {url} ({err}))") from err
+            raise RequestError(f"Timmed out while requesting data from {url}") from err
 
         _LOGGER.debug("Data received for %s: %s", url, data)
         return cast(Dict[str, Any], data)
