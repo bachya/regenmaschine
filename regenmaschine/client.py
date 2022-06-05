@@ -106,6 +106,8 @@ class Client:
         **kwargs: Dict[str, Any],
     ) -> Dict[str, Any]:
         """Make a request with a session."""
+        data: Dict[str, Any] = {}
+
         try:
             async with async_timeout.timeout(self._request_timeout), session.request(
                 method, url, ssl=ssl, **kwargs
