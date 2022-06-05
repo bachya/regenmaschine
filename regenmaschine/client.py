@@ -106,19 +106,23 @@ class Client:
         **kwargs: Dict[str, Any],
     ) -> Dict[str, Any]:
         """Make a request with a session."""
+        data: Dict[str, Any] = {}
+
         try:
             async with async_timeout.timeout(self._request_timeout), session.request(
                 method, url, ssl=ssl, **kwargs
             ) as resp:
-                resp.raise_for_status()
                 data = await resp.json(content_type=None)
+                resp.raise_for_status()
                 _raise_for_remote_status(url, data)
         except ServerDisconnectedError:
             raise
         except ClientError as err:
             if "401" in str(err):
                 raise TokenExpiredError("Long-lived access token has expired") from err
-            raise RequestError(f"Error requesting data from {url}: {err}") from err
+            raise RequestError(
+                f"Error requesting data from {url}: {err} (data: {data})"
+            ) from err
         except asyncio.TimeoutError as err:
             raise RequestError(f"Timmed out while requesting data from {url}") from err
 
