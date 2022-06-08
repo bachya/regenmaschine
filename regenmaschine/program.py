@@ -45,9 +45,21 @@ class Program:
         return cast(List[Dict[str, Any]], data["programs"])
 
     async def start(self, program_id: int) -> Dict[str, Any]:
-        """Start a program."""
-        return await self._request("post", f"program/{program_id}/start")
+        """Start a program.
+
+        Note that in addition to including it in the query URL, the program ID must be
+        provided in the request body to accommodate 1st generation controllers.
+        """
+        return await self._request(
+            "post", f"program/{program_id}/start", json={"pid": program_id}
+        )
 
     async def stop(self, program_id: int) -> Dict[str, Any]:
-        """Stop a program."""
-        return await self._request("post", f"program/{program_id}/stop")
+        """Stop a program.
+
+        Note that in addition to including it in the query URL, the program ID must be
+        provided in the request body to accommodate 1st generation controllers.
+        """
+        return await self._request(
+            "post", f"program/{program_id}/stop", json={"pid": program_id}
+        )
