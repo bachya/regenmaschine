@@ -14,7 +14,7 @@ Python library for interacting with
 It gives developers an easy API to manage their controllers over their local
 LAN or remotely via the RainMachine™ cloud.
 
-- [Remote Access Announcement](#remote-access-announcement)
+- [Remote Access Announcement](#remote-access-announcement-2022-06-26)
 - [Python Versions](#python-versions)
 - [Installation](#installation)
 - [Usage](#usage)
