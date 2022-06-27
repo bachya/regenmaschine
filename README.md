@@ -22,7 +22,8 @@ LAN or remotely via the RainMachine™ cloud.
 
 # Announcement re: Remote Access (2022-06-26)
 
-On June 2, 2022, RainMachine announced a "Premium Services" addition; under this new
+On June 2, 2022, RainMachine announced a
+[Premium Services](https://www.rainmachine.com/premium/) addition; under this new
 model, remote access is _only_ available to subscribers of these Premium Services.
 
 I do not currently intend to subscribe to Premium Services; as such, the remote access
