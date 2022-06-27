@@ -20,6 +20,15 @@ LAN or remotely via the RainMachine™ cloud.
 - [Loading Controllers Multiple Times](#loading-controllers-multiple-times)
 - [Contributing](#contributing)
 
+# Announcement re: Remote Access (2022-06-26)
+
+On June 2, 2022, RainMachine announced a "Premium Services" addition; under this new
+model, remote access is _only_ available to subscribers of these Premium Services.
+
+I do not currently intend to subscribe to Premium Services; as such, the remote access
+abilities of `regenmaschine` will remain as-is from here on out unless spurred on by
+others. PRs from subscribing users are always welcome.
+
 # Python Versions
 
 `regenmaschine` is currently supported on:
