@@ -29,8 +29,8 @@ model, remote access is _only_ available to subscribers of these Premium Service
 
 I do not currently intend to subscribe to Premium Services; as such, the remote access
 abilities of `regenmaschine` will remain as-is from here on out unless spurred on by
-others. As such, they may stop working at any time. PRs from subscribing users are
-always welcome.
+others. They may stop working at any time. PRs from subscribing users are always
+welcome.
 
 # Python Versions
 
