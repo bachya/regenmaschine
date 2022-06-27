@@ -14,13 +14,14 @@ Python library for interacting with
 It gives developers an easy API to manage their controllers over their local
 LAN or remotely via the RainMachine™ cloud.
 
+- [Remote Access Announcement](#remote-access-announcement)
 - [Python Versions](#python-versions)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Loading Controllers Multiple Times](#loading-controllers-multiple-times)
 - [Contributing](#contributing)
 
-# Announcement re: Remote Access (2022-06-26)
+# Remote Access Announcement (2022-06-26)
 
 On June 2, 2022, RainMachine announced a
 [Premium Services](https://www.rainmachine.com/premium/) addition; under this new
