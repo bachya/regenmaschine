@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
-from ssl import SSLContext, SSLError, TLSVersion, create_default_context
+from ssl import CERT_NONE, SSLContext, SSLError, TLSVersion, create_default_context
 from typing import Any, Awaitable, Callable
 
 from regenmaschine.api import API
@@ -88,7 +88,14 @@ class LocalController(Controller):
         super().__init__(request)
 
         self._host = URL_BASE_LOCAL.format(host, port)
-        if not ssl:
+
+        if ssl:
+            # If SSL is enabled, we set options so that the controller's self-signed
+            # cert is accepted:
+            assert self._ssl_context
+            self._ssl_context.check_hostname = False
+            self._ssl_context.verify_mode = CERT_NONE
+        else:
             self._ssl_context = None
 
     async def login(self, password: str) -> None:
