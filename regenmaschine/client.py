@@ -3,17 +3,20 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime
+<<<<<<< HEAD
 import logging
 from typing import Any
+=======
+from typing import Any, Dict, Optional, cast
+>>>>>>> 87cdb7efa2ad (Logging)
 
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError, ServerDisconnectedError
 import async_timeout
 
+from regenmaschine.const import LOGGER
 from regenmaschine.controller import Controller, LocalController, RemoteController
 from regenmaschine.errors import RequestError, TokenExpiredError, raise_remote_error
-
-_LOGGER: logging.Logger = logging.getLogger(__name__)
 
 DEFAULT_LOCAL_PORT: int = 8080
 DEFAULT_TIMEOUT: int = 30
@@ -128,7 +131,7 @@ class Client:
         except asyncio.TimeoutError as err:
             raise RequestError(f"Timmed out while requesting data from {url}") from err
 
-        _LOGGER.debug("Data received for %s: %s", url, data)
+        LOGGER.debug("Data received for %s: %s", url, data)
 
         return data
 

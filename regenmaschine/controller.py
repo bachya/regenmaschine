@@ -6,6 +6,7 @@ from ssl import SSLContext, SSLError, TLSVersion, create_default_context
 from typing import Any, Awaitable, Callable
 
 from regenmaschine.api import API
+from regenmaschine.const import LOGGER
 from regenmaschine.diagnostics import Diagnostics
 from regenmaschine.parser import Parser
 from regenmaschine.program import Program
@@ -59,10 +60,13 @@ class Controller:  # pylint: disable=too-many-instance-attributes
                 ssl=self._ssl_context,
                 **kwargs,
             )
-        except SSLError:
+        except SSLError as err:
             # Some older local controllers don't utilize a modern TLS version; if we
             # encounter a TLS handshake error, attempt to downgrade and try again:
             assert self._ssl_context
+
+            LOGGER.warning("SSL error: %s (attempting TLS downgrade)", err)
+
             self._ssl_context.minimum_version = TLSVersion.SSLv3
             return await self._client_request(
                 method,
