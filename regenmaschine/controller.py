@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta
+from ssl import SSLContext, SSLError, TLSVersion, create_default_context
 from typing import Any, Awaitable, Callable
 
 from regenmaschine.api import API
@@ -27,7 +28,7 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         self._access_token_expiration: datetime | None = None
         self._client_request = request
         self._host: str = ""
-        self._ssl = True
+        self._ssl_context: SSLContext | None = create_default_context()
         self.api_version: str = ""
         self.hardware_version: int = 0
         self.mac: str = ""
@@ -49,14 +50,28 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         self, method: str, endpoint: str, **kwargs: dict[str, Any]
     ) -> dict[str, Any]:
         """Wrap the generic request method to add access token, etc."""
-        return await self._client_request(
-            method,
-            f"{self._host}/{endpoint}",
-            access_token=self._access_token,
-            access_token_expiration=self._access_token_expiration,
-            ssl=self._ssl,
-            **kwargs,
-        )
+        try:
+            return await self._client_request(
+                method,
+                f"{self._host}/{endpoint}",
+                access_token=self._access_token,
+                access_token_expiration=self._access_token_expiration,
+                ssl=self._ssl_context,
+                **kwargs,
+            )
+        except SSLError:
+            # Some older local controllers don't utilize a modern TLS version; if we
+            # encounter a TLS handshake error, attempt to downgrade and try again:
+            assert self._ssl_context
+            self._ssl_context.minimum_version = TLSVersion.SSLv3
+            return await self._client_request(
+                method,
+                f"{self._host}/{endpoint}",
+                access_token=self._access_token,
+                access_token_expiration=self._access_token_expiration,
+                ssl=self._ssl_context,
+                **kwargs,
+            )
 
 
 class LocalController(Controller):
@@ -69,7 +84,8 @@ class LocalController(Controller):
         super().__init__(request)
 
         self._host = URL_BASE_LOCAL.format(host, port)
-        self._ssl = ssl
+        if not ssl:
+            self._ssl_context = None
 
     async def login(self, password: str) -> None:
         """Authenticate against the device (locally)."""
