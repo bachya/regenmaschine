@@ -1,24 +1,26 @@
 """Define an object to interact with zones."""
+from __future__ import annotations
+
 import asyncio
-from typing import Any, Awaitable, Callable, Dict, Optional, cast
+from typing import Any, Awaitable, Callable, Dict, cast
 
 
 class Zone:
     """Define a zone object."""
 
-    def __init__(self, request: Callable[..., Awaitable[Dict[str, Any]]]) -> None:
+    def __init__(self, request: Callable[..., Awaitable[dict[str, Any]]]) -> None:
         """Initialize."""
         self._request = request
 
     async def _post(
-        self, zone_id: int, json: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, zone_id: int, json: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Post data to a (non)existing zone."""
         return await self._request("post", f"zone/{zone_id}/properties", json=json)
 
     async def all(
         self, *, details: bool = False, include_inactive: bool = False
-    ) -> Dict[int, Dict[str, Any]]:
+    ) -> dict[int, dict[str, Any]]:
         """Return all zones (with optional advanced properties)."""
         tasks = [self._request("get", "zone")]
 
@@ -42,15 +44,15 @@ class Zone:
 
         return zones
 
-    async def disable(self, zone_id: int) -> Dict[str, Any]:
+    async def disable(self, zone_id: int) -> dict[str, Any]:
         """Disable a zone."""
         return await self._post(zone_id, {"active": False})
 
-    async def enable(self, zone_id: int) -> Dict[str, Any]:
+    async def enable(self, zone_id: int) -> dict[str, Any]:
         """Enable a zone."""
         return await self._post(zone_id, {"active": True})
 
-    async def get(self, zone_id: int, *, details: bool = False) -> Dict[str, Any]:
+    async def get(self, zone_id: int, *, details: bool = False) -> dict[str, Any]:
         """Return a specific zone."""
         tasks = [self._request("get", f"zone/{zone_id}")]
         if details:
@@ -63,7 +65,7 @@ class Zone:
 
         return {**results[0], **results[1]}
 
-    async def start(self, zone_id: int, time: int) -> Dict[str, Any]:
+    async def start(self, zone_id: int, time: int) -> dict[str, Any]:
         """Start a zone.
 
         Note that in addition to including it in the query URL, the zone ID must be
@@ -73,7 +75,7 @@ class Zone:
             "post", f"zone/{zone_id}/start", json={"time": time, "zid": zone_id}
         )
 
-    async def stop(self, zone_id: int) -> Dict[str, Any]:
+    async def stop(self, zone_id: int) -> dict[str, Any]:
         """Stop a zone.
 
         Note that in addition to including it in the query URL, the zone ID must be

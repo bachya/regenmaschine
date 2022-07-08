@@ -1,6 +1,8 @@
 """Define an object to interact with generic watering data/actions."""
+from __future__ import annotations
+
 import datetime
-from typing import Any, Awaitable, Callable, Dict, List, Optional, cast
+from typing import Any, Awaitable, Callable, Dict, List, cast
 
 MAX_PAUSE_DURATION = 43200
 
@@ -8,16 +10,16 @@ MAX_PAUSE_DURATION = 43200
 class Watering:
     """Define a watering object."""
 
-    def __init__(self, request: Callable[..., Awaitable[Dict[str, Any]]]) -> None:
+    def __init__(self, request: Callable[..., Awaitable[dict[str, Any]]]) -> None:
         """Initialize."""
         self._request = request
 
     async def log(
         self,
-        date: Optional[datetime.date] = None,
-        days: Optional[int] = None,
+        date: datetime.date | None = None,
+        days: int | None = None,
         details: bool = False,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Get watering information for X days from Y date."""
         endpoint = "watering/log"
         if details:
@@ -29,7 +31,7 @@ class Watering:
         data = await self._request("get", endpoint)
         return cast(List[Dict[str, Any]], data["waterLog"]["days"])
 
-    async def pause_all(self, seconds: int) -> Dict[str, Any]:
+    async def pause_all(self, seconds: int) -> dict[str, Any]:
         """Pause all watering for a specified number of seconds."""
         if seconds > MAX_PAUSE_DURATION:
             raise ValueError(
@@ -40,14 +42,14 @@ class Watering:
             "post", "watering/pauseall", json={"duration": seconds}
         )
 
-    async def queue(self) -> List[Dict[str, Any]]:
+    async def queue(self) -> list[dict[str, Any]]:
         """Return the queue of active watering activities."""
         data = await self._request("get", "watering/queue")
         return cast(List[Dict[str, Any]], data["queue"])
 
     async def runs(
-        self, date: Optional[datetime.date] = None, days: Optional[int] = None
-    ) -> List[Dict[str, Any]]:
+        self, date: datetime.date | None = None, days: int | None = None
+    ) -> list[dict[str, Any]]:
         """Return all program runs for X days from Y date."""
         endpoint = "watering/past"
 
@@ -57,10 +59,10 @@ class Watering:
         data = await self._request("get", endpoint)
         return cast(List[Dict[str, Any]], data["pastValues"])
 
-    async def stop_all(self) -> Dict[str, Any]:
+    async def stop_all(self) -> dict[str, Any]:
         """Stop all programs and zones from running."""
         return await self._request("post", "watering/stopall")
 
-    async def unpause_all(self) -> Dict[str, Any]:
+    async def unpause_all(self) -> dict[str, Any]:
         """Unpause all paused watering."""
         return await self.pause_all(0)

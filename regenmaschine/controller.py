@@ -1,7 +1,8 @@
 """Define a RainMachine controller class."""
-# pylint: disable=too-few-public-methods,too-many-instance-attributes
+from __future__ import annotations
+
 from datetime import datetime, timedelta
-from typing import Any, Awaitable, Callable, Dict, Optional
+from typing import Any, Awaitable, Callable
 
 from regenmaschine.api import API
 from regenmaschine.diagnostics import Diagnostics
@@ -22,8 +23,8 @@ class Controller:  # pylint: disable=too-many-instance-attributes
 
     def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
         """Initialize."""
-        self._access_token: Optional[str] = None
-        self._access_token_expiration: Optional[datetime] = None
+        self._access_token: str | None = None
+        self._access_token_expiration: datetime | None = None
         self._client_request = request
         self._host: str = ""
         self._ssl = True
@@ -45,8 +46,8 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         self.zones = Zone(self._request)
 
     async def _request(
-        self, method: str, endpoint: str, **kwargs: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, method: str, endpoint: str, **kwargs: dict[str, Any]
+    ) -> dict[str, Any]:
         """Wrap the generic request method to add access token, etc."""
         return await self._client_request(
             method,
