@@ -1,11 +1,13 @@
 """Define an object to interact with provisioning info."""
-from typing import Any, Awaitable, Callable, Dict, cast
+from __future__ import annotations
+
+from typing import Any, Awaitable, Callable, cast
 
 
 class Provision:
     """Define a provisioning object."""
 
-    def __init__(self, request: Callable[..., Awaitable[Dict[str, Any]]]) -> None:
+    def __init__(self, request: Callable[..., Awaitable[dict[str, Any]]]) -> None:
         """Initialize."""
         self._request = request
 
@@ -15,10 +17,10 @@ class Provision:
         data = await self._request("get", "provision/name")
         return cast(str, data["name"])
 
-    async def settings(self) -> Dict[str, Any]:
+    async def settings(self) -> dict[str, Any]:
         """Get a multitude of settings info."""
         return await self._request("get", "provision")
 
-    async def wifi(self) -> Dict[str, Any]:
+    async def wifi(self) -> dict[str, Any]:
         """Get wifi info from the device."""
         return await self._request("get", "provision/wifi")

@@ -1,8 +1,10 @@
 """Define a client to interact with a RainMachine unit."""
+from __future__ import annotations
+
 import asyncio
 from datetime import datetime
 import logging
-from typing import Any, Dict, Optional, cast
+from typing import Any
 
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError, ServerDisconnectedError
@@ -17,7 +19,7 @@ DEFAULT_LOCAL_PORT: int = 8080
 DEFAULT_TIMEOUT: int = 30
 
 
-def _raise_for_remote_status(url: str, data: Dict[str, Any]) -> None:
+def _raise_for_remote_status(url: str, data: dict[str, Any]) -> None:
     """Raise an error from the remote API if necessary."""
     if data.get("errorType") and data["errorType"] > 0:
         raise_remote_error(data["errorType"])
@@ -34,23 +36,23 @@ class Client:
     def __init__(
         self,
         *,
-        session: Optional[ClientSession] = None,
+        session: ClientSession | None = None,
         request_timeout: int = DEFAULT_TIMEOUT,
     ) -> None:
         """Initialize."""
         self._request_timeout = request_timeout
         self._session = session
-        self.controllers: Dict[str, Controller] = {}
+        self.controllers: dict[str, Controller] = {}
 
     async def _request(
         self,
         method: str,
         url: str,
         *,
-        access_token: Optional[str] = None,
-        access_token_expiration: Optional[datetime] = None,
+        access_token: str | None = None,
+        access_token_expiration: datetime | None = None,
         ssl: bool = True,
-        **kwargs: Dict[str, Any],
+        **kwargs: dict[str, Any],
     ) -> dict:
         """Make a request against the RainMachine device."""
         if access_token_expiration and datetime.now() >= access_token_expiration:
@@ -103,10 +105,10 @@ class Client:
         method: str,
         url: str,
         ssl: bool,
-        **kwargs: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        **kwargs: dict[str, Any],
+    ) -> dict[str, Any]:
         """Make a request with a session."""
-        data: Dict[str, Any] = {}
+        data: dict[str, Any] = {}
 
         try:
             async with async_timeout.timeout(self._request_timeout), session.request(
@@ -127,7 +129,8 @@ class Client:
             raise RequestError(f"Timmed out while requesting data from {url}") from err
 
         _LOGGER.debug("Data received for %s: %s", url, data)
-        return cast(Dict[str, Any], data)
+
+        return data
 
     async def load_local(  # pylint: disable=too-many-arguments
         self,

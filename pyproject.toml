@@ -57,7 +57,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -67,7 +66,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 aiohttp = ">=3.8.0"
-python = "^3.7.0"
+python = "^3.8.0"
 
 [tool.poetry.dev-dependencies]
 aresponses = "^2.0.0"
@@ -86,10 +85,12 @@ expected-line-ending-format = "LF"
 # Reasons disabled:
 # bad-continuation - Invalid attack on black
 # cyclic-import - Imports under TYPE_CHECKING still get evaluated
+# too-few-public-methods - Not an indication of an issue
 # unnecessary-pass - This can hurt readability
 disable = [
   "bad-continuation",
   "cyclic-import",
+  "too-few-public-methods",
   "unnecessary-pass"
 ]
 
@@ -110,3 +111,6 @@ ignore-docstrings = true
 
 # Ignore imports when computing similarities.
 ignore-imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
