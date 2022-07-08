@@ -113,7 +113,7 @@ async def main() -> None:
     async with ClientSession() as session:
         client = Client(session=session)
 
-        await client.load_local("192.168.1.101", "my_password", port=8080, ssl=True)
+        await client.load_local("192.168.1.101", "my_password", port=8080, use_ssl=True)
 
         controllers = client.controllers
         # >>> {'ab:cd:ef:12:34:56': <LocalController>}
@@ -176,7 +176,7 @@ async def main() -> None:
         client = Client(session=session)
 
         # Load a local controller:
-        await client.load_local("192.168.1.101", "my_password", port=8080, ssl=True)
+        await client.load_local("192.168.1.101", "my_password", port=8080, use_ssl=True)
 
         # Load all remote controllers associated with an account:
         await client.load_remote("rainmachine_email@host.com", "my_password")
