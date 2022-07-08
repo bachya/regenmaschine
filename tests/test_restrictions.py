@@ -32,7 +32,9 @@ async def test_restrict_unrestrict(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             await controller.restrictions.restrict(timedelta(hours=15))
@@ -54,7 +56,9 @@ async def test_restrictions_hourly(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.restrictions.hourly()
@@ -76,7 +80,9 @@ async def test_restrictions_raindelay(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.restrictions.raindelay()
@@ -98,7 +104,9 @@ async def test_restrictions_current(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.restrictions.current()
@@ -120,7 +128,9 @@ async def test_restrictions_global(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.restrictions.universal()
@@ -142,7 +152,9 @@ async def test_restrictions_hourly(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.restrictions.hourly()
@@ -164,7 +176,9 @@ async def test_restrictions_raindelay(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.restrictions.raindelay()

@@ -27,7 +27,9 @@ async def test_watering_log_details(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.watering.log(today, 2, details=True)
@@ -57,7 +59,9 @@ async def test_watering_pause(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.watering.pause_all(30)
@@ -85,7 +89,9 @@ async def test_watering_queue(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.watering.queue()
@@ -110,7 +116,9 @@ async def test_watering_past(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.watering.runs(today, 2)
@@ -132,7 +140,9 @@ async def test_watering_stop(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.watering.stop_all()

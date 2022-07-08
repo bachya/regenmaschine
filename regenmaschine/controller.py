@@ -27,7 +27,7 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         self._access_token_expiration: datetime | None = None
         self._client_request = request
         self._host: str = ""
-        self._ssl = True
+        self._use_ssl = True
         self.api_version: str = ""
         self.hardware_version: int = 0
         self.mac: str = ""
@@ -54,7 +54,7 @@ class Controller:  # pylint: disable=too-many-instance-attributes
             f"{self._host}/{endpoint}",
             access_token=self._access_token,
             access_token_expiration=self._access_token_expiration,
-            ssl=self._ssl,
+            use_ssl=self._use_ssl,
             **kwargs,
         )
 
@@ -63,13 +63,17 @@ class LocalController(Controller):
     """Define a controller accessed over the LAN."""
 
     def __init__(  # pylint: disable=too-many-arguments
-        self, request: Callable[..., Awaitable[dict]], host: str, port: int, ssl: bool
+        self,
+        request: Callable[..., Awaitable[dict]],
+        host: str,
+        port: int,
+        use_ssl: bool = True,
     ) -> None:
         """Initialize."""
         super().__init__(request)
 
         self._host = URL_BASE_LOCAL.format(host, port)
-        self._ssl = ssl
+        self._use_ssl = use_ssl
 
     async def login(self, password: str) -> None:
         """Authenticate against the device (locally)."""

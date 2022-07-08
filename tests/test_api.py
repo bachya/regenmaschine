@@ -22,7 +22,9 @@ async def test_api_versions(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.api.versions()
@@ -45,7 +47,7 @@ async def test_api_versions_no_explicit_session(aresponses, authenticated_local_
         )
 
         client = Client()
-        await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+        await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False)
         controller = next(iter(client.controllers.values()))
 
         data = await controller.api.versions()

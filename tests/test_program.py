@@ -30,7 +30,9 @@ async def test_program_enable_disable(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             resp = await controller.programs.enable(1)
@@ -53,7 +55,9 @@ async def test_program_get(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             programs = await controller.programs.all(include_inactive=True)
@@ -74,7 +78,9 @@ async def test_program_get_active(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             programs = await controller.programs.all()
@@ -97,7 +103,9 @@ async def test_program_get_by_id(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.programs.get(1)
@@ -119,7 +127,9 @@ async def test_program_next_run(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.programs.next()
@@ -141,7 +151,9 @@ async def test_program_running(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.programs.running()
@@ -172,7 +184,9 @@ async def test_program_start_and_stop(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             data = await controller.programs.start(1)

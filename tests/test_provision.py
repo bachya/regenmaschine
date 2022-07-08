@@ -38,7 +38,9 @@ async def test_endpoints(aresponses, authenticated_local_client):
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             name = await controller.provisioning.device_name
