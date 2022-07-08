@@ -31,7 +31,9 @@ async def test_legacy_login(authenticated_local_client):
     async with authenticated_local_client:
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
 
             assert controller._access_token == TEST_ACCESS_TOKEN
@@ -242,7 +244,7 @@ async def test_request_timeout(authenticated_local_client):  # noqa: D202
                 with pytest.raises(RequestError):
                     client = Client(session=session, request_timeout=0.1)
                     await client.load_local(
-                        TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False
+                        TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
                     )
 
 
@@ -272,7 +274,7 @@ async def test_token_expired_implicit_exception(authenticated_local_client):
             async with aiohttp.ClientSession() as session:
                 client = Client(session=session)
                 await client.load_local(
-                    TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False
+                    TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
                 )
                 controller = next(iter(client.controllers.values()))
 
@@ -299,7 +301,9 @@ async def test_retry_only_once_on_server_disconnected(
 
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
-            await client.load_local(TEST_HOST, TEST_PASSWORD, port=TEST_PORT, ssl=False)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
             controller = next(iter(client.controllers.values()))
             patcher = None
 

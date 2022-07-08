@@ -4,6 +4,7 @@ from __future__ import annotations
 import asyncio
 from datetime import datetime
 import logging
+import ssl
 from typing import Any
 
 from aiohttp import ClientSession, ClientTimeout
@@ -42,6 +43,15 @@ class Client:
         """Initialize."""
         self._request_timeout = request_timeout
         self._session = session
+
+        self._ssl_context = ssl.create_default_context()
+        # The local API on Gen 1 controllers is set to use SSLv3; force its inclusion
+        # here for Python 3.10+
+        self._ssl_context.minimum_version = ssl.TLSVersion.SSLv3
+        # Don't choke on the controller's self-signed certificate:
+        self._ssl_context.check_hostname = False
+        self._ssl_context.verify_mode = ssl.CERT_NONE
+
         self.controllers: dict[str, Controller] = {}
 
     async def _request(
@@ -51,7 +61,7 @@ class Client:
         *,
         access_token: str | None = None,
         access_token_expiration: datetime | None = None,
-        ssl: bool = True,
+        use_ssl: bool = True,
         **kwargs: dict[str, Any],
     ) -> dict:
         """Make a request against the RainMachine device."""
@@ -80,7 +90,7 @@ class Client:
             for attempt in range(2):
                 try:
                     return await self._request_with_session(
-                        session, method, url, ssl, **kwargs
+                        session, method, url, use_ssl, **kwargs
                     )
                 except ServerDisconnectedError as err:
                     # The HTTP/1.1 spec allows the device to close the connection
@@ -104,7 +114,7 @@ class Client:
         session: ClientSession,
         method: str,
         url: str,
-        ssl: bool,
+        use_ssl: bool,
         **kwargs: dict[str, Any],
     ) -> dict[str, Any]:
         """Make a request with a session."""
@@ -112,7 +122,7 @@ class Client:
 
         try:
             async with async_timeout.timeout(self._request_timeout), session.request(
-                method, url, ssl=ssl, **kwargs
+                method, url, ssl=self._ssl_context if use_ssl else None, **kwargs
             ) as resp:
                 data = await resp.json(content_type=None)
                 resp.raise_for_status()
@@ -137,11 +147,13 @@ class Client:
         host: str,
         password: str,
         port: int = DEFAULT_LOCAL_PORT,
-        ssl: bool = True,
+        use_ssl: bool = True,
         skip_existing: bool = True,
     ) -> None:
         """Create a local client."""
-        controller: LocalController = LocalController(self._request, host, port, ssl)
+        controller: LocalController = LocalController(
+            self._request, host, port, use_ssl
+        )
         await controller.login(password)
 
         wifi_data = await controller.provisioning.wifi()
