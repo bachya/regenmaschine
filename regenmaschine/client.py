@@ -3,12 +3,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime
-<<<<<<< HEAD
-import logging
 from typing import Any
-=======
-from typing import Any, Dict, Optional, cast
->>>>>>> 87cdb7efa2ad (Logging)
 
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientError, ServerDisconnectedError
