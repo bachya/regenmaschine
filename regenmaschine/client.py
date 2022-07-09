@@ -44,11 +44,18 @@ class Client:
         self._request_timeout = request_timeout
         self._session = session
 
-        self._ssl_context = ssl.create_default_context()
-        # The local API on Gen 1 controllers is set to use SSLv3; force its inclusion
-        # here for Python 3.10+
+        self._ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+
+        # The local API on Gen 1 controllers uses outdated RSA ciphers (and there isn't
+        # any indication that they'll be updated). Python 3.10+ enforces minimum TLS
+        # standards that the Gen 1 can't support, so to keep compatibility, we loosen
+        # things up:
+        #   1. We set a minimum TLS version of SSLv3
+        #   2. We utilize the "DEFAULT" cipher suite (which includes old RSA ciphers).
+        #   3. We don't validate the hostname.
+        #   4. We allow self-signed certificates.
         self._ssl_context.minimum_version = ssl.TLSVersion.SSLv3
-        # Don't choke on the controller's self-signed certificate:
+        self._ssl_context.set_ciphers("DEFAULT")
         self._ssl_context.check_hostname = False
         self._ssl_context.verify_mode = ssl.CERT_NONE
 
