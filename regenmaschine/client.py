@@ -46,9 +46,9 @@ class Client:
 
         self._ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
 
-        # The local API on Gen 1 controllers use outdated RSA ciphers (and there isn't
-        # any indication that they'll be updated). Python 3.10+ tightens things such
-        # that these controllers no longer work, so to keep compatibility, we loosen
+        # The local API on Gen 1 controllers uses outdated RSA ciphers (and there isn't
+        # any indication that they'll be updated). Python 3.10+ enforces minimum TLS
+        # standards that the Gen 1 can't support, so to keep compatibility, we loosen
         # things up:
         #   1. We set a minimum TLS version of SSLv3
         #   2. We utilize the "DEFAULT" cipher suite (which includes old RSA ciphers).
