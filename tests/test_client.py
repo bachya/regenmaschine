@@ -231,7 +231,7 @@ async def test_remote_error_unknown(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_request_timeout(authenticated_local_client):  # noqa: D202
+async def test_request_timeout(authenticated_local_client):
     """Test whether the client properly raises an error on timeout."""
 
     async def long_running_login(*args, **kwargs):  # pylint: disable=unused-argument
@@ -246,6 +246,28 @@ async def test_request_timeout(authenticated_local_client):  # noqa: D202
                     await client.load_local(
                         TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
                     )
+
+
+@pytest.mark.asyncio
+async def test_request_unparseable_response(aresponses, authenticated_local_client):
+    """Test a response that can't be parsed as JSON."""
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/zone",
+            "get",
+            aresponses.Response(text="404 Not Found", status=404),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
+            controller = next(iter(client.controllers.values()))
+
+            with pytest.raises(RequestError):
+                zones = await controller.zones.all()
 
 
 @pytest.mark.asyncio
