@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import datetime
+import json
 import logging
 import ssl
 from typing import Any
@@ -136,6 +137,8 @@ class Client:
                 _raise_for_remote_status(url, data)
         except ServerDisconnectedError:
             raise
+        except json.decoder.JSONDecodeError as err:
+            raise RequestError("Unable to parse response as JSON") from err
         except ClientError as err:
             if "401" in str(err):
                 raise TokenExpiredError("Long-lived access token has expired") from err
@@ -143,7 +146,7 @@ class Client:
                 f"Error requesting data from {url}: {err} (data: {data})"
             ) from err
         except asyncio.TimeoutError as err:
-            raise RequestError(f"Timmed out while requesting data from {url}") from err
+            raise RequestError(f"Timed out while requesting data from {url}") from err
 
         _LOGGER.debug("Data received for %s: %s", url, data)
 
