@@ -6,6 +6,7 @@ from typing import Any, Awaitable, Callable
 
 from regenmaschine.api import API
 from regenmaschine.diagnostics import Diagnostics
+from regenmaschine.machine import Machine
 from regenmaschine.parser import Parser
 from regenmaschine.program import Program
 from regenmaschine.provision import Provision
@@ -37,6 +38,7 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         # API endpoints:
         self.api = API(self._request)
         self.diagnostics = Diagnostics(self._request)
+        self.machine = Machine(self._request)
         self.parsers = Parser(self._request)
         self.programs = Program(self._request)
         self.provisioning = Provision(self._request)
