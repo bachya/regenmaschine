@@ -284,6 +284,14 @@ async def main() -> None:
             # Stop all watering activities:
             await controller.watering.stop_all()
 
+            # See if a firmware update is available:
+            update_data = await controller.machine.get_firmware_update_status()
+            # ...and request the update:
+            update_data = await controller.machine.update_firmware()
+
+            # Reboot the controller:
+            update_data = await controller.machine.reboot()
+
 
 asyncio.run(main())
 ```
