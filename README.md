@@ -3,8 +3,8 @@
 [![CI](https://github.com/bachya/regenmaschine/workflows/CI/badge.svg)](https://github.com/bachya/regenmaschine/actions)
 [![PyPi](https://img.shields.io/pypi/v/regenmaschine.svg)](https://pypi.python.org/pypi/regenmaschine)
 [![Version](https://img.shields.io/pypi/pyversions/regenmaschine.svg)](https://pypi.python.org/pypi/regenmaschine)
-[![License](https://img.shields.io/pypi/l/regenmaschine.svg)](https://github.com/bachya/regenmaschine/blob/master/LICENSE)
-[![Code Coverage](https://codecov.io/gh/bachya/regenmaschine/branch/master/graph/badge.svg)](https://codecov.io/gh/bachya/regenmaschine)
+[![License](https://img.shields.io/pypi/l/regenmaschine.svg)](https://github.com/bachya/regenmaschine/blob/main/LICENSE)
+[![Code Coverage](https://codecov.io/gh/bachya/regenmaschine/branch/main/graph/badge.svg)](https://codecov.io/gh/bachya/regenmaschine)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/bachya/regenmaschine/maintainability)
 [![Say Thanks](https://img.shields.io/badge/SayThanks-!-1EAEDB.svg)](https://saythanks.io/to/bachya)
 
