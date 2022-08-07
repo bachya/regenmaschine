@@ -263,10 +263,14 @@ async def main() -> None:
             hourly = await controller.restrictions.hourly()
             raindelay = await controller.restrictions.raindelay()
 
-            # Restrict all watering activities for 3 days:
-            await controller.restrictions.restrict(datetime.timedelta(days=3))
-            # ...and then unrestrict watering activities:
-            await controller.restrictions.unrestrict()
+            # Set universal restrictions – note that the payload is the same structure
+            # as returned by controller.restrictions.universal():
+            await controller.restrictions.set_universal(
+                {
+                    "hotDaysExtraWatering":False,
+                    "freezeProtectEnabled":True,
+                }
+            )
 
             # Get watering stats:
             today = await controller.stats.on_date(datetime.date.today())

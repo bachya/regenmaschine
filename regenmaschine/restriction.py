@@ -1,8 +1,6 @@
 """Define an object to interact with restriction info."""
 from __future__ import annotations
 
-from datetime import timedelta
-from time import time
 from typing import Any, Awaitable, Callable, Dict, List, cast
 
 
@@ -26,28 +24,10 @@ class Restriction:
         """Get restriction info related to rain delays."""
         return await self._request("get", "restrictions/raindelay")
 
-    async def restrict(self, duration: timedelta) -> dict[str, Any]:
-        """Restrict all watering activities for a time period."""
-        return await self._request(
-            "post",
-            "restrictions/global",
-            json={
-                "rainDelayStartTime": round(time()),
-                "rainDelayDuration": duration.total_seconds(),
-            },
-        )
+    async def set_universal(self, payload: dict[str, Any]) -> dict[str, Any]:
+        """Set global (always active) restrictions based on a payload."""
+        return await self._request("post", "restrictions/global", json=payload)
 
     async def universal(self) -> dict[str, Any]:
         """Get global (always active) restrictions."""
         return await self._request("get", "restrictions/global")
-
-    async def unrestrict(self) -> dict[str, Any]:
-        """Unrestrict all watering activities."""
-        return await self._request(
-            "post",
-            "restrictions/global",
-            json={
-                "rainDelayStartTime": round(time()),
-                "rainDelayDuration": 0,
-            },
-        )

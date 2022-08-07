@@ -1,6 +1,4 @@
 """Define tests for restriction endpoints."""
-from datetime import timedelta
-
 import aiohttp
 import pytest
 
@@ -10,23 +8,15 @@ from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
 
 @pytest.mark.asyncio
-async def test_restrict_unrestrict(aresponses, authenticated_local_client):
-    """Test restricting watering and then unrestricting it.."""
+async def test_set_restrictions_global(aresponses, authenticated_local_client):
+    """Test setting global restrictions."""
     async with authenticated_local_client:
         authenticated_local_client.add(
             f"{TEST_HOST}:{TEST_PORT}",
             "/api/4/restrictions/global",
             "post",
             aresponses.Response(
-                text=load_fixture("restrict_response.json"), status=200
-            ),
-        )
-        authenticated_local_client.add(
-            f"{TEST_HOST}:{TEST_PORT}",
-            "/api/4/restrictions/global",
-            "post",
-            aresponses.Response(
-                text=load_fixture("unrestrict_response.json"), status=200
+                text=load_fixture("restrictions_global_set_response.json"), status=200
             ),
         )
 
@@ -37,8 +27,9 @@ async def test_restrict_unrestrict(aresponses, authenticated_local_client):
             )
             controller = next(iter(client.controllers.values()))
 
-            await controller.restrictions.restrict(timedelta(hours=15))
-            await controller.restrictions.unrestrict()
+            await controller.restrictions.set_universal(
+                {"hotDaysExtraWatering": False, "freezeProtectEnabled": True}
+            )
 
 
 @pytest.mark.asyncio
