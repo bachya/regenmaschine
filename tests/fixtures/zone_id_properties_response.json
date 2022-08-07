@@ -12,7 +12,7 @@
   "soil": 5,
   "group_id": 4,
   "history": true,
-  "master": false,
+  "main": false,
   "before": 0,
   "after": 0,
   "waterSense": {

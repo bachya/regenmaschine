@@ -14,7 +14,7 @@
       "soil": 5,
       "group_id": 4,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -65,7 +65,7 @@
       "soil": 5,
       "group_id": 3,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -116,7 +116,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -167,7 +167,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -218,7 +218,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -269,7 +269,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -320,7 +320,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -371,7 +371,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -422,7 +422,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -473,7 +473,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -524,7 +524,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {
@@ -575,7 +575,7 @@
       "soil": 1,
       "group_id": 1,
       "history": true,
-      "master": false,
+      "main": false,
       "before": 0,
       "after": 0,
       "waterSense": {

@@ -10,6 +10,6 @@
   "noOfCycles": 0,
   "restriction": false,
   "type": 4,
-  "master": false,
+  "main": false,
   "waterSense": false
 }

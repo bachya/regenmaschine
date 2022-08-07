@@ -11,7 +11,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 4,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -25,7 +25,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 5,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -39,7 +39,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 9,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -53,7 +53,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 2,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -67,7 +67,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 2,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -81,7 +81,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 2,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -95,7 +95,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 2,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -109,7 +109,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 2,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -123,7 +123,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 2,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -137,7 +137,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 2,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -151,7 +151,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 2,
-      "master": false,
+      "main": false,
       "waterSense": false
     },
     {
@@ -165,7 +165,7 @@
       "noOfCycles": 0,
       "restriction": false,
       "type": 2,
-      "master": false,
+      "main": false,
       "waterSense": false
     }
   ]
