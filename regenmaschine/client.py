@@ -9,27 +9,16 @@ import ssl
 from typing import Any
 
 from aiohttp import ClientSession, ClientTimeout
-from aiohttp.client_exceptions import ClientError, ServerDisconnectedError
+from aiohttp.client_exceptions import ServerDisconnectedError
 import async_timeout
 
 from regenmaschine.controller import Controller, LocalController, RemoteController
-from regenmaschine.errors import RequestError, TokenExpiredError, raise_remote_error
+from regenmaschine.errors import RequestError, TokenExpiredError, raise_for_error
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
 
 DEFAULT_LOCAL_PORT: int = 8080
 DEFAULT_TIMEOUT: int = 30
-
-
-def _raise_for_remote_status(url: str, data: dict[str, Any]) -> None:
-    """Raise an error from the remote API if necessary."""
-    if data.get("errorType") and data["errorType"] > 0:
-        raise_remote_error(data["errorType"])
-
-    if data.get("statusCode") and data["statusCode"] != 200:
-        raise RequestError(
-            f"Error requesting data from {url}: {data['statusCode']} {data['message']}"
-        )
 
 
 class Client:
@@ -133,22 +122,15 @@ class Client:
                 method, url, ssl=self._ssl_context if use_ssl else None, **kwargs
             ) as resp:
                 data = await resp.json(content_type=None)
-                resp.raise_for_status()
-                _raise_for_remote_status(url, data)
         except ServerDisconnectedError:
             raise
         except json.decoder.JSONDecodeError as err:
             raise RequestError("Unable to parse response as JSON") from err
-        except ClientError as err:
-            if "401" in str(err):
-                raise TokenExpiredError("Long-lived access token has expired") from err
-            raise RequestError(
-                f"Error requesting data from {url}: {err} (data: {data})"
-            ) from err
         except asyncio.TimeoutError as err:
             raise RequestError(f"Timed out while requesting data from {url}") from err
-
-        _LOGGER.debug("Data received for %s: %s", url, data)
+        else:
+            _LOGGER.debug("Data received for %s: %s", url, data)
+            raise_for_error(resp, data)
 
         return data
 

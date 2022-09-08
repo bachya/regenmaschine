@@ -7,7 +7,7 @@ import aiohttp
 import pytest
 
 from regenmaschine import Client
-from regenmaschine.errors import RequestError, TokenExpiredError
+from regenmaschine.errors import RequestError, TokenExpiredError, UnknownAPICallError
 
 import tests.async_mock as mock
 from tests.common import (
@@ -249,6 +249,30 @@ async def test_request_timeout(authenticated_local_client):
 
 
 @pytest.mark.asyncio
+async def test_request_unknown_api_call(aresponses, authenticated_local_client):
+    """Test that an unknown API call is handled."""
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/zone",
+            "get",
+            aresponses.Response(
+                text=load_fixture("unknown_api_call_response.json"), status=400
+            ),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
+            controller = next(iter(client.controllers.values()))
+
+            with pytest.raises(UnknownAPICallError):
+                _ = await controller.zones.all()
+
+
+@pytest.mark.asyncio
 async def test_request_unparseable_response(aresponses, authenticated_local_client):
     """Test a response that can't be parsed as JSON."""
     async with authenticated_local_client:
@@ -267,7 +291,7 @@ async def test_request_unparseable_response(aresponses, authenticated_local_clie
             controller = next(iter(client.controllers.values()))
 
             with pytest.raises(RequestError):
-                zones = await controller.zones.all()
+                _ = await controller.zones.all()
 
 
 @pytest.mark.asyncio
