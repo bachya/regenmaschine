@@ -83,12 +83,10 @@ expected-line-ending-format = "LF"
 
 [tool.pylint."MESSAGES CONTROL"]
 # Reasons disabled:
-# bad-continuation - Invalid attack on black
 # cyclic-import - Imports under TYPE_CHECKING still get evaluated
 # too-few-public-methods - Not an indication of an issue
 # unnecessary-pass - This can hurt readability
 disable = [
-  "bad-continuation",
   "cyclic-import",
   "too-few-public-methods",
   "unnecessary-pass"
