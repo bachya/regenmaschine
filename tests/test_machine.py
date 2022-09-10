@@ -41,6 +41,34 @@ async def test_get_firmware_update_status(aresponses, authenticated_local_client
 
 
 @pytest.mark.asyncio
+async def test_get_firmware_update_status_gen1(aresponses, authenticated_local_client):
+    """Test getting the status of a firmware update on a 1st generation controller."""
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/machine/update",
+            "get",
+            aresponses.Response(
+                text=load_fixture("machine_get_update_response.json"), status=200
+            ),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
+            controller = next(iter(client.controllers.values()))
+
+            # Simulate this controller being a 1st generation controller:
+            controller.hardware_version = 1
+
+            data = await controller.machine.get_firmware_update_status()
+            assert data["update"] is False
+            assert data["updateStatus"] == 1
+
+
+@pytest.mark.asyncio
 async def test_reboot(aresponses, authenticated_local_client):
     """Test requesting a reboot."""
     async with authenticated_local_client:

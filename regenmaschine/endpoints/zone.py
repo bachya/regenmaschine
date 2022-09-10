@@ -2,30 +2,28 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Awaitable, Callable, Dict, cast
+from typing import Any, Dict, cast
+
+from regenmaschine.endpoints import EndpointManager
 
 
-class Zone:
+class Zone(EndpointManager):
     """Define a zone object."""
 
-    def __init__(self, request: Callable[..., Awaitable[dict[str, Any]]]) -> None:
-        """Initialize."""
-        self._request = request
-
-    async def _post(
-        self, zone_id: int, json: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    async def _post(self, zone_id: int, json: dict[str, Any]) -> dict[str, Any]:
         """Post data to a (non)existing zone."""
-        return await self._request("post", f"zone/{zone_id}/properties", json=json)
+        return await self.controller.request(
+            "post", f"zone/{zone_id}/properties", json=json
+        )
 
     async def all(
         self, *, details: bool = False, include_inactive: bool = False
     ) -> dict[int, dict[str, Any]]:
         """Return all zones (with optional advanced properties)."""
-        tasks = [self._request("get", "zone")]
+        tasks = [self.controller.request("get", "zone")]
 
         if details:
-            tasks.append(self._request("get", "zone/properties"))
+            tasks.append(self.controller.request("get", "zone/properties"))
 
         results = await asyncio.gather(*tasks)
 
@@ -54,9 +52,9 @@ class Zone:
 
     async def get(self, zone_id: int, *, details: bool = False) -> dict[str, Any]:
         """Return a specific zone."""
-        tasks = [self._request("get", f"zone/{zone_id}")]
+        tasks = [self.controller.request("get", f"zone/{zone_id}")]
         if details:
-            tasks.append(self._request("get", f"zone/{zone_id}/properties"))
+            tasks.append(self.controller.request("get", f"zone/{zone_id}/properties"))
 
         results = await asyncio.gather(*tasks)
 
@@ -71,7 +69,7 @@ class Zone:
         Note that in addition to including it in the query URL, the zone ID must be
         provided in the request body to accommodate 1st generation controllers.
         """
-        return await self._request(
+        return await self.controller.request(
             "post", f"zone/{zone_id}/start", json={"time": time, "zid": zone_id}
         )
 
@@ -81,6 +79,6 @@ class Zone:
         Note that in addition to including it in the query URL, the zone ID must be
         provided in the request body to accommodate 1st generation controllers.
         """
-        return await self._request(
+        return await self.controller.request(
             "post", f"zone/{zone_id}/stop", json={"zid": zone_id}
         )

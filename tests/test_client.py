@@ -327,7 +327,7 @@ async def test_token_expired_implicit_exception(authenticated_local_client):
                 controller._access_token_expiration = datetime.now() - timedelta(
                     hours=1
                 )
-                await controller._request("get", "random/endpoint")
+                await controller.request("get", "random/endpoint")
 
 
 @pytest.mark.asyncio
