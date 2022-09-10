@@ -32,7 +32,12 @@ def coverage(session: nox.sessions.Session) -> None:
     ]
     session.run("poetry", "install", "--no-dev", external=True)
     install_with_constraints(
-        session, "aresponses", "pytest", "pytest-aiohttp", "pytest-cov"
+        session,
+        "aresponses",
+        "pytest",
+        "pytest-aiohttp",
+        "pytest-cov",
+        "typing-extensions",
     )
     session.run("pytest", *args)
 
@@ -42,5 +47,7 @@ def tests(session: nox.sessions.Session) -> None:
     """Run all tests."""
     args = session.posargs or ["-s", "tests/"]
     session.run("poetry", "install", "--no-dev", external=True)
-    install_with_constraints(session, "aresponses", "pytest", "pytest-aiohttp")
+    install_with_constraints(
+        session, "aresponses", "pytest", "pytest-aiohttp", "typing-extensions"
+    )
     session.run("pytest", *args)
