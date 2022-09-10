@@ -77,6 +77,7 @@ pytest = "^7.0.0"
 pytest-aiohttp = "^1.0.0"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.0.0"
+typing-extensions = "^4.3.0"
 
 [tool.pylint.BASIC]
 expected-line-ending-format = "LF"

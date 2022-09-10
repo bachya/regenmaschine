@@ -3,6 +3,7 @@ import aiohttp
 import pytest
 
 from regenmaschine import Client
+from regenmaschine.errors import UnknownAPICallError
 
 from .common import TEST_HOST, TEST_PASSWORD, TEST_PORT, load_fixture
 
@@ -54,6 +55,24 @@ async def test_restrictions_hourly(aresponses, authenticated_local_client):
 
             data = await controller.restrictions.hourly()
             assert not data
+
+
+@pytest.mark.asyncio
+async def test_restrictions_hourly_gen1(authenticated_local_client):
+    """Test that getting hourly restrictions fails on a Gen1 controller."""
+    async with authenticated_local_client:
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
+            controller = next(iter(client.controllers.values()))
+
+            # Simulate this controller being a Gen1 controller:
+            controller.hardware_version = 1
+
+            with pytest.raises(UnknownAPICallError):
+                _ = await controller.restrictions.hourly()
 
 
 @pytest.mark.asyncio

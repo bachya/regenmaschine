@@ -4,16 +4,16 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import Any, Awaitable, Callable
 
-from regenmaschine.api import API
-from regenmaschine.diagnostics import Diagnostics
-from regenmaschine.machine import Machine
-from regenmaschine.parser import Parser
-from regenmaschine.program import Program
-from regenmaschine.provision import Provision
-from regenmaschine.restriction import Restriction
-from regenmaschine.stats import Stats
-from regenmaschine.watering import Watering
-from regenmaschine.zone import Zone
+from regenmaschine.endpoints.api import API
+from regenmaschine.endpoints.diagnostics import Diagnostics
+from regenmaschine.endpoints.machine import Machine
+from regenmaschine.endpoints.parser import Parser
+from regenmaschine.endpoints.program import Program
+from regenmaschine.endpoints.provision import Provision
+from regenmaschine.endpoints.restriction import Restriction
+from regenmaschine.endpoints.stats import Stats
+from regenmaschine.endpoints.watering import Watering
+from regenmaschine.endpoints.zone import Zone
 
 URL_BASE_LOCAL: str = "https://{0}:{1}/api/4"
 URL_BASE_REMOTE: str = "https://api.rainmachine.com/{0}/api/4"
@@ -36,18 +36,18 @@ class Controller:  # pylint: disable=too-many-instance-attributes
         self.software_version: str = ""
 
         # API endpoints:
-        self.api = API(self._request)
-        self.diagnostics = Diagnostics(self._request)
-        self.machine = Machine(self._request)
-        self.parsers = Parser(self._request)
-        self.programs = Program(self._request)
-        self.provisioning = Provision(self._request)
-        self.restrictions = Restriction(self._request)
-        self.stats = Stats(self._request)
-        self.watering = Watering(self._request)
-        self.zones = Zone(self._request)
+        self.api = API(self)
+        self.diagnostics = Diagnostics(self)
+        self.machine = Machine(self)
+        self.parsers = Parser(self)
+        self.programs = Program(self)
+        self.provisioning = Provision(self)
+        self.restrictions = Restriction(self)
+        self.stats = Stats(self)
+        self.watering = Watering(self)
+        self.zones = Zone(self)
 
-    async def _request(
+    async def request(
         self, method: str, endpoint: str, **kwargs: dict[str, Any]
     ) -> dict[str, Any]:
         """Wrap the generic request method to add access token, etc."""
