@@ -68,7 +68,7 @@ async def test_restrictions_hourly_gen1(authenticated_local_client):
             )
             controller = next(iter(client.controllers.values()))
 
-            # Simulate this controller being a Gen1 controller:
+            # Simulate this controller being a 1st generation controller:
             controller.hardware_version = 1
 
             with pytest.raises(UnknownAPICallError):
