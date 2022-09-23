@@ -154,10 +154,12 @@ class Client:
 
         version_data = await controller.api.versions()
         controller.api_version = version_data["apiVer"]
-        controller.hardware_version = version_data["hwVer"]
+        controller.hardware_version = str(version_data["hwVer"])
         controller.mac = wifi_data["macAddress"]
-        controller.name = await controller.provisioning.device_name
         controller.software_version = version_data["swVer"]
+
+        name = await controller.provisioning.device_name
+        controller.name = str(name)
 
         self.controllers[controller.mac] = controller
 
@@ -189,9 +191,9 @@ class Client:
 
             version_data = await controller.api.versions()
             controller.api_version = version_data["apiVer"]
-            controller.hardware_version = version_data["hwVer"]
+            controller.hardware_version = str(version_data["hwVer"])
             controller.mac = sprinkler["mac"]
-            controller.name = sprinkler["name"]
+            controller.name = str(sprinkler["name"])
             controller.software_version = version_data["swVer"]
 
             self.controllers[sprinkler["mac"]] = controller

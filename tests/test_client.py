@@ -2,6 +2,7 @@
 # pylint: disable=protected-access
 import asyncio
 from datetime import datetime, timedelta
+import json
 
 import aiohttp
 import pytest
@@ -27,7 +28,7 @@ from tests.common import (
 
 @pytest.mark.asyncio
 async def test_legacy_login(authenticated_local_client):
-    """Test loading a local client through the legacy method."""
+    """Test loading a local controller through the legacy method."""
     async with authenticated_local_client:
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
@@ -46,7 +47,7 @@ async def test_legacy_login(authenticated_local_client):
 
 @pytest.mark.asyncio
 async def test_load_local(authenticated_local_client):
-    """Test loading a local client."""
+    """Test loading a local controller."""
     async with authenticated_local_client:
         async with aiohttp.ClientSession() as session:
             client = Client(session=session)
@@ -64,8 +65,24 @@ async def test_load_local(authenticated_local_client):
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize("provision_name_response", [json.dumps({"name": "89"})])
+async def test_load_local_string_name(authenticated_local_client):
+    """Test loading a local controller whose name (per the API) is not a string."""
+    async with authenticated_local_client:
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, False)
+
+            assert len(client.controllers) == 1
+
+            controller = client.controllers[TEST_MAC]
+            assert isinstance(controller.name, str)
+            assert controller.name == "89"
+
+
+@pytest.mark.asyncio
 async def test_load_local_skip(aresponses, authenticated_local_client):
-    """Test skipping the loading of a local client if it's already loaded."""
+    """Test skipping the loading of a local controller if it's already loaded."""
     authenticated_local_client.add(
         f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/auth/login",
@@ -94,7 +111,7 @@ async def test_load_local_skip(aresponses, authenticated_local_client):
 
 @pytest.mark.asyncio
 async def test_load_local_failure(aresponses):
-    """Test loading a local client and receiving a fail response."""
+    """Test loading a local controller and receiving a fail response."""
     aresponses.add(
         f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/auth/login",

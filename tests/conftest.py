@@ -5,8 +5,8 @@ import pytest
 from .common import TEST_HOST, TEST_PORT, TEST_SPRINKLER_ID, load_fixture
 
 
-@pytest.fixture()
-def authenticated_local_client():
+@pytest.fixture(name="authenticated_local_client")
+def authenticated_local_client_fixture(provision_name_response):
     """Return an aresponses server for an authenticated local client."""
     client = aresponses.ResponsesMockServer()
     client.add(
@@ -19,9 +19,7 @@ def authenticated_local_client():
         f"{TEST_HOST}:{TEST_PORT}",
         "/api/4/provision/name",
         "get",
-        aresponses.Response(
-            text=load_fixture("provision_name_response.json"), status=200
-        ),
+        aresponses.Response(text=provision_name_response, status=200),
     )
     client.add(
         f"{TEST_HOST}:{TEST_PORT}",
@@ -41,8 +39,8 @@ def authenticated_local_client():
     return client
 
 
-@pytest.fixture()
-def authenticated_remote_client():
+@pytest.fixture(name="authenticated_remote_client")
+def authenticated_remote_client_fixture():
     """Return an aresponses server for an authenticated remote client."""
     client = aresponses.ResponsesMockServer()
     client.add(
@@ -77,3 +75,9 @@ def authenticated_remote_client():
     )
 
     return client
+
+
+@pytest.fixture(name="provision_name_response")
+def provision_name_response_fixture():
+    """Return an API response that contains the controller name."""
+    return load_fixture("provision_name_response.json")
