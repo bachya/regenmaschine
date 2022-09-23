@@ -28,7 +28,7 @@ class EndpointManager:
         def decorator(
             inst: type[EndpointManager], *args: P.args, **kwargs: P.kwargs
         ) -> Awaitable:
-            if inst.controller.hardware_version == 1:
+            if inst.controller.hardware_version == "1":
                 raise UnknownAPICallError(
                     f"Can't call {func.__name__} on a 1st generation controller"
                 )
