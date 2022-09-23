@@ -62,7 +62,7 @@ async def test_get_firmware_update_status_gen1(aresponses, authenticated_local_c
             controller = next(iter(client.controllers.values()))
 
             # Simulate this controller being a 1st generation controller:
-            controller.hardware_version = 1
+            controller.hardware_version = "1"
 
             data = await controller.machine.get_firmware_update_status()
             assert data["update"] is False
