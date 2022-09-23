@@ -1,6 +1,17 @@
 {
   "lastUpdateCheckTimestamp": 1657825288,
-  "packageDetails": [],
+  "packageDetails": [
+    {
+      "packageName": "rainmachine-app",
+      "newVersion": "4.0.1036",
+      "oldVersion": "4.0.1003"
+    },
+    {
+      "packageName": "rainmachine-web-ui",
+      "newVersion": "2021-10-13-28",
+      "oldVersion": "2020-07-31-24"
+    }
+  ],
   "update": false,
   "lastUpdateCheck": "2022-07-14 13:01:28",
   "updateStatus": 1
