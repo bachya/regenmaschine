@@ -38,6 +38,7 @@ async def test_get_firmware_update_status(aresponses, authenticated_local_client
             data = await controller.machine.get_firmware_update_status()
             assert data["update"] is False
             assert data["updateStatus"] == 1
+            assert len(data["packageDetails"]) == 2
 
 
 @pytest.mark.asyncio
