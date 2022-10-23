@@ -31,6 +31,22 @@ class Watering(EndpointManager):
         return cast(List[Dict[str, Any]], data["waterLog"]["days"])
 
     @EndpointManager.raise_on_gen1_controller
+    async def flowmeter(self) -> dict[str, Any]:
+        """Returns the registered values from flowmeter."""
+        data = await self.controller.request("get", "watering/flowmeter")
+        return cast(List[Dict[str, Any]], data)
+
+    @EndpointManager.raise_on_gen1_controller
+    async def post_flowmeter(
+        self, value: float, units: str = "litre"
+    ) -> dict[str, Any]:
+        """Push flowmeter values to unit."""
+        data = await self.controller.request(
+            "post", "watering/flowmeter", json={value: value, units: units}
+        )
+        return cast(List[Dict[str, Any]], data["statusCode"])
+
+    @EndpointManager.raise_on_gen1_controller
     async def pause_all(self, seconds: int) -> dict[str, Any]:
         """Pause all watering for a specified number of seconds."""
         if seconds > MAX_PAUSE_DURATION:
