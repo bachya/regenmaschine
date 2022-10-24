@@ -2,7 +2,7 @@
 
 **Does this fix a specific issue?**
 
-Fixes https://github.com/bachya/aiowatttime/issues/<ISSUE ID>
+Fixes https://github.com/bachya/regenmaschine/issues/<ISSUE ID>
 
 **Checklist:**
 
