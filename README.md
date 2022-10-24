@@ -299,7 +299,7 @@ async def main() -> None:
             # Reboot the controller:
             update_data = await controller.machine.reboot()
 
-            # Return the currnent flow meter data:
+            # Return the current flow meter data:
             flowmeter = await controller.watering.flowmeter()
 
             # Add values to flowmeter counters from an external smart water meter
