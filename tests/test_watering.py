@@ -147,3 +147,51 @@ async def test_watering_stop(aresponses, authenticated_local_client):
 
             data = await controller.watering.stop_all()
             assert data["message"] == "OK"
+
+
+@pytest.mark.asyncio
+async def test_watering_flowmeter(aresponses, authenticated_local_client):
+    """Test getting flowmeter values."""
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/watering/flowmeter",
+            "get",
+            aresponses.Response(
+                text=load_fixture("watering_flowmeter_response.json"), status=200
+            ),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
+            controller = next(iter(client.controllers.values()))
+
+            data = await controller.watering.flowmeter()
+            assert data["flowMeterWateringClicks"] == 4000
+
+
+@pytest.mark.asyncio
+async def test_post_watering_flowmeter(aresponses, authenticated_local_client):
+    """Test getting flowmeter values."""
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/watering/flowmeter",
+            "post",
+            aresponses.Response(
+                text=load_fixture("watering_flowmeter_post_response.json"), status=200
+            ),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
+            controller = next(iter(client.controllers.values()))
+
+            data = await controller.watering.post_flowmeter(value=200, units="litre")
+            assert data["statusCode"] == 0
