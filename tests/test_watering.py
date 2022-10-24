@@ -194,4 +194,4 @@ async def test_post_watering_flowmeter(aresponses, authenticated_local_client):
             controller = next(iter(client.controllers.values()))
 
             data = await controller.watering.post_flowmeter(value=200, units="litre")
-            assert data == 0
+            assert data["statusCode"] == 0

@@ -37,12 +37,14 @@ class Watering(EndpointManager):
         return data
 
     @EndpointManager.raise_on_gen1_controller
-    async def post_flowmeter(self, value: float, units: str = "litre") -> int:
-        """Push flowmeter values to unit."""
+    async def post_flowmeter(
+        self, value: float, units: str = "litre"
+    ) -> dict[str, Any]:
+        """Add values to flowmeter counters from an external meter."""
         data = await self.controller.request(
             "post", "watering/flowmeter", json={"value": value, "units": units}
         )
-        return cast(int, data["statusCode"])
+        return data
 
     @EndpointManager.raise_on_gen1_controller
     async def pause_all(self, seconds: int) -> dict[str, Any]:

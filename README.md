@@ -299,6 +299,15 @@ async def main() -> None:
             # Reboot the controller:
             update_data = await controller.machine.reboot()
 
+            # Return the currnent flow meter data:
+            flowmeter = await controller.watering.flowmeter()
+
+            # Add values to flowmeter counters from an external smart water meter
+            # not wired directly to the controller.
+            # Units can be "clicks", "gal", "m3" and "litre".
+            await controller.watering.post_flowmeter({"value": 2000, "units": "clicks"})
+
+
 
 asyncio.run(main())
 ```
