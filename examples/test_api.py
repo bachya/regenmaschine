@@ -82,9 +82,14 @@ async def main():
                 runs = await controller.watering.runs(date=datetime.date.today())
                 _LOGGER.info(runs)
 
-                print("ALL ACTIVE ZONES")
+                _LOGGER.info("ALL ACTIVE ZONES")
                 zones = await controller.zones.all(details=True)
                 _LOGGER.info(zones)
+
+                _LOGGER.info("FLOW METER")
+                flowmeter = await controller.watering.flowmeter()
+                _LOGGER.info(flowmeter)
+
         except RainMachineError as err:
             print(err)
 
