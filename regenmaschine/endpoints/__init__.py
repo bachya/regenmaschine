@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
-from typing import TYPE_CHECKING, Generic, ParamSpec, TypeVar
+from typing import TYPE_CHECKING, Generic, TypeVar
+
+from typing_extensions import ParamSpec
 
 from regenmaschine.errors import UnknownAPICallError
 
