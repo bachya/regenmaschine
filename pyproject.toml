@@ -41,7 +41,7 @@ warn_unused_ignores = true
 
 [tool.poetry]
 name = "regenmaschine"
-version = "2022.10.0"
+version = "2022.10.1"
 description = "A simple API for RainMachine sprinkler controllers"
 readme = "README.md"
 authors = ["Aaron Bach <bachya1208@gmail.com>"]
