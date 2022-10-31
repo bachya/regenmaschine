@@ -38,13 +38,13 @@ welcome.
 
 `regenmaschine` is currently supported on:
 
-* Python 3.9
-* Python 3.10
-* Python 3.11
+- Python 3.9
+- Python 3.10
+- Python 3.11
 
 # Installation
 
-```python
+```bash
 pip install regenmaschine
 ```
 
@@ -78,7 +78,6 @@ pooling:
 
 See the module docstrings throughout the library for full info on all parameters, return
 types, etc.
-
 
 ```python
 import asyncio
@@ -267,8 +266,8 @@ async def main() -> None:
             # as returned by controller.restrictions.universal():
             await controller.restrictions.set_universal(
                 {
-                    "hotDaysExtraWatering":False,
-                    "freezeProtectEnabled":True,
+                    "hotDaysExtraWatering": False,
+                    "freezeProtectEnabled": True,
                 }
             )
 
@@ -307,7 +306,6 @@ async def main() -> None:
             await controller.watering.post_flowmeter({"value": 2000, "units": "clicks"})
 
 
-
 asyncio.run(main())
 ```
 
@@ -319,9 +317,9 @@ signatures and more examples. For additional reference, the full RainMachine™ 
 It is technically possible to load a controller multiple times. Let's pretend
 for a moment that:
 
-* We have a local controller named `Home` (available at `192.168.1.101`).
-* We have a remote controller named `Grandma's House`.
-* Both controllers live under our email address: `user@host.com`
+- We have a local controller named `Home` (available at `192.168.1.101`).
+- We have a remote controller named `Grandma's House`.
+- Both controllers live under our email address: `user@host.com`
 
 If we load them thus:
 
@@ -352,7 +350,7 @@ asyncio.run(main())
 
 1. `Home` will be a `LocalController` and accessible over the LAN.
 2. `Grandma's House` will be a `RemoteController` and accessible only over the
-RainMachine™ cloud.
+   RainMachine™ cloud.
 
 Notice that `regenmaschine` is smart enough to not overwrite a controller that
 already exists: even though `Home` exists as a remote controller owned by
@@ -387,14 +385,14 @@ asyncio.run(main())
 # Contributing
 
 1. [Check for open features/bugs](https://github.com/bachya/regenmaschine/issues)
-  or [initiate a discussion on one](https://github.com/bachya/regenmaschine/issues/new).
+   or [initiate a discussion on one](https://github.com/bachya/regenmaschine/issues/new).
 2. [Fork the repository](https://github.com/bachya/regenmaschine/fork).
 3. (_optional, but highly recommended_) Create a virtual environment: `python3 -m venv .venv`
 4. (_optional, but highly recommended_) Enter the virtual environment: `source ./.venv/bin/activate`
 5. Install the dev environment: `script/setup`
 6. Code your new feature or bug fix.
 7. Write tests that cover your new functionality.
-8. Run tests and ensure 100% code coverage: `nox -rs coverage`
+8. Run tests and ensure 100% code coverage: `poetry run pytest --cov regenmaschine tests`
 9. Update `README.md` with any new documentation.
 10. Add yourself to `AUTHORS.md`.
 11. Submit a pull request!

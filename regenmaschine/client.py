@@ -2,23 +2,21 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime
 import json
-import logging
 import ssl
-from typing import Any
+from datetime import datetime
+from typing import Any, cast
 
+import async_timeout
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ServerDisconnectedError
-import async_timeout
 
-from regenmaschine.controller import Controller, LocalController, RemoteController
-from regenmaschine.errors import RequestError, TokenExpiredError, raise_for_error
+from .const import LOGGER
+from .controller import Controller, LocalController, RemoteController
+from .errors import RequestError, TokenExpiredError, raise_for_error
 
-_LOGGER: logging.Logger = logging.getLogger(__name__)
-
-DEFAULT_LOCAL_PORT: int = 8080
-DEFAULT_TIMEOUT: int = 30
+DEFAULT_LOCAL_PORT = 8080
+DEFAULT_TIMEOUT = 30
 
 
 class Client:
@@ -27,10 +25,15 @@ class Client:
     def __init__(
         self,
         *,
-        session: ClientSession | None = None,
         request_timeout: int = DEFAULT_TIMEOUT,
+        session: ClientSession | None = None,
     ) -> None:
-        """Initialize."""
+        """Initialize.
+
+        Args:
+            request_timeout: The number of seconds before a request times out.
+            session: An optional aiohttp ClientSession.
+        """
         self._request_timeout = request_timeout
         self._session = session
 
@@ -60,8 +63,25 @@ class Client:
         access_token_expiration: datetime | None = None,
         use_ssl: bool = True,
         **kwargs: dict[str, Any],
-    ) -> dict:
-        """Make a request against the RainMachine device."""
+    ) -> dict[str, Any]:
+        """Make an API request.
+
+        Args:
+            method: An HTTP method.
+            url: An API URL.
+            access_token: An optional API access token.
+            access_token_expiration: An optional API token expiration datetime.
+            use_ssl: Whether to use SSL/TLS on the request.
+            **kwargs: Additional kwargs to send with the request.
+
+        Returns:
+            An API response payload.
+
+        Raises:
+            AssertionError: To handle mypy strangeness.
+            RequestError: Raised upon an underlying HTTP error.
+            TokenExpiredError: Raised upon an expired access token
+        """
         if access_token_expiration and datetime.now() >= access_token_expiration:
             raise TokenExpiredError("Long-lived access token has expired")
 
@@ -72,17 +92,13 @@ class Client:
         if access_token:
             kwargs["params"]["access_token"] = access_token
 
-        use_running_session = self._session and not self._session.closed
-
-        if use_running_session:
+        if use_running_session := self._session and not self._session.closed:
             session = self._session
         else:
             session = ClientSession(timeout=ClientTimeout(total=DEFAULT_TIMEOUT))
 
-        assert session
-
         try:
-            # Only try 2x for ServerDisconnectedError to comply with the RFC
+            # Only try 2x for ServerDisconnectedError to comply with the RFC:
             # https://datatracker.ietf.org/doc/html/rfc2616#section-8.1.4
             for attempt in range(2):
                 try:
@@ -93,7 +109,7 @@ class Client:
                     # The HTTP/1.1 spec allows the device to close the connection
                     # at any time. aiohttp raises ServerDisconnectedError to let us
                     # decide what to do. In this case we want to retry as it likely
-                    # means the connection was stale and the server closed it on us.
+                    # means the connection was stale and the server closed it on us:
                     if attempt == 0:
                         continue
                     raise RequestError(
@@ -114,25 +130,35 @@ class Client:
         use_ssl: bool,
         **kwargs: dict[str, Any],
     ) -> dict[str, Any]:
-        """Make a request with a session."""
-        data: dict[str, Any] = {}
+        """Make a request with a session.
 
+        Args:
+            session: An aiohttp ClientSession.
+            method: An HTTP method.
+            url: An API URL.
+            use_ssl: Whether to use SSL/TLS on the request.
+            **kwargs: Additional kwargs to send with the request.
+
+        Returns:
+            An API response payload.
+
+        Raises:
+            RequestError: Raised upon an underlying HTTP error.
+        """
         try:
             async with async_timeout.timeout(self._request_timeout), session.request(
                 method, url, ssl=self._ssl_context if use_ssl else None, **kwargs
             ) as resp:
                 data = await resp.json(content_type=None)
-        except ServerDisconnectedError:
-            raise
         except json.decoder.JSONDecodeError as err:
             raise RequestError("Unable to parse response as JSON") from err
         except asyncio.TimeoutError as err:
             raise RequestError(f"Timed out while requesting data from {url}") from err
         else:
-            _LOGGER.debug("Data received for %s: %s", url, data)
+            LOGGER.debug("Data received for %s: %s", url, data)
             raise_for_error(resp, data)
 
-        return data
+        return cast(dict[str, Any], data)
 
     async def load_local(  # pylint: disable=too-many-arguments
         self,
@@ -142,10 +168,16 @@ class Client:
         use_ssl: bool = True,
         skip_existing: bool = True,
     ) -> None:
-        """Create a local client."""
-        controller: LocalController = LocalController(
-            self._request, host, port, use_ssl
-        )
+        """Create a local client.
+
+        Args:
+            host: The IP address or hostname of the controller.
+            password: The controller password.
+            port: The port that serves the controller's API.
+            use_ssl: Whether to use SSL/TLS on the request.
+            skip_existing: Don't load the controller if it's already loaded.
+        """
+        controller = LocalController(self._request, host, port, use_ssl)
         await controller.login(password)
 
         wifi_data = await controller.provisioning.wifi()
@@ -166,7 +198,13 @@ class Client:
     async def load_remote(
         self, email: str, password: str, skip_existing: bool = True
     ) -> None:
-        """Create a remote client."""
+        """Create a remote client.
+
+        Args:
+            email: A RainMachine account email address.
+            password: The account password.
+            skip_existing: Don't load the controller if it's already loaded.
+        """
         auth_resp = await self._request(
             "post",
             "https://my.rainmachine.com/login/auth",

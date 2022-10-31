@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Dict, cast
+from typing import Any, cast
 
 from regenmaschine.endpoints import EndpointManager
 
@@ -11,7 +11,15 @@ class Zone(EndpointManager):
     """Define a zone object."""
 
     async def _post(self, zone_id: int, json: dict[str, Any]) -> dict[str, Any]:
-        """Post data to a (non)existing zone."""
+        """Post data to a (non)existing zone.
+
+        Args:
+            zone_id: A zone ID.
+            json: An API request payload.
+
+        Returns:
+            An API response payload.
+        """
         return await self.controller.request(
             "post", f"zone/{zone_id}/properties", json=json
         )
@@ -19,7 +27,15 @@ class Zone(EndpointManager):
     async def all(
         self, *, details: bool = False, include_inactive: bool = False
     ) -> dict[int, dict[str, Any]]:
-        """Return all zones (with optional advanced properties)."""
+        """Return all zones (with optional advanced properties).
+
+        Args:
+            details: Whether extra details should be included.
+            include_inactive: Whether to include inactive programs.
+
+        Returns:
+            An API response payload.
+        """
         tasks = [self.controller.request("get", "zone")]
 
         if details:
@@ -43,15 +59,37 @@ class Zone(EndpointManager):
         return zones
 
     async def disable(self, zone_id: int) -> dict[str, Any]:
-        """Disable a zone."""
+        """Disable a zone.
+
+        Args:
+            zone_id: A zone ID.
+
+        Returns:
+            An API response payload.
+        """
         return await self._post(zone_id, {"active": False})
 
     async def enable(self, zone_id: int) -> dict[str, Any]:
-        """Enable a zone."""
+        """Enable a zone.
+
+        Args:
+            zone_id: A zone ID.
+
+        Returns:
+            An API response payload.
+        """
         return await self._post(zone_id, {"active": True})
 
     async def get(self, zone_id: int, *, details: bool = False) -> dict[str, Any]:
-        """Return a specific zone."""
+        """Return a specific zone.
+
+        Args:
+            zone_id: A zone ID.
+            details: Whether extra details should be included.
+
+        Returns:
+            An API response payload.
+        """
         tasks = [self.controller.request("get", f"zone/{zone_id}")]
         if details:
             tasks.append(self.controller.request("get", f"zone/{zone_id}/properties"))
@@ -59,7 +97,7 @@ class Zone(EndpointManager):
         results = await asyncio.gather(*tasks)
 
         if len(results) == 1:
-            return cast(Dict[str, Any], results[0])
+            return cast(dict[str, Any], results[0])
 
         return {**results[0], **results[1]}
 
@@ -68,6 +106,13 @@ class Zone(EndpointManager):
 
         Note that in addition to including it in the query URL, the zone ID must be
         provided in the request body to accommodate 1st generation controllers.
+
+        Args:
+            zone_id: A zone ID.
+            time: The number of seconds to run the zone for.
+
+        Returns:
+            An API response payload.
         """
         return await self.controller.request(
             "post", f"zone/{zone_id}/start", json={"time": time, "zid": zone_id}
@@ -78,6 +123,12 @@ class Zone(EndpointManager):
 
         Note that in addition to including it in the query URL, the zone ID must be
         provided in the request body to accommodate 1st generation controllers.
+
+        Args:
+            zone_id: A zone ID.
+
+        Returns:
+            An API response payload.
         """
         return await self.controller.request(
             "post", f"zone/{zone_id}/stop", json={"zid": zone_id}

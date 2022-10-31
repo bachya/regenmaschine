@@ -9,16 +9,19 @@ from aiohttp import ClientSession
 from regenmaschine import Client
 from regenmaschine.errors import RainMachineError
 
+IP_ADDRESS = "<IP_ADDRESS>"
+PASSWORD = "<PASSWORD>"  # noqa: S105
+
 _LOGGER = logging.getLogger(__name__)
 
 
-async def main():
+async def main() -> None:
     """Run."""
     logging.basicConfig(level=logging.INFO)
     async with ClientSession() as session:
         try:
             client = Client(session=session)
-            await client.load_local("<IP ADDRESS>", "<PASSWORD>")
+            await client.load_local(IP_ADDRESS, PASSWORD)
 
             for controller in client.controllers.values():
                 _LOGGER.info("CLIENT INFORMATION")

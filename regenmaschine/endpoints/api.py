@@ -10,5 +10,9 @@ class API(EndpointManager):  # pylint: disable=too-few-public-methods
     """Define an API object."""
 
     async def versions(self) -> dict[str, Any]:
-        """Get software, hardware, and API versions."""
+        """Get software, hardware, and API versions.
+
+        Returns:
+            An API response payload.
+        """
         return await self.controller.request("get", "apiVer")
