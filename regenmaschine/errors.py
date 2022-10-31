@@ -5,6 +5,7 @@ from typing import Any
 
 from aiohttp import ClientResponse
 from aiohttp.client_exceptions import ClientError
+from yarl import URL
 
 
 class RainMachineError(Exception):
@@ -47,8 +48,17 @@ REMOTE_ERROR_CODE_EXCEPTION_MAPPING = {
 }
 
 
-def _raise_local_api_error(url: str, error_code: int, message: str) -> None:
-    """Raise the appropriate error for a remote error code."""
+def _raise_local_api_error(url: URL, error_code: int, message: str) -> None:
+    """Raise the appropriate error for a remote error code.
+
+    Args:
+        url: The URL that raised the exception:
+        error_code: The RainMachine error code.
+        message: The RainMachine error message.
+
+    Raises:
+        exc: A RequestError subclass.
+    """
     exc: RequestError
     try:
         exc_obj = LOCAL_ERROR_CODE_EXCEPTION_MAPPING[error_code]
@@ -60,8 +70,16 @@ def _raise_local_api_error(url: str, error_code: int, message: str) -> None:
     raise exc
 
 
-def _raise_remote_api_error(url: str, error_code: int) -> None:
-    """Raise the appropriate error for a remote error code."""
+def _raise_remote_api_error(url: URL, error_code: int) -> None:
+    """Raise the appropriate error for a remote error code.
+
+    Args:
+        url: The URL that raised the exception:
+        error_code: The RainMachine error code.
+
+    Raises:
+        exc: A RequestError subclass.
+    """
     exc: RequestError
     try:
         exc = REMOTE_ERROR_CODE_EXCEPTION_MAPPING[error_code]
@@ -71,7 +89,15 @@ def _raise_remote_api_error(url: str, error_code: int) -> None:
 
 
 def raise_for_error(resp: ClientResponse, data: dict[str, Any] | None) -> None:
-    """Raise an error from the remote API if necessary."""
+    """Raise an error from the remote API if necessary.
+
+    Args:
+        resp: The aiohttp ClientResponse that generated the exception.
+        data: An optional API response payload.
+
+    Raises:
+        RequestError: Raised when any error occurs.
+    """
     if data:
         if data.get("errorType") and data["errorType"] > 0:
             # RainMachine's remote cloud uses "errorType" to show errors, so if we find

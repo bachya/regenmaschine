@@ -1,8 +1,9 @@
 """Define a RainMachine controller class."""
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta
-from typing import Any, Awaitable, Callable
+from typing import Any
 
 from regenmaschine.endpoints.api import API
 from regenmaschine.endpoints.diagnostics import Diagnostics
@@ -15,15 +16,19 @@ from regenmaschine.endpoints.stats import Stats
 from regenmaschine.endpoints.watering import Watering
 from regenmaschine.endpoints.zone import Zone
 
-URL_BASE_LOCAL: str = "https://{0}:{1}/api/4"
-URL_BASE_REMOTE: str = "https://api.rainmachine.com/{0}/api/4"
+URL_BASE_LOCAL = "https://{0}:{1}/api/4"
+URL_BASE_REMOTE = "https://api.rainmachine.com/{0}/api/4"
 
 
-class Controller:  # pylint: disable=too-many-instance-attributes
+class Controller:  # pylint: disable=too-few-public-methods,too-many-instance-attributes
     """Define the controller."""
 
-    def __init__(self, request: Callable[..., Awaitable[dict]]) -> None:
-        """Initialize."""
+    def __init__(self, request: Callable[..., Awaitable[dict[str, Any]]]) -> None:
+        """Initialize.
+
+        Args:
+            request: The request method from the Client object.
+        """
         self._access_token: str | None = None
         self._access_token_expiration: datetime | None = None
         self._client_request = request
@@ -50,7 +55,16 @@ class Controller:  # pylint: disable=too-many-instance-attributes
     async def request(
         self, method: str, endpoint: str, **kwargs: dict[str, Any]
     ) -> dict[str, Any]:
-        """Wrap the generic request method to add access token, etc."""
+        """Wrap the generic request method to add access token, etc.
+
+        Args:
+            method: An HTTP method.
+            endpoint: An API URL endpoint.
+            **kwargs: Additional kwargs to send with the request.
+
+        Returns:
+            An API response payload.
+        """
         return await self._client_request(
             method,
             f"{self._host}/{endpoint}",
@@ -64,21 +78,32 @@ class Controller:  # pylint: disable=too-many-instance-attributes
 class LocalController(Controller):
     """Define a controller accessed over the LAN."""
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(
         self,
-        request: Callable[..., Awaitable[dict]],
+        request: Callable[..., Awaitable[dict[str, Any]]],
         host: str,
         port: int,
         use_ssl: bool = True,
     ) -> None:
-        """Initialize."""
+        """Initialize.
+
+        Args:
+            request: The request method from the Client object.
+            host: The IP address or hostname of the controller.
+            port: The port that serves the controller's API.
+            use_ssl: Whether to use SSL/TLS on the request.
+        """
         super().__init__(request)
 
         self._host = URL_BASE_LOCAL.format(host, port)
         self._use_ssl = use_ssl
 
     async def login(self, password: str) -> None:
-        """Authenticate against the device (locally)."""
+        """Authenticate against the device (locally).
+
+        Args:
+            password: The controller password.
+        """
         auth_resp = await self._client_request(
             "post", f"{self._host}/auth/login", json={"pwd": password, "remember": 1}
         )
@@ -95,7 +120,13 @@ class RemoteController(Controller):
     async def login(
         self, stage_1_access_token: str, sprinkler_id: str, password: str
     ) -> None:
-        """Authenticate against the device (remotely)."""
+        """Authenticate against the device (remotely).
+
+        Args:
+            stage_1_access_token: The first-stage access token from the remote cloud.
+            sprinkler_id: A unique ID for the controller.
+            password: The account password.
+        """
         auth_resp: dict = await self._client_request(
             "post",
             "https://my.rainmachine.com/devices/login-sprinkler",

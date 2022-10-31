@@ -28,15 +28,7 @@
     "currentFieldCapacity": 16.03,
     "area": 92.9000015258789,
     "referenceTime": 1243,
-    "detailedMonthsKc": [
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1
-    ],
+    "detailedMonthsKc": [1, 1, 1, 1, 1, 1, 1],
     "flowrate": null,
     "soilIntakeRate": 10.16
   },
