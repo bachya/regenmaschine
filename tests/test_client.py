@@ -4,7 +4,7 @@ import asyncio
 import json
 from datetime import datetime, timedelta
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import aiohttp
 import pytest
@@ -151,7 +151,7 @@ async def test_load_local_skip(
 
 
 @pytest.mark.asyncio
-async def test_load_local_failure(aresponses: ResponsesMockServer) -> None:
+async def test_load_local_http_error(aresponses: ResponsesMockServer) -> None:
     """Test loading a local controller and receiving a fail response.
 
     Args:
@@ -170,6 +170,25 @@ async def test_load_local_failure(aresponses: ResponsesMockServer) -> None:
             await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, False)
 
     aresponses.assert_plan_strictly_followed()
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    "exc",
+    [
+        aiohttp.client_exceptions.ClientConnectorError(Mock(), Mock()),
+        asyncio.TimeoutError(),
+        json.decoder.JSONDecodeError("Not valid", "", 0),
+    ],
+)
+async def test_load_local_other_errors(exc: type[Exception]) -> None:
+    """Test loading a local controller and encounting a non-HTTP issue."""
+    async with aiohttp.ClientSession() as session:
+        client = Client(session=session)
+        with patch.object(client._session, "request", side_effect=exc), pytest.raises(
+            RequestError
+        ):
+            await client.load_local(TEST_HOST, TEST_PASSWORD, TEST_PORT, False)
 
 
 @pytest.mark.asyncio

@@ -9,7 +9,7 @@ from typing import Any, cast
 
 import async_timeout
 from aiohttp import ClientSession, ClientTimeout
-from aiohttp.client_exceptions import ServerDisconnectedError
+from aiohttp.client_exceptions import ClientOSError, ServerDisconnectedError
 
 from .const import LOGGER
 from .controller import Controller, LocalController, RemoteController
@@ -152,6 +152,10 @@ class Client:
                 data = await resp.json(content_type=None)
         except json.decoder.JSONDecodeError as err:
             raise RequestError("Unable to parse response as JSON") from err
+        except ClientOSError as err:
+            raise RequestError(
+                f"Connection error while requesting data from {url}"
+            ) from err
         except asyncio.TimeoutError as err:
             raise RequestError(f"Timed out while requesting data from {url}") from err
         else:
