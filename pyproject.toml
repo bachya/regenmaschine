@@ -61,6 +61,7 @@ classifiers = [
 [tool.poetry.dependencies]
 aiohttp = ">=3.8.0"
 python = "^3.9.0"
+typing-extensions = "^4.3.0"
 
 [tool.poetry.group.dev.dependencies]
 aresponses = "^2.1.6"
@@ -92,7 +93,6 @@ pytest-cov = "^4.0.0"
 pytest-mock = "^3.0.0"
 pyupgrade = "^3.1.0"
 safety = "^2.3.1"
-typing-extensions = "^4.3.0"
 vulture = "^2.6"
 yamllint = "^1.28.0"
 
