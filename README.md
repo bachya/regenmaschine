@@ -247,6 +247,9 @@ async def main() -> None:
             # ...and stop it:
             await controller.zones.stop(1)
 
+            # Get all running zones:
+            programs = await controller.zones.running()
+
             # Get the device name:
             name = await controller.provisioning.device_name
 
