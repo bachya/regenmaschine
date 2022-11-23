@@ -101,6 +101,15 @@ class Zone(EndpointManager):
 
         return {**results[0], **results[1]}
 
+    async def running(self) -> list[dict[str, Any]]:
+        """Return all running zones.
+
+        Returns:
+            An API response payload.
+        """
+        data = await self.controller.request("get", "watering/zone")
+        return cast(list[dict[str, Any]], data["zones"])
+
     async def start(self, zone_id: int, time: int) -> dict[str, Any]:
         """Start a zone.
 

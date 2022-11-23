@@ -253,6 +253,40 @@ async def test_zone_get_by_id_details(
 
 
 @pytest.mark.asyncio
+async def test_zone_running(
+    aresponses: ResponsesMockServer, authenticated_local_client: ResponsesMockServer
+) -> None:
+    """Test getting all running zones.
+
+    Args:
+        aresponses: An aresponses server.
+        authenticated_local_client: A mock local controller.
+    """
+    async with authenticated_local_client:
+        authenticated_local_client.add(
+            f"{TEST_HOST}:{TEST_PORT}",
+            "/api/4/watering/zone",
+            "get",
+            response=aiohttp.web_response.json_response(
+                json.loads(load_fixture("watering_zone_response.json")), status=200
+            ),
+        )
+
+        async with aiohttp.ClientSession() as session:
+            client = Client(session=session)
+            await client.load_local(
+                TEST_HOST, TEST_PASSWORD, port=TEST_PORT, use_ssl=False
+            )
+            controller = next(iter(client.controllers.values()))
+
+            data = await controller.zones.running()
+            assert len(data) == 12
+            assert data[0]["name"] == "Zone 1"
+
+    aresponses.assert_plan_strictly_followed()
+
+
+@pytest.mark.asyncio
 async def test_zone_start_stop(
     aresponses: ResponsesMockServer,
     authenticated_local_client: ResponsesMockServer,
