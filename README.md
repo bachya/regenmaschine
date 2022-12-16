@@ -1,20 +1,19 @@
 # 💧 Regenmaschine: A Simple Python Library for RainMachine™
 
-[![CI](https://github.com/bachya/regenmaschine/workflows/CI/badge.svg)](https://github.com/bachya/regenmaschine/actions)
-[![PyPi](https://img.shields.io/pypi/v/regenmaschine.svg)](https://pypi.python.org/pypi/regenmaschine)
-[![Version](https://img.shields.io/pypi/pyversions/regenmaschine.svg)](https://pypi.python.org/pypi/regenmaschine)
-[![License](https://img.shields.io/pypi/l/regenmaschine.svg)](https://github.com/bachya/regenmaschine/blob/main/LICENSE)
-[![Code Coverage](https://codecov.io/gh/bachya/regenmaschine/branch/main/graph/badge.svg)](https://codecov.io/gh/bachya/regenmaschine)
-[![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/bachya/regenmaschine/maintainability)
-[![Say Thanks](https://img.shields.io/badge/SayThanks-!-1EAEDB.svg)](https://saythanks.io/to/bachya)
+[![CI][ci-badge]][ci]
+[![PyPI][pypi-badge]][pypi]
+[![Version][version-badge]][version]
+[![License][license-badge]][license]
+[![Code Coverage][codecov-badge]][codecov]
+[![Maintainability][maintainability-badge]][maintainability]
 
 <a href="https://www.buymeacoffee.com/bachya1208P" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 `regenmaschine` (German for "rain machine") is a simple, clean, well-tested
 Python library for interacting with
-[RainMachine™ smart sprinkler controllers](http://www.rainmachine.com/).
-It gives developers an easy API to manage their controllers over their local
-LAN or remotely via the RainMachine™ cloud.
+[RainMachine™ smart sprinkler controllers][regenmaschine]. It gives developers an easy
+API to manage their controllers over their local LAN or remotely via the RainMachine™
+cloud.
 
 - [Remote Access Announcement](#remote-access-announcement-2022-06-26)
 - [Python Versions](#python-versions)
@@ -25,9 +24,9 @@ LAN or remotely via the RainMachine™ cloud.
 
 # Remote Access Announcement (2022-06-26)
 
-On June 2, 2022, RainMachine announced a
-[Premium Services](https://www.rainmachine.com/premium/) addition; under this new
-model, remote access is _only_ available to subscribers of these Premium Services.
+On June 2, 2022, RainMachine announced a [Premium Services][rainmachine-premium]
+addition; under this new model, remote access is _only_ available to subscribers of
+these Premium Services.
 
 I do not currently intend to subscribe to Premium Services; as such, the remote access
 abilities of `regenmaschine` will remain as-is from here on out unless spurred on by
@@ -72,9 +71,8 @@ asyncio.run(main())
 
 By default, the library creates a new connection to the sprinkler controller with each
 coroutine. If you are calling a large number of coroutines (or merely want to squeeze
-out every second of runtime savings possible), an
-[`aiohttp`](https://github.com/aio-libs/aiohttp) `ClientSession` can be used for connection
-pooling:
+out every second of runtime savings possible), an [`aiohttp`][aiohttp] `ClientSession` can
+be used for connection pooling:
 
 See the module docstrings throughout the library for full info on all parameters, return
 types, etc.
@@ -313,7 +311,8 @@ asyncio.run(main())
 ```
 
 Check out `example.py`, the tests, and the source files themselves for method
-signatures and more examples. For additional reference, the full RainMachine™ API documentation is available [here](https://rainmachine.docs.apiary.io/).
+signatures and more examples. For additional reference, the full RainMachine™ API
+documentation is available [here][rainmachine-api].
 
 # Loading Controllers Multiple Times
 
@@ -387,15 +386,36 @@ asyncio.run(main())
 
 # Contributing
 
-1. [Check for open features/bugs](https://github.com/bachya/regenmaschine/issues)
-   or [initiate a discussion on one](https://github.com/bachya/regenmaschine/issues/new).
-2. [Fork the repository](https://github.com/bachya/regenmaschine/fork).
+Thanks to all of [our contributors][contributors] so far!
+
+1. [Check for open features/bugs][issues] or [initiate a discussion on one][new-issue].
+2. [Fork the repository][fork].
 3. (_optional, but highly recommended_) Create a virtual environment: `python3 -m venv .venv`
 4. (_optional, but highly recommended_) Enter the virtual environment: `source ./.venv/bin/activate`
 5. Install the dev environment: `script/setup`
-6. Code your new feature or bug fix.
+6. Code your new feature or bug fix on a new branch.
 7. Write tests that cover your new functionality.
 8. Run tests and ensure 100% code coverage: `poetry run pytest --cov regenmaschine tests`
 9. Update `README.md` with any new documentation.
-10. Add yourself to `AUTHORS.md`.
-11. Submit a pull request!
+10. Submit a pull request!
+
+[aiohttp]: https://github.com/aio-libs/aiohttp
+[ci-badge]: https://github.com/bachya/regenmaschine/workflows/CI/badge.svg
+[ci]: https://github.com/bachya/regenmaschine/actions
+[codecov-badge]: https://codecov.io/gh/bachya/regenmaschine/branch/dev/graph/badge.svg
+[codecov]: https://codecov.io/gh/bachya/regenmaschine
+[contributors]: https://github.com/bachya/regenmaschine/graphs/contributors
+[fork]: https://github.com/bachya/regenmaschine/fork
+[issues]: https://github.com/bachya/regenmaschine/issues
+[license-badge]: https://img.shields.io/pypi/l/regenmaschine.svg
+[license]: https://github.com/bachya/regenmaschine/blob/main/LICENSE
+[maintainability-badge]: https://api.codeclimate.com/v1/badges/cb14e60d5f5a4c2ccb2c/maintainability
+[maintainability]: https://codeclimate.com/github/bachya/regenmaschine/maintainability
+[new-issue]: https://github.com/bachya/regenmaschine/issues/new
+[pypi-badge]: https://img.shields.io/pypi/v/regenmaschine.svg
+[pypi]: https://pypi.python.org/pypi/regenmaschine
+[rainmachine-api]: https://rainmachine.docs.apiary.io/
+[rainmachine-premium]: https://www.rainmachine.com/premium/
+[regenmaschine]: http://www.rainmachine.com/
+[version-badge]: https://img.shields.io/pypi/pyversions/regenmaschine.svg
+[version]: https://pypi.python.org/pypi/regenmaschine
