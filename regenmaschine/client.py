@@ -158,9 +158,9 @@ class Client:
             ) from err
         except asyncio.TimeoutError as err:
             raise RequestError(f"Timed out while requesting data from {url}") from err
-        else:
-            LOGGER.debug("Data received for %s: %s", url, data)
-            raise_for_error(resp, data)
+
+        LOGGER.debug("Data received for %s: %s", url, data)
+        raise_for_error(resp, data)
 
         return cast(dict[str, Any], data)
 
