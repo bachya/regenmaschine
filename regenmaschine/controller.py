@@ -16,7 +16,7 @@ from regenmaschine.endpoints.stats import Stats
 from regenmaschine.endpoints.watering import Watering
 from regenmaschine.endpoints.zone import Zone
 
-URL_BASE_LOCAL = "https://{0}:{1}/api/4"
+URL_BASE_LOCAL = "{0}://{1}:{2}/api/4"
 URL_BASE_REMOTE = "https://api.rainmachine.com/{0}/api/4"
 
 
@@ -95,7 +95,10 @@ class LocalController(Controller):
         """
         super().__init__(request)
 
-        self._host = URL_BASE_LOCAL.format(host, port)
+        if use_ssl:
+            self._host = URL_BASE_LOCAL.format("https", host, port)
+        else:
+            self._host = URL_BASE_LOCAL.format("http", host, port)
         self._use_ssl = use_ssl
 
     async def login(self, password: str) -> None:
