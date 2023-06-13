@@ -49,7 +49,7 @@ class Client:
         #   4. We allow self-signed certificates.
         #   5. We allow legacy server connections.
         self._ssl_context.minimum_version = ssl.TLSVersion.SSLv3
-        self._ssl_context.set_ciphers("DEFAULT")
+        self._ssl_context.set_ciphers("DEFAULT:@SECLEVEL=0")
         self._ssl_context.check_hostname = False
         self._ssl_context.verify_mode = ssl.CERT_NONE
         self._ssl_context.options |= getattr(ssl, "OP_LEGACY_SERVER_CONNECT", 0x4)
