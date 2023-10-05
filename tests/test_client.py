@@ -182,7 +182,7 @@ async def test_load_local_http_error(aresponses: ResponsesMockServer) -> None:
     ],
 )
 async def test_load_local_other_errors(exc: type[Exception]) -> None:
-    """Test loading a local controller and encounting a non-HTTP issue."""
+    """Test loading a local controller and encountering a non-HTTP issue."""
     async with aiohttp.ClientSession() as session:
         client = Client(session=session)
         with patch.object(client._session, "request", side_effect=exc), pytest.raises(
