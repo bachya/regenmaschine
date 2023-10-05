@@ -56,7 +56,7 @@ class Client:
 
         self.controllers: dict[str, Controller] = {}
 
-    async def _request(
+    async def _request(  # pylint: disable=too-many-arguments
         self,
         method: str,
         url: str,
