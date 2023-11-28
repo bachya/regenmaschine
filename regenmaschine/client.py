@@ -19,7 +19,7 @@ DEFAULT_TIMEOUT = 30
 
 try:
     timeout_callable = asyncio.timeout  # type: ignore[attr-defined]
-except AttributeError:
+except AttributeError:  # pragma: no cover
     import async_timeout
 
     timeout_callable = async_timeout.timeout

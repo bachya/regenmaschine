@@ -97,7 +97,7 @@ class Zone(EndpointManager):
         results = await asyncio.gather(*tasks)
 
         if len(results) == 1:
-            return results[0]
+            return cast(dict[str, Any], results[0])
 
         return {**results[0], **results[1]}
 
