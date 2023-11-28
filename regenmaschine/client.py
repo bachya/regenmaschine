@@ -7,7 +7,6 @@ import ssl
 from datetime import datetime
 from typing import Any, cast
 
-import async_timeout
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientOSError, ServerDisconnectedError
 
@@ -17,6 +16,13 @@ from .errors import RequestError, TokenExpiredError, raise_for_error
 
 DEFAULT_LOCAL_PORT = 8080
 DEFAULT_TIMEOUT = 30
+
+try:
+    timeout_callable = asyncio.timeout  # type: ignore[attr-defined]
+except AttributeError:  # pragma: no cover
+    import async_timeout
+
+    timeout_callable = async_timeout.timeout
 
 
 class Client:
@@ -148,7 +154,7 @@ class Client:
             RequestError: Raised upon an underlying HTTP error.
         """
         try:
-            async with async_timeout.timeout(self._request_timeout), session.request(
+            async with timeout_callable(self._request_timeout), session.request(
                 method, url, ssl=self._ssl_context if use_ssl else None, **kwargs
             ) as resp:
                 data = await resp.json(content_type=None)
