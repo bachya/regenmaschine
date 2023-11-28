@@ -20,7 +20,7 @@ DEFAULT_TIMEOUT = 30
 try:
     timeout_callable = asyncio.timeout  # type: ignore[attr-defined]
 except AttributeError:  # pragma: no cover
-    import async_timeout
+    import async_timeout  # pylint: disable=import-error
 
     timeout_callable = async_timeout.timeout
 
