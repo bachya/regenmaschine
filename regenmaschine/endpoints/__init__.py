@@ -28,7 +28,7 @@ class EndpointManager(Generic[_P, _T]):  # pylint: disable=too-few-public-method
 
     @staticmethod
     def raise_on_gen1_controller(
-        func: Callable[..., Awaitable[_T]]
+        func: Callable[..., Awaitable[_T]],
     ) -> Callable[..., Awaitable[_T]]:
         """Raise an error if a method is called on a 1st generation controller.
 
