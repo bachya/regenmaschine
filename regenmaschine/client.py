@@ -17,13 +17,6 @@ from .errors import RequestError, TokenExpiredError, raise_for_error
 DEFAULT_LOCAL_PORT = 8080
 DEFAULT_TIMEOUT = 30
 
-try:
-    timeout_callable = asyncio.timeout  # type: ignore[attr-defined]
-except AttributeError:  # pragma: no cover
-    import async_timeout  # pylint: disable=import-error
-
-    timeout_callable = async_timeout.timeout
-
 
 class Client:
     """Define the client."""
@@ -154,8 +147,12 @@ class Client:
             RequestError: Raised upon an underlying HTTP error.
         """
         try:
-            async with timeout_callable(self._request_timeout), session.request(
-                method, url, ssl=self._ssl_context if use_ssl else None, **kwargs
+            async with session.request(
+                method,
+                url,
+                ssl=self._ssl_context if use_ssl else None,
+                timeout=self._request_timeout,
+                **kwargs,
             ) as resp:
                 data = await resp.json(content_type=None)
         except json.decoder.JSONDecodeError as err:
