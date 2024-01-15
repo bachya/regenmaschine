@@ -312,7 +312,7 @@ async def test_request_timeout(
         authenticated_local_client: A mock local controller.
     """
     with patch.object(
-        aiohttp.ClientResponse, "json", lambda *args, **kwargs: asyncio.sleep(0.5)
+        aiohttp.ClientResponse, "json", side_effect=asyncio.TimeoutError
     ):
         async with authenticated_local_client, aiohttp.ClientSession() as session:
             with pytest.raises(RequestError):
