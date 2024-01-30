@@ -9,6 +9,7 @@ from typing import Any, cast
 
 from aiohttp import ClientSession, ClientTimeout
 from aiohttp.client_exceptions import ClientOSError, ServerDisconnectedError
+from yarl import URL
 
 from .const import LOGGER
 from .controller import Controller, LocalController, RemoteController
@@ -65,7 +66,7 @@ class Client:
     async def _request(  # pylint: disable=too-many-arguments
         self,
         method: str,
-        url: str,
+        url: URL,
         *,
         access_token: str | None = None,
         access_token_expiration: datetime | None = None,
@@ -134,7 +135,7 @@ class Client:
         self,
         session: ClientSession,
         method: str,
-        url: str,
+        url: URL,
         use_ssl: bool,
         **kwargs: dict[str, Any],
     ) -> dict[str, Any]:
@@ -219,7 +220,7 @@ class Client:
         """
         auth_resp = await self._request(
             "post",
-            "https://my.rainmachine.com/login/auth",
+            URL("https://my.rainmachine.com/login/auth"),
             json={"user": {"email": email, "pwd": password, "remember": 1}},
         )
 
@@ -227,7 +228,7 @@ class Client:
 
         sprinklers_resp = await self._request(
             "post",
-            "https://my.rainmachine.com/devices/get-sprinklers",
+            URL("https://my.rainmachine.com/devices/get-sprinklers"),
             access_token=access_token,
             json={"user": {"email": email, "pwd": password, "remember": 1}},
         )

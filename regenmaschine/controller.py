@@ -5,6 +5,8 @@ from collections.abc import Awaitable, Callable
 from datetime import datetime, timedelta
 from typing import Any
 
+from yarl import URL
+
 from regenmaschine.endpoints.api import API
 from regenmaschine.endpoints.diagnostics import Diagnostics
 from regenmaschine.endpoints.machine import Machine
@@ -33,6 +35,7 @@ class Controller:  # pylint: disable=too-few-public-methods,too-many-instance-at
         self._access_token_expiration: datetime | None = None
         self._client_request = request
         self._host: str = ""
+        self._base_url: URL = URL("")
         self._use_ssl = True
         self.api_version: str = ""
         self.hardware_version: str = ""
@@ -67,7 +70,7 @@ class Controller:  # pylint: disable=too-few-public-methods,too-many-instance-at
         """
         return await self._client_request(
             method,
-            f"{self._host}/{endpoint}",
+            self._base_url.joinpath(endpoint),
             access_token=self._access_token,
             access_token_expiration=self._access_token_expiration,
             use_ssl=self._use_ssl,
@@ -99,6 +102,8 @@ class LocalController(Controller):
             self._host = URL_BASE_LOCAL.format("https", host, port)
         else:
             self._host = URL_BASE_LOCAL.format("http", host, port)
+
+        self._base_url = URL(self._host)
         self._use_ssl = use_ssl
 
     async def login(self, password: str) -> None:
@@ -108,7 +113,9 @@ class LocalController(Controller):
             password: The controller password.
         """
         auth_resp = await self._client_request(
-            "post", f"{self._host}/auth/login", json={"pwd": password, "remember": 1}
+            "post",
+            self._base_url.joinpath("auth/login"),
+            json={"pwd": password, "remember": 1},
         )
 
         self._access_token: str = auth_resp["access_token"]
@@ -132,10 +139,11 @@ class RemoteController(Controller):
         """
         auth_resp: dict = await self._client_request(
             "post",
-            "https://my.rainmachine.com/devices/login-sprinkler",
+            URL("https://my.rainmachine.com/devices/login-sprinkler"),
             access_token=stage_1_access_token,
             json={"sprinklerId": sprinkler_id, "pwd": password},
         )
 
         self._access_token = auth_resp["access_token"]
         self._host = URL_BASE_REMOTE.format(sprinkler_id)
+        self._base_url = URL(self._host)
