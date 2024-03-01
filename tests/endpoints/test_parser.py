@@ -1,4 +1,5 @@
 """Define tests for parser endpoints."""
+
 import json
 
 import aiohttp

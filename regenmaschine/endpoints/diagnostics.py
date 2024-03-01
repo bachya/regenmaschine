@@ -1,4 +1,5 @@
 """Define an object to interact with RainMachine diagnostics."""
+
 from __future__ import annotations
 
 from typing import Any, cast

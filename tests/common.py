@@ -1,4 +1,5 @@
 """Define common test utilities."""
+
 import os
 
 TEST_ACCESS_TOKEN = "12345abcdef"  # noqa: S105

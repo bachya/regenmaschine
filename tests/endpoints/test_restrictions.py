@@ -1,4 +1,5 @@
 """Define tests for restriction endpoints."""
+
 import json
 
 import aiohttp
