@@ -1,4 +1,5 @@
 """Define an object to interact with zones."""
+
 from __future__ import annotations
 
 import asyncio

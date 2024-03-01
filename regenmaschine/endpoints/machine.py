@@ -1,4 +1,5 @@
 """Define an object to interact with machine info."""
+
 from __future__ import annotations
 
 from contextlib import suppress

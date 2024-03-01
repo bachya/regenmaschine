@@ -1,4 +1,5 @@
 """Define tests for program endpoints."""
+
 import json
 from typing import Any
 

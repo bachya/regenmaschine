@@ -1,4 +1,5 @@
 """Define fixtures available for all tests."""
+
 import json
 from typing import Any, cast
 
