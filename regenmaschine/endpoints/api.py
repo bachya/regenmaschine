@@ -1,4 +1,5 @@
 """Define an object to interact with API info."""
+
 from __future__ import annotations
 
 from typing import Any

@@ -1,4 +1,5 @@
 """Define tests for restriction endpoints."""
+
 import datetime
 import json
 from typing import Any, cast

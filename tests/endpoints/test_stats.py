@@ -1,4 +1,5 @@
 """Define tests for stat endpoints."""
+
 import json
 from datetime import date
 

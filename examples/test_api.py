@@ -1,4 +1,5 @@
 """Run an example script to quickly test."""
+
 # pylint: disable=too-many-locals,too-many-statements
 import asyncio
 import datetime

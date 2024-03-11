@@ -1,4 +1,5 @@
 """Define tests for api endpoints."""
+
 import json
 from typing import Any, cast
 

@@ -1,4 +1,5 @@
 """Define an object to interact with generic watering data/actions."""
+
 from __future__ import annotations
 
 import datetime
