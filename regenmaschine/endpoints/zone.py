@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-import asyncio
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from regenmaschine.endpoints import EndpointManager
 
@@ -37,17 +36,18 @@ class Zone(EndpointManager):
         Returns:
             An API response payload.
         """
-        tasks = [self.controller.request("get", "zone")]
+        raw_zones = await self.controller.request("get", "zone")
+        zone_details: dict | None = None
 
         if details:
-            tasks.append(self.controller.request("get", "zone/properties"))
+            zone_details = await self.controller.request("get", "zone/properties")
 
-        results = await asyncio.gather(*tasks)
-
-        zones = {}
-        for zone in results[0]["zones"]:
+        zones: dict[int, dict[str, Any]] = {}
+        for zone in raw_zones["zones"]:
             if details:
-                [extra] = [z for z in results[1]["zones"] if z["uid"] == zone["uid"]]
+                if TYPE_CHECKING:
+                    assert zone_details is not None
+                [extra] = [z for z in zone_details["zones"] if z["uid"] == zone["uid"]]
                 zone_data = {**zone, **extra}
             else:
                 if "active" not in zone:
@@ -91,16 +91,13 @@ class Zone(EndpointManager):
         Returns:
             An API response payload.
         """
-        tasks = [self.controller.request("get", f"zone/{zone_id}")]
-        if details:
-            tasks.append(self.controller.request("get", f"zone/{zone_id}/properties"))
-
-        results = await asyncio.gather(*tasks)
-
-        if len(results) == 1:
-            return results[0]
-
-        return {**results[0], **results[1]}
+        zone = await self.controller.request("get", f"zone/{zone_id}")
+        if not details:
+            return zone
+        zone_details = await self.controller.request(
+            "get", f"zone/{zone_id}/properties"
+        )
+        return {**zone, **zone_details}
 
     async def running(self) -> list[dict[str, Any]]:
         """Return all running zones.
