@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from typing import TYPE_CHECKING, Any, Concatenate, Coroutine, TypeVar
+from collections.abc import Callable, Coroutine
+from typing import TYPE_CHECKING, Any, Concatenate, TypeVar
 
 from typing_extensions import ParamSpec
 
