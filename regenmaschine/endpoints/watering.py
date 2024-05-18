@@ -135,5 +135,4 @@ class Watering(EndpointManager):
         Returns:
             An API response payload.
         """
-        data = await self.pause_all(0)
-        return cast(dict[str, Any], data)
+        return await self.pause_all(0)
