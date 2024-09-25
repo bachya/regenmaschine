@@ -171,7 +171,7 @@ class Client:
 
         return cast(dict[str, Any], data)
 
-    async def load_local(  # pylint: disable=too-many-arguments
+    async def load_local(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         host: str,
         password: str,
